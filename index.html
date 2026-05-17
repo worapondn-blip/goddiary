@@ -1072,11 +1072,318 @@
     /* ── Home widgets ── */
     .home-widgets {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto 1fr 1fr;
       gap: 1.5rem;
       margin-top: 2rem;
       align-items: start;
     }
+
+    /* Projects widget (home) */
+    .proj-widget-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .proj-widget-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .proj-widget-title {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--green-dark);
+    }
+    .proj-widget-link {
+      font-size: 0.72rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .proj-widget-link:hover { color: var(--green-dark); }
+    .proj-mini-list { display: flex; flex-direction: column; gap: 0.85rem; }
+    .proj-mini-item { cursor: pointer; }
+    .proj-mini-item:hover .proj-mini-name { color: var(--green-mid); }
+    .proj-mini-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      transition: color 0.12s;
+    }
+    .proj-progress-bar {
+      height: 5px;
+      background: var(--green-tag);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .proj-progress-fill {
+      height: 100%;
+      background: var(--green-dark);
+      border-radius: 3px;
+      transition: width 0.4s;
+    }
+    .proj-mini-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .proj-empty {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    /* Projects page */
+    .proj-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .proj-add-btn {
+      padding: 0.5rem 1.1rem;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .proj-add-btn:hover { background: var(--green-mid); }
+    .proj-cards { display: flex; flex-direction: column; gap: 1.5rem; }
+    .proj-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .proj-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .proj-card-name {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--green-dark);
+    }
+    .proj-card-actions { display: flex; gap: 0.4rem; }
+    .proj-card-action {
+      font-size: 0.75rem;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      transition: all 0.12s;
+    }
+    .proj-card-action:hover { color: var(--text); border-color: var(--green-mid); }
+    .proj-card-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .proj-card-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .proj-card-progress .proj-progress-bar { flex: 1; height: 6px; }
+    .proj-progress-pct {
+      font-size: 0.78rem;
+      color: var(--green-mid);
+      font-weight: 600;
+      min-width: 32px;
+      text-align: right;
+    }
+    .proj-section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      margin-top: 1rem;
+    }
+    .proj-section-label:first-of-type { margin-top: 0; }
+    .proj-tasks { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.5rem; }
+    .proj-task {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.83rem;
+    }
+    .proj-task-status {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    .proj-task-status.todo { background: var(--bg); color: var(--muted); }
+    .proj-task-status.inprogress { background: #FFF3CD; color: #856404; border-color: #FFDA6A; }
+    .proj-task-status.done { background: #D1E7DD; color: #0A3622; border-color: #A3CFBB; }
+    .proj-task-text { flex: 1; }
+    .proj-task-text.done { text-decoration: line-through; color: var(--muted); }
+    .proj-task-del {
+      color: var(--muted); cursor: pointer; opacity: 0; font-size: 0.85rem; transition: opacity 0.12s;
+    }
+    .proj-task:hover .proj-task-del { opacity: 1; }
+    .proj-milestones { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.5rem; }
+    .proj-milestone {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.83rem;
+    }
+    .proj-ms-check {
+      width: 15px; height: 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+    .proj-ms-check.done { background: var(--green-dark); border-color: var(--green-dark); color: #fff; }
+    .proj-ms-text { flex: 1; }
+    .proj-ms-text.done { text-decoration: line-through; color: var(--muted); }
+    .proj-ms-date { font-size: 0.72rem; color: var(--muted); flex-shrink: 0; }
+    .proj-ms-del {
+      color: var(--muted); cursor: pointer; opacity: 0; font-size: 0.85rem; transition: opacity 0.12s;
+    }
+    .proj-milestone:hover .proj-ms-del { opacity: 1; }
+    .proj-add-row {
+      display: flex; gap: 0.4rem; margin-top: 0.4rem;
+    }
+    .proj-add-input {
+      flex: 1;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+    }
+    .proj-add-input:focus { border-color: var(--green-mid); }
+    .proj-add-date {
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      width: 130px;
+    }
+    .proj-add-mini-btn {
+      padding: 0.35rem 0.75rem;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .proj-add-mini-btn:hover { background: var(--green-mid); }
+
+    /* Modal */
+    .proj-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .proj-modal-overlay.open { display: flex; }
+    .proj-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 420px;
+      max-width: 90vw;
+    }
+    .proj-modal h3 {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--green-dark);
+      margin-bottom: 1.25rem;
+    }
+    .proj-modal-field { margin-bottom: 0.85rem; }
+    .proj-modal-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+    .proj-modal-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+    }
+    .proj-modal-input:focus { border-color: var(--green-mid); }
+    .proj-modal-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+    .proj-modal-cancel {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .proj-modal-cancel:hover { border-color: var(--green-mid); color: var(--text); }
+    .proj-modal-save {
+      padding: 0.5rem 1.25rem;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .proj-modal-save:hover { background: var(--green-mid); }
 
     /* Calendar */
     .cal-card {
@@ -1295,6 +1602,9 @@
   <span class="nav-item" data-page="travel" onclick="showPage('travel',this)">
     <span class="nav-dot"></span>Travel
   </span>
+  <span class="nav-item" data-page="projects" onclick="showPage('projects',this)">
+    <span class="nav-dot"></span>Projects
+  </span>
   <span class="nav-item" data-page="people" onclick="showPage('people',this)">
     <span class="nav-dot"></span>People
   </span>
@@ -1330,6 +1640,15 @@
             </div>
           </div>
           <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <!-- Projects widget -->
+        <div class="proj-widget-card">
+          <div class="proj-widget-header">
+            <span class="proj-widget-title">Projects.</span>
+            <span class="proj-widget-link" onclick="showPage('projects',document.querySelector('[data-page=projects]'))">ดูทั้งหมด →</span>
+          </div>
+          <div class="proj-mini-list" id="proj-widget-list"></div>
         </div>
 
         <!-- Todo -->
@@ -1554,6 +1873,40 @@
         <div id="budget-cards"></div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Projects -->
+  <div id="page-projects" class="page">
+    <div class="page-inner narrow">
+      <div class="proj-page-header">
+        <div class="page-head" style="margin-bottom:0">
+          <h2>Projects.</h2>
+          <span class="count" id="proj-count"></span>
+        </div>
+        <button class="proj-add-btn" onclick="openProjModal()">+ New project</button>
+      </div>
+      <p class="page-sub">Long-term projects — tasks + milestones</p>
+      <div class="proj-cards" id="proj-cards"></div>
+    </div>
+  </div>
+
+  <!-- Add project modal -->
+  <div class="proj-modal-overlay" id="proj-modal">
+    <div class="proj-modal">
+      <h3>New project</h3>
+      <div class="proj-modal-field">
+        <label class="proj-modal-label">ชื่อ project</label>
+        <input class="proj-modal-input" id="proj-modal-name" type="text" placeholder="เช่น เว็บ goddiary">
+      </div>
+      <div class="proj-modal-field">
+        <label class="proj-modal-label">รายละเอียด (optional)</label>
+        <input class="proj-modal-input" id="proj-modal-desc" type="text" placeholder="เป้าหมายของ project นี้">
+      </div>
+      <div class="proj-modal-actions">
+        <button class="proj-modal-cancel" onclick="closeProjModal()">ยกเลิก</button>
+        <button class="proj-modal-save" onclick="saveNewProj()">สร้าง</button>
+      </div>
     </div>
   </div>
 
@@ -2718,6 +3071,228 @@
         : document.querySelector('#page-' + pageId + ' .page-inner');
       if (el) el.insertAdjacentHTML('beforeend', html);
     });
+  })();
+
+  // ── Projects ──
+  function getProjects() {
+    try { return JSON.parse(localStorage.getItem('gd_projects') || '[]'); } catch { return []; }
+  }
+  function saveProjects(p) { localStorage.setItem('gd_projects', JSON.stringify(p)); }
+
+  function projProgress(proj) {
+    if (!proj.tasks.length) return 0;
+    return Math.round(proj.tasks.filter(t => t.status === 'done').length / proj.tasks.length * 100);
+  }
+
+  const STATUS_LABEL = { todo: 'Todo', inprogress: 'In Progress', done: 'Done' };
+  const STATUS_CYCLE = { todo: 'inprogress', inprogress: 'done', done: 'todo' };
+
+  function renderProjects() {
+    const projs = getProjects();
+    const cards = document.getElementById('proj-cards');
+    const countEl = document.getElementById('proj-count');
+    if (countEl) countEl.textContent = projs.length + ' projects';
+    if (!cards) return;
+
+    cards.innerHTML = '';
+    if (!projs.length) {
+      cards.innerHTML = '<p style="color:var(--muted);font-size:0.85rem">ยังไม่มี project — กด New project เพื่อเริ่มค่ะ</p>';
+      return;
+    }
+
+    projs.forEach((proj, pi) => {
+      const pct = projProgress(proj);
+      const div = document.createElement('div');
+      div.className = 'proj-card';
+      div.innerHTML = `
+        <div class="proj-card-head">
+          <span class="proj-card-name">${proj.name}</span>
+          <div class="proj-card-actions">
+            <span class="proj-card-action" onclick="deleteProj(${pi})">ลบ</span>
+          </div>
+        </div>
+        ${proj.desc ? `<p class="proj-card-desc">${proj.desc}</p>` : ''}
+        <div class="proj-card-progress">
+          <div class="proj-progress-bar"><div class="proj-progress-fill" style="width:${pct}%"></div></div>
+          <span class="proj-progress-pct">${pct}%</span>
+        </div>
+
+        <div class="proj-section-label">Tasks</div>
+        <div class="proj-tasks" id="proj-tasks-${pi}"></div>
+        <div class="proj-add-row">
+          <input class="proj-add-input" id="proj-task-input-${pi}" type="text" placeholder="เพิ่ม task..." onkeydown="if(event.key==='Enter')addProjTask(${pi})">
+          <button class="proj-add-mini-btn" onclick="addProjTask(${pi})">+ เพิ่ม</button>
+        </div>
+
+        <div class="proj-section-label">Milestones</div>
+        <div class="proj-milestones" id="proj-ms-${pi}"></div>
+        <div class="proj-add-row">
+          <input class="proj-add-input" id="proj-ms-input-${pi}" type="text" placeholder="เพิ่ม milestone..." onkeydown="if(event.key==='Enter')addProjMs(${pi})">
+          <input class="proj-add-date" id="proj-ms-date-${pi}" type="date">
+          <button class="proj-add-mini-btn" onclick="addProjMs(${pi})">+ เพิ่ม</button>
+        </div>
+      `;
+      cards.appendChild(div);
+
+      // Tasks
+      const taskList = document.getElementById(`proj-tasks-${pi}`);
+      if (!proj.tasks.length) taskList.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);padding:0.25rem 0">ยังไม่มี task</div>';
+      proj.tasks.forEach((t, ti) => {
+        const el = document.createElement('div');
+        el.className = 'proj-task';
+        el.innerHTML = `
+          <span class="proj-task-status ${t.status}" onclick="cycleProjTask(${pi},${ti})">${STATUS_LABEL[t.status]}</span>
+          <span class="proj-task-text ${t.status === 'done' ? 'done' : ''}">${t.text}</span>
+          <span class="proj-task-del" onclick="deleteProjTask(${pi},${ti})">✕</span>
+        `;
+        taskList.appendChild(el);
+      });
+
+      // Milestones
+      const msList = document.getElementById(`proj-ms-${pi}`);
+      if (!proj.milestones.length) msList.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);padding:0.25rem 0">ยังไม่มี milestone</div>';
+      proj.milestones.forEach((m, mi) => {
+        const el = document.createElement('div');
+        el.className = 'proj-milestone';
+        el.innerHTML = `
+          <div class="proj-ms-check ${m.done ? 'done' : ''}" onclick="toggleProjMs(${pi},${mi})">${m.done ? '✓' : ''}</div>
+          <span class="proj-ms-text ${m.done ? 'done' : ''}">${m.text}</span>
+          ${m.date ? `<span class="proj-ms-date">${m.date}</span>` : ''}
+          <span class="proj-ms-del" onclick="deleteProjMs(${pi},${mi})">✕</span>
+        `;
+        msList.appendChild(el);
+      });
+    });
+
+    renderProjWidget();
+  }
+
+  function renderProjWidget() {
+    const projs = getProjects();
+    const list = document.getElementById('proj-widget-list');
+    if (!list) return;
+    if (!projs.length) {
+      list.innerHTML = '<div class="proj-empty">ยังไม่มี project</div>';
+      return;
+    }
+    list.innerHTML = '';
+    projs.slice(0, 4).forEach((proj, pi) => {
+      const pct = projProgress(proj);
+      const done = proj.tasks.filter(t => t.status === 'done').length;
+      const el = document.createElement('div');
+      el.className = 'proj-mini-item';
+      el.onclick = () => showPage('projects', document.querySelector('[data-page=projects]'));
+      el.innerHTML = `
+        <div class="proj-mini-name">${proj.name}</div>
+        <div class="proj-progress-bar"><div class="proj-progress-fill" style="width:${pct}%"></div></div>
+        <div class="proj-mini-meta">
+          <span>${done}/${proj.tasks.length} tasks</span>
+          <span>${pct}%</span>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  function openProjModal() {
+    document.getElementById('proj-modal').classList.add('open');
+    document.getElementById('proj-modal-name').focus();
+  }
+  function closeProjModal() {
+    document.getElementById('proj-modal').classList.remove('open');
+    document.getElementById('proj-modal-name').value = '';
+    document.getElementById('proj-modal-desc').value = '';
+  }
+  function saveNewProj() {
+    const name = document.getElementById('proj-modal-name').value.trim();
+    if (!name) return;
+    const projs = getProjects();
+    projs.push({ name, desc: document.getElementById('proj-modal-desc').value.trim(), tasks: [], milestones: [] });
+    saveProjects(projs);
+    closeProjModal();
+    renderProjects();
+  }
+  function deleteProj(pi) {
+    if (!confirm('ลบ project นี้?')) return;
+    const projs = getProjects();
+    projs.splice(pi, 1);
+    saveProjects(projs);
+    renderProjects();
+  }
+  function addProjTask(pi) {
+    const input = document.getElementById(`proj-task-input-${pi}`);
+    const text = input.value.trim();
+    if (!text) return;
+    const projs = getProjects();
+    projs[pi].tasks.push({ text, status: 'todo' });
+    saveProjects(projs);
+    input.value = '';
+    renderProjects();
+  }
+  function cycleProjTask(pi, ti) {
+    const projs = getProjects();
+    projs[pi].tasks[ti].status = STATUS_CYCLE[projs[pi].tasks[ti].status];
+    saveProjects(projs);
+    renderProjects();
+  }
+  function deleteProjTask(pi, ti) {
+    const projs = getProjects();
+    projs[pi].tasks.splice(ti, 1);
+    saveProjects(projs);
+    renderProjects();
+  }
+  function addProjMs(pi) {
+    const input = document.getElementById(`proj-ms-input-${pi}`);
+    const text = input.value.trim();
+    if (!text) return;
+    const date = document.getElementById(`proj-ms-date-${pi}`).value;
+    const projs = getProjects();
+    projs[pi].milestones.push({ text, date, done: false });
+    saveProjects(projs);
+    input.value = '';
+    renderProjects();
+  }
+  function toggleProjMs(pi, mi) {
+    const projs = getProjects();
+    projs[pi].milestones[mi].done = !projs[pi].milestones[mi].done;
+    saveProjects(projs);
+    renderProjects();
+  }
+  function deleteProjMs(pi, mi) {
+    const projs = getProjects();
+    projs[pi].milestones.splice(mi, 1);
+    saveProjects(projs);
+    renderProjects();
+  }
+
+  document.getElementById('proj-modal-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveNewProj(); });
+
+  // Seed initial projects
+  (function seedProjects() {
+    const SEED_KEY = 'gd_proj_seeded_v1';
+    if (localStorage.getItem(SEED_KEY)) { renderProjects(); return; }
+    const initial = [
+      {
+        name: 'เว็บ goddiary',
+        desc: 'Personal OS ของ Godji — deploy ที่ worlofgod.netlify.app',
+        tasks: [
+          { text: 'Setup GitHub + Netlify auto-deploy', status: 'done' },
+          { text: 'เพิ่ม Calendar + Todo list', status: 'done' },
+          { text: 'เพิ่ม Projects page', status: 'done' },
+          { text: 'เชื่อม backend (Firebase/Supabase)', status: 'todo' },
+        ],
+        milestones: []
+      },
+      {
+        name: 'คลิปสั้นจาก AI',
+        desc: 'YouTube AI shorts — สร้าง content จาก AI',
+        tasks: [],
+        milestones: []
+      }
+    ];
+    saveProjects(initial);
+    localStorage.setItem(SEED_KEY, '1');
+    renderProjects();
   })();
 
   // ── Calendar & Todo ──

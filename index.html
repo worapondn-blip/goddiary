@@ -1068,6 +1068,202 @@
     }
     .po-role { font-size: 0.78rem; color: var(--muted); }
     .po-desc { font-size: 0.875rem; color: var(--text); line-height: 1.65; }
+
+    /* ── Home widgets ── */
+    .home-widgets {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      align-items: start;
+    }
+
+    /* Calendar */
+    .cal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem 1.5rem;
+      width: 280px;
+    }
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .cal-title {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--green-dark);
+    }
+    .cal-nav {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .cal-nav button {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 26px; height: 26px;
+      cursor: pointer;
+      color: var(--green-mid);
+      font-size: 0.8rem;
+      line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.12s;
+    }
+    .cal-nav button:hover { background: var(--green-tag); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+    .cal-day-name {
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 0.2rem 0 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    .cal-day {
+      text-align: center;
+      font-size: 0.78rem;
+      padding: 0.3rem 0;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.12s;
+      position: relative;
+    }
+    .cal-day:hover { background: var(--green-tag); }
+    .cal-day.empty { cursor: default; }
+    .cal-day.empty:hover { background: none; }
+    .cal-day.today {
+      background: var(--green-dark);
+      color: #fff;
+      font-weight: 600;
+    }
+    .cal-day.selected:not(.today) {
+      background: var(--green-tag);
+      font-weight: 600;
+    }
+    .cal-day.has-todo::after {
+      content: '';
+      display: block;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--green-mid);
+      margin: 1px auto 0;
+    }
+    .cal-day.today.has-todo::after { background: rgba(255,255,255,0.7); }
+
+    /* Todo */
+    .todo-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem 1.5rem;
+      min-height: 240px;
+    }
+    .todo-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .todo-date-label {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--green-dark);
+    }
+    .todo-count {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .todo-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      min-height: 60px;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.85rem;
+    }
+    .todo-check {
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      transition: all 0.12s;
+    }
+    .todo-check.done {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+    .todo-text {
+      flex: 1;
+      cursor: pointer;
+    }
+    .todo-text.done { text-decoration: line-through; color: var(--muted); }
+    .todo-del {
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.12s;
+    }
+    .todo-item:hover .todo-del { opacity: 1; }
+    .todo-empty {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 1.25rem 0;
+    }
+    .todo-input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .todo-input {
+      flex: 1;
+      padding: 0.45rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.12s;
+    }
+    .todo-input:focus { border-color: var(--green-mid); }
+    .todo-add-btn {
+      padding: 0.45rem 1rem;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .todo-add-btn:hover { background: var(--green-mid); }
   </style>
 </head>
 <body>
@@ -1122,6 +1318,34 @@
           <span class="hero-btn" onclick="showPage('briefs',document.querySelector('[data-page=briefs]'))">Stock briefs</span>
         </div>
       </section>
+
+      <div class="home-widgets">
+        <!-- Calendar -->
+        <div class="cal-card">
+          <div class="cal-header">
+            <span class="cal-title" id="cal-title"></span>
+            <div class="cal-nav">
+              <button onclick="calMove(-1)">&#8249;</button>
+              <button onclick="calMove(1)">&#8250;</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <!-- Todo -->
+        <div class="todo-card">
+          <div class="todo-header">
+            <span class="todo-date-label" id="todo-date-label"></span>
+            <span class="todo-count" id="todo-count"></span>
+          </div>
+          <ul class="todo-list" id="todo-list"></ul>
+          <div class="todo-input-row">
+            <input class="todo-input" id="todo-input" type="text" placeholder="เพิ่ม todo..." onkeydown="if(event.key==='Enter')addTodo()">
+            <button class="todo-add-btn" onclick="addTodo()">+ เพิ่ม</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2494,6 +2718,160 @@
         : document.querySelector('#page-' + pageId + ' .page-inner');
       if (el) el.insertAdjacentHTML('beforeend', html);
     });
+  })();
+
+  // ── Calendar & Todo ──
+  const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const DAYS_TH = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+  let calYear, calMonth, selectedDate;
+
+  function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+  function getTodos(key) {
+    try { return JSON.parse(localStorage.getItem('todos_' + key) || '[]'); } catch { return []; }
+  }
+  function saveTodos(key, todos) {
+    localStorage.setItem('todos_' + key, JSON.stringify(todos));
+  }
+
+  function renderCal() {
+    const title = document.getElementById('cal-title');
+    const grid = document.getElementById('cal-grid');
+    if (!title || !grid) return;
+
+    title.textContent = MONTHS_TH[calMonth] + ' ' + (calYear + 543);
+    grid.innerHTML = '';
+
+    DAYS_TH.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-name';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    const today = new Date();
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day empty';
+      grid.appendChild(el);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div');
+      const key = dateKey(calYear, calMonth, d);
+      const isToday = calYear === today.getFullYear() && calMonth === today.getMonth() && d === today.getDate();
+      const isSelected = key === selectedDate;
+      const hasTodo = getTodos(key).length > 0;
+
+      el.className = 'cal-day' + (isToday ? ' today' : '') + (isSelected && !isToday ? ' selected' : '') + (hasTodo ? ' has-todo' : '');
+      el.textContent = d;
+      el.onclick = () => selectDate(calYear, calMonth, d);
+      grid.appendChild(el);
+    }
+  }
+
+  function selectDate(y, m, d) {
+    selectedDate = dateKey(y, m, d);
+    renderCal();
+    renderTodo();
+  }
+
+  function calMove(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0) { calMonth = 11; calYear--; }
+    renderCal();
+  }
+
+  function renderTodo() {
+    const label = document.getElementById('todo-date-label');
+    const countEl = document.getElementById('todo-count');
+    const list = document.getElementById('todo-list');
+    if (!label || !list) return;
+
+    const [y, m, d] = selectedDate.split('-').map(Number);
+    label.textContent = `${d} ${MONTHS_TH[m-1]} ${y + 543}`;
+
+    const todos = getTodos(selectedDate);
+    const done = todos.filter(t => t.done).length;
+    countEl.textContent = todos.length ? `${done}/${todos.length} เสร็จ` : '';
+
+    list.innerHTML = '';
+    if (!todos.length) {
+      list.innerHTML = '<li class="todo-empty">ยังไม่มี todo วันนี้</li>';
+      return;
+    }
+    todos.forEach((t, i) => {
+      const li = document.createElement('li');
+      li.className = 'todo-item';
+      li.innerHTML = `
+        <div class="todo-check ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">
+          ${t.done ? '✓' : ''}
+        </div>
+        <span class="todo-text ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">${t.text}</span>
+        <span class="todo-del" onclick="deleteTodo(${i})">✕</span>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  function addTodo() {
+    const input = document.getElementById('todo-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const todos = getTodos(selectedDate);
+    todos.push({ text, done: false });
+    saveTodos(selectedDate, todos);
+    input.value = '';
+    renderCal();
+    renderTodo();
+  }
+
+  function toggleTodo(i) {
+    const todos = getTodos(selectedDate);
+    todos[i].done = !todos[i].done;
+    saveTodos(selectedDate, todos);
+    renderTodo();
+  }
+
+  function deleteTodo(i) {
+    const todos = getTodos(selectedDate);
+    todos.splice(i, 1);
+    saveTodos(selectedDate, todos);
+    renderCal();
+    renderTodo();
+  }
+
+  // Backlog items — อัปเดตตรงนี้เพื่อเพิ่ม/ลบ backlog
+  const BACKLOG = [
+    'เชื่อม todo list กับ backend (Firebase/Supabase) ให้ June รู้ว่าติ๊กเสร็จแล้ว',
+  ];
+  const BACKLOG_KEY = 'backlog_seeded_v1';
+
+  function seedBacklog() {
+    if (localStorage.getItem(BACKLOG_KEY)) return;
+    const todayKey = dateKey(calYear, calMonth, new Date().getDate());
+    const existing = getTodos(todayKey);
+    BACKLOG.forEach(text => {
+      if (!existing.find(t => t.text === text)) existing.push({ text, done: false });
+    });
+    saveTodos(todayKey, existing);
+    localStorage.setItem(BACKLOG_KEY, '1');
+  }
+
+  // Init
+  (function initCalTodo() {
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    selectedDate = dateKey(calYear, calMonth, now.getDate());
+    seedBacklog();
+    renderCal();
+    renderTodo();
   })();
 </script>
 

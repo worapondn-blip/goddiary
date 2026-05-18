@@ -53,23 +53,26 @@
       }
       return r;
     }
-    async function load() {
+    function loadLocal() {
+      _c.projects   = lsGet('gd_projects', []);
+      _c.todos      = lsTodos();
+      _c.travel     = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
+      _c.trip_todos = lsTripTodos();
+    }
+    async function loadRemote() {
       try {
         var ss = await Promise.all([ref('projects').get(), ref('todos').get(), ref('travel').get(), ref('trip_todos').get()]);
-        _c.projects   = ss[0].exists ? (ss[0].data().items || []) : lsGet('gd_projects', []);
-        _c.todos      = ss[1].exists ? (ss[1].data().data  || {}) : lsTodos();
-        _c.travel     = ss[2].exists ? ss[2].data()               : lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
-        _c.trip_todos = ss[3].exists ? (ss[3].data().data  || {}) : lsTripTodos();
+        _c.projects   = ss[0].exists ? (ss[0].data().items || []) : _c.projects;
+        _c.todos      = ss[1].exists ? (ss[1].data().data  || {}) : _c.todos;
+        _c.travel     = ss[2].exists ? ss[2].data()               : _c.travel;
+        _c.trip_todos = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_todos;
       } catch(e) {
         console.warn('Firestore unavailable, using localStorage:', e);
-        _c.projects   = lsGet('gd_projects', []);
-        _c.todos      = lsTodos();
-        _c.travel     = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
-        _c.trip_todos = lsTripTodos();
       }
     }
     return {
-      load:         load,
+      loadLocal:    loadLocal,
+      loadRemote:   loadRemote,
       getProjects:  function()      { return _c.projects || []; },
       setProjects:  function(v)     { _c.projects = v; write('projects', { items: v }); },
       getTodos:     function(k)     { return (_c.todos || {})[k] || []; },
@@ -1333,7 +1336,8 @@
   document.getElementById('proj-modal-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveNewProj(); });
 
   async function initApp() {
-    await _db.load();
+    // render ทันทีจาก localStorage ก่อน
+    _db.loadLocal();
 
     const SEED_KEY = 'gd_proj_seeded_v1';
     if (!_db.getProjects().length && !localStorage.getItem(SEED_KEY)) {
@@ -1367,6 +1371,13 @@
     if (!localStorage.getItem('backlog_seeded_v1')) seedBacklog();
     renderCal();
     renderTodo();
+
+    // โหลด Firestore ตามหลัง แล้ว re-render ถ้ามีข้อมูลใหม่
+    _db.loadRemote().then(function() {
+      renderProjects();
+      renderCal();
+      renderTodo();
+    });
   }
 
   // ── Calendar & Todo ──

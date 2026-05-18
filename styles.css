@@ -14,26 +14,31 @@
       font-family: 'Mali';
       src: url('fonts/Mali-Regular.ttf') format('truetype');
       font-weight: 400;
+      font-display: swap;
     }
     @font-face {
       font-family: 'Mali';
       src: url('fonts/Mali-Medium.ttf') format('truetype');
       font-weight: 500;
+      font-display: swap;
     }
     @font-face {
       font-family: 'Mali';
       src: url('fonts/Mali-SemiBold.ttf') format('truetype');
       font-weight: 600;
+      font-display: swap;
     }
     @font-face {
       font-family: 'Mali';
       src: url('fonts/Mali-Bold.ttf') format('truetype');
       font-weight: 700;
+      font-display: swap;
     }
     @font-face {
       font-family: 'Caveat';
       src: url('fonts/Caveat-VariableFont_wght.ttf') format('truetype');
       font-weight: 100 900;
+      font-display: swap;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1009,7 +1014,7 @@
     body.sidebar-open .sidebar-toggle span:nth-child(2) { opacity: 0; }
     body.sidebar-open .sidebar-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-    @media (min-width: 641px) {
+    @media (min-width: 769px) {
       .sidebar {
         transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1), padding 0.28s;
         overflow: hidden;
@@ -1023,7 +1028,7 @@
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .sidebar {
         position: fixed;
         top: 0;
@@ -1467,6 +1472,7 @@
       border-radius: 16px;
       padding: 1.25rem 1.5rem 1.5rem;
       width: 280px;
+      max-width: 100%;
     }
     .cal-header {
       display: flex;

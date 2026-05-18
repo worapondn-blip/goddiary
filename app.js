@@ -83,7 +83,7 @@
 
   /* ── Sidebar toggle ── */
   function toggleSidebar() {
-    if (window.innerWidth > 640) {
+    if (window.innerWidth > 768) {
       var closed = document.body.classList.toggle('sidebar-closed');
       try { localStorage.setItem('sidebar', closed ? 'closed' : 'open'); } catch(e) {}
     } else {
@@ -94,7 +94,7 @@
 
   (function initSidebar() {
     try {
-      if (window.innerWidth > 640 && localStorage.getItem('sidebar') === 'closed') {
+      if (window.innerWidth > 768 && localStorage.getItem('sidebar') === 'closed') {
         document.body.classList.add('sidebar-closed');
       }
     } catch(e) {}

@@ -11,7 +11,19 @@
   const _auth = firebase.auth();
   let _currentUser = null;
 
+  function signIn() {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      _auth.signInWithRedirect(provider);
+    } else {
+      _auth.signInWithPopup(provider).catch(function() {
+        _auth.signInWithRedirect(provider);
+      });
+    }
+  }
+
   _auth.onAuthStateChanged(function(user) {
+    var justSignedIn = !_currentUser && !!user;
     _currentUser = user;
     var btn = document.getElementById('auth-btn');
     if (!btn) return;
@@ -19,10 +31,15 @@
       btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : 'Godji');
       btn.title = 'Sign out';
       btn.onclick = function() { _auth.signOut(); };
+      if (justSignedIn) {
+        _db.loadRemote().then(function() {
+          renderProjects(); renderCal(); renderTodo();
+        });
+      }
     } else {
       btn.textContent = 'Sign in';
       btn.title = '';
-      btn.onclick = function() { _auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); };
+      btn.onclick = signIn;
     }
   });
 

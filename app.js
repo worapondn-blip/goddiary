@@ -156,17 +156,6 @@
 
   window.addEventListener('popstate', handleHash);
 
-  (function initFromHash() {
-    var hash = location.hash.slice(1);
-    if (hash) {
-      handleHash();
-    } else {
-      requestAnimationFrame(function() { requestAnimationFrame(function() {
-        document.getElementById('page-home').classList.add('anim-ready');
-      }); });
-    }
-  })();
-
   /* ── Team flip cards ── */
   var teamData = [
     {
@@ -1840,3 +1829,13 @@
   }
 
   initApp();
+
+  // ต้องเรียกหลัง tripsData และ data arrays ทั้งหมดถูก assign แล้ว
+  var hash = location.hash.slice(1);
+  if (hash) {
+    handleHash();
+  } else {
+    requestAnimationFrame(function() { requestAnimationFrame(function() {
+      document.getElementById('page-home').classList.add('anim-ready');
+    }); });
+  }

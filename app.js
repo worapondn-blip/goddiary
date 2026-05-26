@@ -103,6 +103,23 @@
     } catch(e) {}
   })();
 
+  /* ── Dark mode ── */
+  function toggleDarkMode() {
+    var isDark = document.body.classList.toggle('dark');
+    try { localStorage.setItem('darkMode', isDark ? '1' : '0'); } catch(e) {}
+    var btn = document.getElementById('dark-btn');
+    if (btn) btn.textContent = isDark ? '☀' : '☽';
+  }
+  (function initDarkMode() {
+    try {
+      if (localStorage.getItem('darkMode') === '1') {
+        document.body.classList.add('dark');
+        var btn = document.getElementById('dark-btn');
+        if (btn) btn.textContent = '☀';
+      }
+    } catch(e) {}
+  })();
+
   /* ── Navigation ── */
   function showPage(pageId, linkEl, noHistory) {
     var pageEl = document.getElementById('page-' + pageId);
@@ -1527,10 +1544,10 @@
       const li = document.createElement('li');
       li.className = 'todo-item';
       li.innerHTML = `
-        <div class="todo-check ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">
+        <div class="todo-check ${t.done ? 'done' : ''}" onclick="toggleHomeTodo(${i})">
           ${t.done ? '✓' : ''}
         </div>
-        <span class="todo-text ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">${t.text}</span>
+        <span class="todo-text ${t.done ? 'done' : ''}" onclick="toggleHomeTodo(${i})">${t.text}</span>
         <span class="todo-del" onclick="deleteTodo(${i})">✕</span>
       `;
       list.appendChild(li);
@@ -1549,7 +1566,7 @@
     renderTodo();
   }
 
-  function toggleTodo(i) {
+  function toggleHomeTodo(i) {
     const todos = getTodos(selectedDate);
     todos[i].done = !todos[i].done;
     saveTodos(selectedDate, todos);

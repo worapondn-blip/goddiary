@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Godji's OS</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -47,10 +47,12 @@
     <span class="nav-dot"></span>People
   </span>
 
+  <div class="sidebar-controls">
+    <span id="auth-btn">Sign in</span>
+    <span id="dark-btn" onclick="toggleDarkMode()">☽ Dark</span>
+  </div>
   <div class="sidebar-spacer"></div>
   <div class="sidebar-footer">
-    <span id="auth-btn">Sign in</span>
-    <span id="dark-btn" onclick="toggleDarkMode()" title="Dark / Light mode">☽</span>
     <span>2026</span>
   </div>
 </aside>

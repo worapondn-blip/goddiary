@@ -50,6 +50,7 @@
       line-height: 1.6;
       display: flex;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -59,6 +60,7 @@
       flex-shrink: 0;
       background: var(--green-side);
       height: 100vh;
+      height: 100dvh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -122,19 +124,31 @@
       justify-content: space-between;
       align-items: center;
     }
-    #auth-btn {
-      cursor: pointer;
-      color: rgba(255,255,255,0.25);
-      font-size: 0.62rem;
-      transition: color 0.15s;
+    /* ── Sidebar controls (auth + dark mode) ── */
+    .sidebar-controls {
+      margin-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 0.35rem;
     }
-    #auth-btn:hover { color: rgba(255,255,255,0.55); }
+    #auth-btn, #dark-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.45rem 1rem 0.45rem 1.25rem;
+      font-size: 0.83rem;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.13s;
+    }
+    #auth-btn:hover, #dark-btn:hover { color: rgba(255,255,255,0.8); }
 
     /* ── Main scroll area ── */
     .main {
       flex: 1;
       min-width: 0;
       height: 100vh;
+      height: 100dvh;
       overflow-y: auto;
       background: var(--bg);
     }
@@ -1035,13 +1049,14 @@
         z-index: 200;
         transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         height: 100vh;
+        height: 100dvh;
         overflow: visible;
       }
       body.sidebar-open .sidebar { left: 0; }
       body.sidebar-open .sidebar-backdrop { display: block; }
       .sidebar-toggle { left: 0.85rem; }
       body.sidebar-open .sidebar-toggle { left: calc(170px - 44px); }
-      .page-inner { padding: 4rem 1.25rem 3rem; }
+      .page-inner { padding: 4rem 1.25rem calc(3rem + env(safe-area-inset-bottom)); }
       .trip-detail-layout { grid-template-columns: 1fr; }
       .trip-detail-aside { position: static; }
       .pipeline-box { padding: 0 0.75rem; }
@@ -1050,10 +1065,9 @@
       .pl-members { flex-direction: column; }
       .pipe-card { min-width: 0; max-width: 100%; }
       .hero { padding: 1.5rem 0 1rem; }
-      .home-widgets { grid-template-columns: 1fr; gap: 1rem; }
-      .cal-card { width: 100%; order: 1; }
-      .todo-card { min-width: 0; order: 2; }
-      .proj-widget-card { min-width: 0; order: 3; }
+      .cal-card { width: 100%; }
+      .todo-card { min-width: 0; }
+      .proj-widget-card { min-width: 0; }
       .travel-stats { flex-wrap: wrap; gap: 1rem; }
       .travel-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
@@ -1150,13 +1164,19 @@
     .po-role { font-size: 0.78rem; color: var(--muted); }
     .po-desc { font-size: 0.875rem; color: var(--text); line-height: 1.65; }
 
-    /* ── Home widgets ── */
+    /* ── Home widgets — mobile-first, stack vertically ── */
     .home-widgets {
       display: grid;
-      grid-template-columns: auto 2fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
       margin-top: 2rem;
       align-items: start;
+    }
+    @media (min-width: 769px) {
+      .home-widgets {
+        grid-template-columns: auto 2fr 1fr;
+        gap: 1.5rem;
+      }
     }
 
     /* Projects widget (home) */
@@ -1653,17 +1673,6 @@
       transition: background 0.12s;
     }
     .todo-add-btn:hover { background: var(--green-mid); }
-
-    /* ── Dark mode button ── */
-    #dark-btn {
-      cursor: pointer;
-      color: rgba(255,255,255,0.3);
-      font-size: 0.85rem;
-      line-height: 1;
-      transition: color 0.15s;
-      user-select: none;
-    }
-    #dark-btn:hover { color: rgba(255,255,255,0.7); }
 
     /* ── Dark mode ── */
     body.dark {

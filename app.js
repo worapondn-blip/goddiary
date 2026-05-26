@@ -108,14 +108,14 @@
     var isDark = document.body.classList.toggle('dark');
     try { localStorage.setItem('darkMode', isDark ? '1' : '0'); } catch(e) {}
     var btn = document.getElementById('dark-btn');
-    if (btn) btn.textContent = isDark ? '☀' : '☽';
+    if (btn) btn.textContent = isDark ? '☀ Light' : '☽ Dark';
   }
   (function initDarkMode() {
     try {
       if (localStorage.getItem('darkMode') === '1') {
         document.body.classList.add('dark');
         var btn = document.getElementById('dark-btn');
-        if (btn) btn.textContent = '☀';
+        if (btn) btn.textContent = '☀ Light';
       }
     } catch(e) {}
   })();

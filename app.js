@@ -74,13 +74,13 @@
       loadLocal:    loadLocal,
       loadRemote:   loadRemote,
       getProjects:  function()      { return _c.projects || []; },
-      setProjects:  function(v)     { _c.projects = v; write('projects', { items: v }); },
+      setProjects:  function(v)     { _c.projects = v; try { localStorage.setItem('gd_projects', JSON.stringify(v)); } catch {} write('projects', { items: v }); },
       getTodos:     function(k)     { return (_c.todos || {})[k] || []; },
-      setTodos:     function(k, v)  { if (!_c.todos) _c.todos = {}; _c.todos[k] = v; write('todos', { data: _c.todos }); },
+      setTodos:     function(k, v)  { if (!_c.todos) _c.todos = {}; _c.todos[k] = v; try { localStorage.setItem('todos_' + k, JSON.stringify(v)); } catch {} write('todos', { data: _c.todos }); },
       getTravel:    function()      { return _c.travel || { wishlist:[], visited:[], budgets:[] }; },
-      setTravel:    function(v)     { _c.travel = v; write('travel', v); },
+      setTravel:    function(v)     { _c.travel = v; try { localStorage.setItem('godji_travel', JSON.stringify(v)); } catch {} write('travel', v); },
       getTripTodos: function(id)    { return (_c.trip_todos || {})[id] || {}; },
-      setTripTodos: function(id, v) { if (!_c.trip_todos) _c.trip_todos = {}; _c.trip_todos[id] = v; write('trip_todos', { data: _c.trip_todos }); }
+      setTripTodos: function(id, v) { if (!_c.trip_todos) _c.trip_todos = {}; _c.trip_todos[id] = v; try { localStorage.setItem('godji_todos_' + id, JSON.stringify(v)); } catch {} write('trip_todos', { data: _c.trip_todos }); }
     };
   })();
 
@@ -357,90 +357,130 @@
       ]
     },
     {
+      id: 'phuphaman', status: 'planning',
+      name: 'ภูเวียง → ภูผาม่าน → เชียงคาน', dates: '31 พ.ค. – 2 มิ.ย. 2569',
+      companions: 'ซิโบเล็ต ซิโบติ้ว', duration: '3 วัน 2 คืน',
+      startDate: '2026-05-31',
+      companionIds: ['peet', 'tong', 'boat'],
+      todos: [
+        { id: 'tatfa',    text: 'โทรเช็คน้ำตกตาดฟ้า ก่อนไป (043-358-073)',     deadline: '30 พ.ค.' },
+        { id: 'raft',     text: 'จองล่องแพอ่างเก็บน้ำห้วยม่วง',               deadline: '28 พ.ค.' },
+        { id: 'haina',    text: 'จองที่พัก Hai-Na Garden House (096-640-2999)', deadline: '28 พ.ค.' },
+        { id: 'homestay', text: 'จองที่พัก ตาหน่วมโฮมสเตย์ เชียงคาน',         deadline: '28 พ.ค.' },
+        { id: 'cafe',     text: 'หาคาเฟ่ใกล้ 7-Eleven ออนซอน ภูผาม่าน',       deadline: '30 พ.ค.' },
+        { id: 'car',      text: 'เช็คสภาพรถก่อนออก',                           deadline: '30 พ.ค.' },
+        { id: 'money',    text: 'เตรียมเงินสด',                                 deadline: '30 พ.ค.' }
+      ],
+      budget: [
+        { label: 'น้ำมัน (ขอนแก่น–เชียงคาน round trip ~550 กม.)', amount: '~1,100 บาท' },
+        { label: 'ที่พัก 2 คืน',                                    amount: '~1,600 บาท' },
+        { label: 'อาหาร (3 วัน ~3 มื้อ/วัน)',                      amount: '~1,500 บาท' },
+        { label: 'ค่าเข้าอุทยานฯ ภูเวียง',                         amount: '~100 บาท' },
+        { label: 'ล่องแพอ่างเก็บน้ำห้วยม่วง',                      amount: '~200 บาท' },
+        { label: 'ล่องเรือโขง + ปั่นจักรยาน',                      amount: '~150 บาท' },
+        { label: 'Skywalk + ฟาร์มแกะ',                              amount: '~160 บาท' },
+        { label: 'กาแฟ + ของฝาก',                                   amount: '~500 บาท' },
+        { label: 'รวม (ประมาณ)',                                     amount: '~5,310 บาท', total: true }
+      ],
+      notes: [
+        'น้ำตกตาดฟ้า: ปลายพ.ค. น้ำน้อย โทรเช็คก่อน 043-358-073',
+        'ถ้ำพญานาคราช: วันอาทิตย์ รอบเช้าเดียวเท่านั้น — อย่าไปสาย | โทร 043-001-753',
+        'Somewhere cafe (Day 2 08:00): ยังไม่ได้หาร้าน ต้องหาก่อนออกทริป',
+        'บ้านติดดิน: ปิดทุกวันพุธ — 2 มิ.ย. = จันทร์ เปิดปกติ ✓ | โทร 088-022-2999'
+      ],
+      days: [
+        { label: 'Day 1', date: 'เสาร์ 31 พ.ค.', place: 'ภูเวียง + น้ำตกตาดฟ้า + อ่างเก็บน้ำห้วยม่วง', items: [
+          { time: '07:30', text: 'ออกจากขอนแก่น → อุทยานแห่งชาติภูเวียง', transit: '~1.5 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Phu+Wiang+National+Park+Khon+Kaen' },
+          { time: '09:00', text: 'อุทยานแห่งชาติภูเวียง — เส้นทางฟอสซิลไดโนเสาร์', duration: '~2 ชม.', transit: '~30 นาที', note: 'เปิด 08:30–16:30', url: 'https://www.google.com/maps/search/?api=1&query=Phu+Wiang+National+Park+Khon+Kaen' },
+          { time: '11:00', text: 'น้ำตกตาดฟ้า — รับประทานอาหาร', duration: '~1 ชม.', note: '⚠️ ปลายพ.ค. น้ำน้อย โทรเช็ค 043-358-073', url: 'https://www.google.com/maps/search/?api=1&query=Tat+Fa+Waterfall+Phu+Wiang+Khon+Kaen' },
+          { time: '12:00', text: 'เล่นน้ำ', duration: '1 ชม.', transit: '~2 ชม.' },
+          { time: '15:00', text: 'อ่างเก็บน้ำห้วยม่วง — ล่องแพ', duration: '~2 ชม.', transit: '~30 นาที', url: 'https://www.google.com/maps/search/?api=1&query=Huai+Muang+Reservoir+Khon+Kaen' },
+          { time: '17:30', text: 'ฮักผาม่าน — รับประทานอาหาร', duration: '3 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Hug+Pha+Man+Restaurant+Phuphaman+Khon+Kaen' },
+          { time: '20:30', text: 'เช็คอิน Hai-Na Garden House', note: 'โทร 096-640-2999', url: 'https://www.google.com/maps/search/?api=1&query=Hai+Na+Garden+House+Phuphaman+Khon+Kaen' }
+        ]},
+        { label: 'Day 2', date: 'อาทิตย์ 1 มิ.ย.', place: 'ภูผาม่าน → ร้านฮักฮูก → เชียงคาน', items: [
+          { time: '06:00', text: 'Check out Hai-Na Garden House', transit: '~1.5 ชม.' },
+          { time: '07:30', text: '7-Eleven สาขาออนซอน ภูผาม่าน', note: 'จุดถ่ายรูป วิวภูเขา' },
+          { time: '08:00', text: 'Somewhere cafe', transit: '~1 ชม.', note: '⚠️ ยังไม่ได้หาร้าน — เช็คก่อนออกทริป' },
+          { time: '10:00', text: 'ถ้ำพญานาคราช', duration: '~1 ชม.', transit: '~20 นาที', note: '⚠️ วันอาทิตย์ รอบเช้าเดียว ONLY | โทร 043-001-753',
+            details: 'วันอาทิตย์เปิดเฉพาะรอบเช้าเท่านั้น วันธรรมดาเปิดรอบ 13:30', url: 'https://www.google.com/maps/search/?api=1&query=Phaya+Nakarat+Cave+Phuphaman+Khon+Kaen' },
+          { time: '12:00', text: 'ร้านฮักฮูก — รับประทานอาหาร', duration: '~1.5 ชม.', transit: '~3 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=ร้านฮักฮูก+ภูผาม่าน+ขอนแก่น' },
+          { time: '16:30', text: 'ล่องเรือชมโขง + ปั่นจักรยาน', duration: '~2 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Kaeng+Khut+Khu+Chiang+Khan+Loei' },
+          { time: '18:30', text: 'ถนนคนเดินเชียงคาน — หมูกระทะ', duration: '~2 ชม.', note: 'เปิด 17:00–22:00', url: 'https://www.google.com/maps/search/?api=1&query=Chiang+Khan+Walking+Street+Loei' },
+          { time: '20:30', text: 'FREE TIME', duration: '1.5 ชม.' },
+          { time: '22:00', text: 'เช็คอิน ตาหน่วมโฮมสเตย์ เชียงคาน', url: 'https://www.google.com/maps/search/?api=1&query=ตาหน่วมโฮมสเตย์+เชียงคาน+เลย' }
+        ]},
+        { label: 'Day 3', date: 'จันทร์ 2 มิ.ย.', place: 'ทะเลหมอก + ตักบาตร + Skywalk → กลับขอนแก่น', items: [
+          { time: '04:00', text: 'เตรียมตัวดูทะเลหมอก' },
+          { time: '05:00', text: 'ดูหมอกเช้า + ตักบาตร', duration: '1 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Phu+Thok+Viewpoint+Chiang+Khan+Loei' },
+          { time: '06:00', text: 'กลับที่พัก' },
+          { time: '06:30', text: 'กินข้าวเช้า' },
+          { time: '08:00', text: 'Check out' },
+          { time: '09:00', text: 'บ้านติดดิน คาเฟ่เชียงคาน', duration: '~1.5 ชม.', transit: '~30 นาที', note: 'คาเฟ่ริมโขง | เปิด จ–อา (ปิดพุธ) | โทร 088-022-2999', url: 'https://www.google.com/maps/search/?api=1&query=Baan+Tid+Din+Cafe+Chiang+Khan' },
+          { time: '10:30', text: 'สกายวอร์คเชียงคาน', duration: '~30 นาที', transit: '~20 นาที', note: '60 บาท (รวมรถรับส่ง + ถุงคลุมรองเท้า) | เปิด 07:00–18:00', url: 'https://www.google.com/maps/search/?api=1&query=Skywalk+Chiang+Khan+Loei' },
+          { time: '11:20', text: 'ฟาร์มแกะ', duration: '~20 นาที', transit: '~10 นาที', note: '100 บาท | โทร 062-551-4939', url: 'https://www.google.com/maps/search/?api=1&query=Sheep+Farm+Chiang+Khan+Loei' },
+          { time: '12:10', text: 'ร้านตำดี มีหม้อ', duration: '~1.5 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=ตำดีมีหม้อ+เชียงคาน+เลย' },
+          { time: '13:30', text: 'วัดถ้ำผาหมากฮ่อ', duration: '~1.5 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=วัดถ้ำผาหมากฮ่อ+เชียงคาน+เลย' },
+          { time: '15:00', text: 'เดินทางกลับขอนแก่น', transit: '~4 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Khon+Kaen' },
+          { time: '19:00', text: 'ถึงขอนแก่น' }
+        ]}
+      ]
+    },
+    {
       id: 'laos', status: 'planning',
       name: 'ลาว — โบลาเวน + ตาดฟาน', dates: '31 พ.ค. – 2 มิ.ย. 2569',
       companions: 'ซิโบเล็ต ซิโบติ้ว', duration: '3 วัน 2 คืน',
       startDate: '2026-05-31',
       companionIds: ['peet', 'tong', 'boat'],
       todos: [
-        { id: 'friends',  text: 'ตกลงวัน + จำนวนคนกับซิโบ',                  deadline: '18 พ.ค.' },
-        { id: 'zipline',  text: 'จองซิปไลน์ตาดฟาน (Green Discovery Laos)',   deadline: '20 พ.ค.' },
-        { id: 'passport', text: 'ทำ passport — ซิโบทุกคน',                   deadline: '20 พ.ค.' },
-        { id: 'hotel',    text: 'จองที่พัก ปากซอง / โบลาเวน',               deadline: '22 พ.ค.' },
-        { id: 'car',      text: 'เช็คสภาพรถก่อนออก',                         deadline: '29 พ.ค.' },
-        { id: 'money',    text: 'แลกเงิน (บาทรับได้ส่วนใหญ่)',               deadline: '30 พ.ค.' }
+        { id: 'laos-confirm', text: 'ตกลงวัน + จำนวนคนกับซิโบ',                              deadline: '18 พ.ค.' },
+        { id: 'laos-zip',     text: 'จองซิปไลน์ตาดฟาน ผ่าน Green Discovery Laos',            deadline: '20 พ.ค.' },
+        { id: 'laos-pp',      text: 'ทำ passport — ซิโบทุกคน (ใช้บัตรประชาชนไม่ได้)',        deadline: '20 พ.ค.' },
+        { id: 'laos-hotel',   text: 'จองที่พัก ปากซอง',                                       deadline: '22 พ.ค.' },
+        { id: 'laos-car',     text: 'เช็คสภาพรถก่อนออก',                                      deadline: '29 พ.ค.' },
+        { id: 'laos-money',   text: 'แลกเงิน (บาทรับได้ส่วนใหญ่ ไม่ต้องแลกกีบทั้งหมด)',    deadline: '30 พ.ค.' }
       ],
       budget: [
-        { label: 'เชื้อเพลิง (หาร 4 คน ขอนแก่น–อุบล–กลับ)', amount: '~600 บาท' },
+        { label: 'เชื้อเพลิง (หาร 4 คน ขอนแก่น–อุบล–กลับ)',  amount: '~600 บาท' },
         { label: 'ค่าข้ามแดน ช่องเม็ก',                        amount: '~150 บาท' },
-        { label: 'ที่พัก (2 คืน ปากซอง)',                      amount: '~1,200 บาท' },
-        { label: 'อาหาร (6 มื้อ)',                              amount: '~900 บาท' },
-        { label: 'ซิปไลน์ตาดฟาน',                              amount: '~1,500–2,000 บาท' },
+        { label: 'ที่พัก 2 คืน ปากซอง',                        amount: '~1,200 บาท' },
+        { label: 'อาหาร 6 มื้อ',                               amount: '~900 บาท' },
+        { label: 'ซิปไลน์ตาดฟาน (Green Discovery Laos)',       amount: '~1,500–2,000 บาท' },
         { label: 'ค่าเข้าชม / น้ำตก',                          amount: '~200 บาท' },
         { label: 'กาแฟลาว + ของฝาก',                           amount: '~400 บาท' },
-        { label: 'รวม (ประมาณ)',                                amount: '~5,000 บาท', total: true }
+        { label: 'รวม (ต่อคน)',                                  amount: '~5,000 บาท', total: true }
       ],
       notes: [
         'คนไทยไม่ต้อง visa เข้าลาว',
-        'ต้องใช้ passport เท่านั้น (บัตรประชาชนใช้ไม่ได้)',
-        'จองซิปไลน์ล่วงหน้าผ่าน Green Discovery Laos — slot เต็มเร็วมาก',
-        'โบลาเวนอากาศเย็น ~20°C — เตรียมเสื้อกันหนาวด้วย',
-        'ร้านค้าส่วนใหญ่รับบาทไทยได้ — ไม่ต้องแลกกีบทั้งหมด'
+        'ใช้ passport เท่านั้น — บัตรประชาชนใช้ไม่ได้',
+        'จองซิปไลน์ผ่าน Green Discovery Laos ล่วงหน้า — slot เต็วเร็วมาก',
+        'โบลาเวนอากาศเย็น ~20°C — เตรียมเสื้อกันหนาว',
+        'ร้านค้าส่วนใหญ่รับบาทไทย ไม่ต้องแลกกีบทั้งหมด'
       ],
       days: [
-        { label: 'Day 1', date: 'เสาร์ 31 พ.ค.', place: 'เดินทาง + โบลาเวน', items: [
-          { time: '06:00', text: 'ออกจากขอนแก่น', note: 'มุ่งหน้าอุบลราชธานี ~175 กม. / ~2.5 ชม.' },
-          { time: '10:30', text: 'ด่านช่องเม็ก', note: 'ข้ามแดนเข้าลาวฝั่งวังเตา', url: 'https://www.google.com/maps/search/?api=1&query=Chong+Mek+Border+Crossing+Ubon+Thailand' },
-          { time: '11:30', text: 'เมืองปากเซ — แวะกินข้าว', note: 'เมืองหลักลาวใต้', url: 'https://www.google.com/maps/search/?api=1&query=Pakse+Champasak+Laos',
-            details: 'ปากเซเป็นเมืองหลักของแขวงจำปาสัก ลาวใต้ มีถนนริมน้ำโขงสวยและอาหารลาวอร่อย แวะกินข้าวเหนียวไก่ย่างหรือข้าวเหนียวส้มตำก่อนขึ้นโบลาเวน' },
-          { time: '13:30', text: 'เดินทางต่อขึ้นโบลาเวน', note: 'ปากเซ → ปากซอง ~1.5 ชม.' },
-          { time: '15:30', text: 'เช็คอิน ปากซอง', note: 'บนที่ราบสูงโบลาเวน อากาศเย็น ~20°C', url: 'https://www.google.com/maps/search/?api=1&query=Paksong+Bolaven+Plateau+Laos',
-            details: 'ปากซองตั้งอยู่บนที่ราบสูงโบลาเวน สูงจากระดับน้ำทะเล ~1,000 ม. อากาศเย็นสบาย ล้อมรอบด้วยไร่กาแฟ ชา และน้ำตก เป็นฐานที่ดีที่สุดในการสำรวจโบลาเวน' },
-          { time: '17:00', text: 'เดินสวนกาแฟยามเย็น', note: 'โบลาเวนขึ้นชื่อเรื่องกาแฟอาราบิก้าระดับโลก' },
-          { time: '19:00', text: 'กินข้าวเย็น ปากซอง' }
+        { label: 'Day 1', date: 'เสาร์ 31 พ.ค.', place: 'ขอนแก่น → ช่องเม็ก → ปากซอง', items: [
+          { time: '06:00', text: 'ออกจากขอนแก่น → อุบลราชธานี', note: '~175 กม. ~2.5 ชม.', url: 'https://www.google.com/maps/search/?api=1&query=Ubon+Ratchathani' },
+          { time: '10:30', text: 'ด่านช่องเม็ก — ข้ามแดนเข้าลาว', note: 'ต้องใช้ passport', url: 'https://www.google.com/maps/search/?api=1&query=Chong+Mek+Border+Crossing+Ubon+Ratchathani' },
+          { time: '11:30', text: 'เมืองปากเซ — กินข้าวเที่ยง', url: 'https://www.google.com/maps/search/?api=1&query=Pakse+Laos' },
+          { time: '15:30', text: 'เช็คอิน ปากซอง', note: '~1.5 ชม. จากปากเซ | อากาศเย็น ~20°C', url: 'https://www.google.com/maps/search/?api=1&query=Paksong+Laos' },
+          { time: '17:00', text: 'เดินสวนกาแฟยามเย็น' },
+          { time: '19:00', text: 'กินข้าวเย็น ปากซอง', note: '~120 บาท' }
         ]},
-        { label: 'Day 2', date: 'อาทิตย์ 1 มิ.ย.', place: 'วันกิจกรรม (Highlight)', items: [
-          { time: '07:00', text: 'ซิปไลน์ตาดฟาน', note: 'ต้องจองล่วงหน้า — Green Discovery Laos', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Fane+Zipline+Paksong+Laos',
-            details: 'หนึ่งในซิปไลน์ที่ระทึกที่สุดใน SEA — บินข้ามน้ำตกตาดฟานสูง 120 ม. ความยาวกว่า 1.5 กม. ผ่านเหนือผืนป่าโบลาเวน ราคาประมาณ 1,500–2,000 บาท/คน ต้องจองผ่าน Green Discovery Laos ล่วงหน้า (greendiscoverylaos.com)' },
-          { time: '10:00', text: 'น้ำตกตาดฟาน — จุดชมวิว', note: 'น้ำตกคู่สูง 120 ม. ช่วง พ.ค.–ต.ค. น้ำเยอะมาก', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Fane+Waterfall+Paksong+Laos',
-            details: 'น้ำตกคู่ที่ตกลงสู่หุบเหวลึก 120 เมตร หนึ่งในน้ำตกที่สวยที่สุดในลาว ชมได้จากจุดชมวิวของ Tad Fane Resort ช่วงหน้าฝน (พ.ค.–ต.ค.) น้ำมากและพ่นละอองไกลมาก' },
+        { label: 'Day 2', date: 'อาทิตย์ 1 มิ.ย.', place: 'โบลาเวน — Highlight Day', items: [
+          { time: '07:00', text: 'ซิปไลน์ตาดฟาน', note: 'ต้องจองล่วงหน้า Green Discovery Laos | ~1,500–2,000 บาท', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Fane+Zipline+Bolaven+Plateau+Laos' },
+          { time: '10:00', text: 'น้ำตกตาดฟาน — จุดชมวิว', note: 'น้ำตกคู่สูง 120 ม.', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Fane+Waterfall+Laos' },
           { time: '12:00', text: 'กินข้าวกลางวัน', note: '~120 บาท' },
-          { time: '14:00', text: 'น้ำตกตาดเยือง', note: 'เดินป่าสั้นๆ ~20 นาที เล่นน้ำได้', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Yueng+Waterfall+Paksong+Laos',
-            details: 'น้ำตกในป่าโบลาเวนที่เข้าถึงง่าย เดินป่าสั้นๆ ประมาณ 20 นาที น้ำใสเย็นเล่นได้ เงียบสงบ ฟรี (หรือค่าเข้าน้อยมาก)' },
-          { time: '16:00', text: 'ไร่กาแฟโบลาเวน + ชิม + sunset', url: 'https://www.google.com/maps/search/?api=1&query=Bolaven+Plateau+Coffee+Farm+Laos',
-            details: 'โบลาเวนขึ้นชื่อว่าผลิตกาแฟอาราบิก้าชั้นยอดระดับโลก ดินภูเขาไฟและอากาศเย็นทำให้รสชาติเป็นเอกลักษณ์ ซื้อกาแฟคั่วสดกลับบ้านได้ราคาถูกมาก' },
+          { time: '14:00', text: 'น้ำตกตาดเยือง — เล่นน้ำ', note: 'เดินป่า ~20 นาที | ฟรี', url: 'https://www.google.com/maps/search/?api=1&query=Tad+Yuang+Waterfall+Laos' },
+          { time: '16:00', text: 'ไร่กาแฟ + ชิม + ชม sunset', url: 'https://www.google.com/maps/search/?api=1&query=Bolaven+Plateau+Coffee+Farm+Laos' },
           { time: '19:00', text: 'กินข้าวเย็น + พักผ่อน' }
         ]},
-        { label: 'Day 3', date: 'จันทร์ 2 มิ.ย.', place: 'วิวเช้า + เดินทางกลับ', items: [
+        { label: 'Day 3', date: 'จันทร์ 2 มิ.ย.', place: 'วิวเช้า + เดินทางกลับขอนแก่น', items: [
           { time: '07:00', text: 'Check out' },
-          { time: '07:30', text: 'ชมหมอกเช้าโบลาเวน', note: 'วิวสวยสุดตอนเช้าหน้าฝน',
-            details: 'เช้าตรู่บนโบลาเวนในช่วงหน้าฝนจะมีหมอกปกคลุมทะเลต้นไม้ วิวสวยมาก อุณหภูมิประมาณ 15-18°C ใส่เสื้อกันหนาวด้วยนะ' },
-          { time: '08:30', text: 'ซื้อกาแฟลาว + ของฝาก', note: 'กาแฟ Jhai หรือ Dao Coffee ขึ้นชื่อ', url: 'https://www.google.com/maps/search/?api=1&query=Jhai+Coffee+House+Paksong+Laos' },
-          { time: '10:00', text: 'เดินทางกลับ (ปากซอง → ช่องเม็ก → ขอนแก่น)', note: '~5 ชม. ถึงขอนแก่นประมาณ 15:00-16:00' }
+          { time: '07:30', text: 'ชมหมอกเช้าโบลาเวน', note: 'วิวสวยมากช่วงหน้าฝน' },
+          { time: '08:30', text: 'ซื้อกาแฟลาว + ของฝาก', note: 'Jhai Coffee / Dao Coffee' },
+          { time: '10:00', text: 'เดินทางกลับขอนแก่น', note: 'ปากซอง → ช่องเม็ก → ขอนแก่น | ถึง ~15:00–16:00', url: 'https://www.google.com/maps/search/?api=1&query=Khon+Kaen' }
         ]}
-      ],
-      passportGuide: {
-        deadline: '⚠️ ยื่นขอด่วน! ซิโบทุกคนยื่นก่อน 20 พ.ค. นี้ — จะได้ทันก่อนออกเดินทาง 31 พ.ค.',
-        location: 'สำนักงานกงสุลจังหวัดขอนแก่น · ศาลากลางจังหวัด ชั้น 2 ถ.ศูนย์ราชการ ขอนแก่น',
-        locationUrl: 'https://www.google.com/maps/search/?api=1&query=Khon+Kaen+Provincial+Hall',
-        docs: [
-          'บัตรประชาชนตัวจริง (บุคคลทั่วไปอายุ 20+ ใช้อย่างเดียวก็พอ)',
-          'ทะเบียนบ้าน — ไม่บังคับสำหรับบุคคลทั่วไป · ต้องใช้สำเนา (ไม่ต้องตัวจริง) เฉพาะข้าราชการที่ใช้บัตรข้าราชการ หรือพระ/สามเณร',
-          'ไม่ต้องเตรียมรูปถ่าย — ถ่ายให้ที่สำนักงานฟรี'
-        ],
-        steps: [
-          { text: 'Walk-in ได้เลย — ไม่ต้องจองคิว', note: 'จะจองล่วงหน้าก็ได้ที่ qpassport.in.th (ไม่บังคับ) · รับบัตรคิวหน้างานก่อน 11.30 น.', url: 'https://www.qpassport.in.th/' },
-          { text: 'ไปตามนัดพร้อมเอกสาร', note: 'ไปก่อนเวลานัด 15 นาที · พาบัตรประชาชนตัวจริง (ไม่ต้องทะเบียนบ้าน)' },
-          { text: 'กรอกแบบฟอร์มและถ่ายรูป', note: 'เจ้าหน้าที่จะช่วยกรอก + ถ่ายรูปให้ที่สำนักงาน' },
-          { text: 'ชำระค่าธรรมเนียม', note: 'เลือกได้ 5 ปี (1,000 บาท) หรือ 10 ปี (1,500 บาท)' },
-          { text: 'รับ passport', note: 'แบบธรรมดา — จัดส่ง EMS ภายใน 3–5 วันทำการ (ต่างจังหวัด) · แบบด่วนพิเศษ — รับเล่มวันเดียวกัน ช่วง 16.30 น.+ (ยื่นและชำระเสร็จก่อน 11.30 น.)' }
-        ],
-        fees: [
-          { label: '5 ปี', amount: '1,000 บาท' },
-          { label: '10 ปี', amount: '1,500 บาท' },
-          { label: 'ด่วนพิเศษ (วันเดียวกัน)', amount: '+ค่าธรรมเนียมด่วน' }
-        ]
-      }
+      ]
     }
   ];
 
@@ -573,9 +613,12 @@
           : '';
         return (
           '<div class="tl-row">' +
-            '<span class="tl-time">' + item.time + '</span>' +
+            '<div class="tl-time-col">' +
+              '<span class="tl-time">' + item.time + '</span>' +
+              (item.transit ? '<span class="tl-transit">' + item.transit + '</span>' : '') +
+            '</div>' +
             '<span class="tl-dot"></span>' +
-            '<span class="tl-text">' + textHTML + toggleBtn + (item.note ? '<span class="tl-note">' + item.note + '</span>' : '') + detailPanel + '</span>' +
+            '<span class="tl-text">' + textHTML + (item.duration ? '<span class="tl-duration">' + item.duration + '</span>' : '') + toggleBtn + (item.note ? '<span class="tl-note">' + item.note + '</span>' : '') + detailPanel + '</span>' +
           '</div>'
         );
       }).join('');
@@ -968,13 +1011,30 @@
     var data = travelDB.load();
     var el = document.getElementById('visited-cards');
     if (!el) return;
-    if (!data.visited.length) {
+    var tripVisited = tripsData.filter(function(t) { return t.status === 'visited'; });
+    if (!data.visited.length && !tripVisited.length) {
       el.innerHTML = '<div class="empty-state"><span class="empty-icon">✈️</span>ยังไม่มีที่เคยไป — เพิ่มได้เลยค่ะ</div>';
       return;
     }
+    var html = '';
+    tripVisited.forEach(function(trip) {
+      html += (
+        '<div class="travel-card">' +
+          '<div class="tc-place">' + tesc(trip.name) + '</div>' +
+          '<div class="tc-country">ไทย</div>' +
+          '<div class="tc-meta">' +
+            '<span class="tc-tag visited-tag">เคยไปแล้ว</span>' +
+            '<span class="tc-date">' + tesc(trip.dates) + '</span>' +
+          '</div>' +
+          '<div class="tc-actions">' +
+            '<button class="tc-btn" onclick="showPage(\'trips\',document.querySelector(\'[data-page=trips]\'));openTrip(\'' + trip.id + '\')">ดู itinerary →</button>' +
+          '</div>' +
+        '</div>'
+      );
+    });
     var sorted = data.visited.slice().sort(function(a, b) { return (b.visitDate||'').localeCompare(a.visitDate||''); });
-    el.innerHTML = sorted.map(function(item) {
-      return (
+    sorted.forEach(function(item) {
+      html += (
         '<div class="travel-card">' +
           '<div class="tc-place">' + tesc(item.destination) + '</div>' +
           '<div class="tc-country">' + tesc(item.country) + '</div>' +
@@ -988,7 +1048,8 @@
           '</div>' +
         '</div>'
       );
-    }).join('');
+    });
+    el.innerHTML = html;
   }
 
   function addVisited(e) {
@@ -1092,11 +1153,12 @@
 
   function updateTravelStats() {
     var data = travelDB.load();
+    var tripVisitedCount = tripsData.filter(function(t) { return t.status === 'visited'; }).length;
     var w = document.getElementById('stat-wish');
     var v = document.getElementById('stat-visit');
     var b = document.getElementById('stat-budg');
     if (w) w.textContent = data.wishlist.length;
-    if (v) v.textContent = data.visited.length;
+    if (v) v.textContent = data.visited.length + tripVisitedCount;
     if (b) b.textContent = data.budgets.length;
   }
 

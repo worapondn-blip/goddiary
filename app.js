@@ -11,7 +11,18 @@
   const _auth = firebase.auth();
   let _currentUser = null;
 
-  function signIn() {
+  function openAuthModal(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('open');
+  }
+  function closeAuthModal(id, e) {
+    if (e && e.target !== document.getElementById(id)) return;
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  }
+  function signIn() { openAuthModal('signin-modal'); }
+  function doSignIn() {
+    closeAuthModal('signin-modal');
     var provider = new firebase.auth.GoogleAuthProvider();
     _auth.signInWithPopup(provider).catch(function(err) {
       if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
@@ -20,6 +31,10 @@
         console.error('Sign-in error:', err.code, err.message);
       }
     });
+  }
+  function doSignOut() {
+    closeAuthModal('signout-modal');
+    _auth.signOut();
   }
 
   // หลัง redirect กลับมา — ต้อง pick up ผลลัพธ์
@@ -34,9 +49,7 @@
     if (user) {
       btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : 'Godji');
       btn.title = 'Sign out';
-      btn.onclick = function() {
-        if (confirm('ต้องการ Sign out ใช่ไหม?')) { _auth.signOut(); }
-      };
+      btn.onclick = function() { openAuthModal('signout-modal'); };
       // โหลด Firestore ทุกครั้งที่มี user — ทั้งกรณี sign in ใหม่ และ reload ขณะ sign in อยู่แล้ว
       _db.loadRemote().then(function() {
         renderProjects(); renderCal(); renderTodo();

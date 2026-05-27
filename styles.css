@@ -1747,3 +1747,119 @@
     body.dark .cal-day.today { background: #C4956A; color: #1C1008; }
 
     body.dark .trip-jump-chip:hover { background: #C4956A; color: #1C1008; border-color: #C4956A; }
+
+    /* ── Auth Modals (sign-in + sign-out) ── */
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-overlay.open { display: flex; }
+
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.25rem 1.75rem 1.75rem;
+      width: 100%;
+      max-width: 340px;
+      margin: 1rem;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+      text-align: center;
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 0.9rem; right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+    }
+    .auth-close:hover { color: var(--text); }
+
+    .auth-icon-wrap {
+      width: 52px; height: 52px;
+      background: var(--green-tag);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: var(--green-mid);
+    }
+    .auth-icon-out { background: #2A1008; color: #C4956A; }
+
+    .auth-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 0.35rem;
+    }
+
+    .auth-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+
+    .auth-google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      margin-bottom: 0.65rem;
+    }
+    .auth-google-btn:hover { border-color: var(--green-mid); }
+    .auth-google-icon { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+
+    .auth-confirm-btn {
+      display: block;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      background: #7A2010;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 0.65rem;
+      transition: background 0.15s;
+    }
+    .auth-confirm-btn:hover { background: #9A2A14; }
+
+    .auth-cancel-btn {
+      display: block;
+      width: 100%;
+      padding: 0.65rem 1rem;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .auth-cancel-btn:hover { color: var(--text); border-color: var(--green-mid); }

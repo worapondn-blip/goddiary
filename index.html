@@ -502,6 +502,18 @@
 </template>
 
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+<!-- Companions Modal -->
+<div id="companions-modal" class="auth-overlay" onclick="closeAuthModal('companions-modal',event)">
+  <div class="auth-card comp-modal-card">
+    <button class="auth-close" onclick="closeAuthModal('companions-modal')">&times;</button>
+    <h2 class="auth-title">ผู้ร่วมทริป</h2>
+    <p class="auth-sub">เลือกคนที่ไปด้วยกัน</p>
+    <div id="companions-checklist" class="companions-checklist"></div>
+    <button class="auth-confirm-btn comp-save-btn" onclick="saveCompanions()">บันทึก</button>
+    <button class="auth-cancel-btn" onclick="closeAuthModal('companions-modal')">ยกเลิก</button>
+  </div>
+</div>
+
 <!-- Sign-in Modal -->
 <div id="signin-modal" class="auth-overlay" onclick="closeAuthModal('signin-modal',event)">
   <div class="auth-card">

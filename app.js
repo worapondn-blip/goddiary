@@ -63,7 +63,7 @@
 
   /* ── DB Layer (Firestore + localStorage fallback) ── */
   var _db = (function() {
-    var _c = { projects: null, todos: null, travel: null, trip_todos: null };
+    var _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null };
     function ref(n) { return _fs.collection('app').doc(n); }
     function write(n, data) {
       if (!_currentUser) return;
@@ -89,18 +89,20 @@
       return r;
     }
     function loadLocal() {
-      _c.projects   = lsGet('gd_projects', []);
-      _c.todos      = lsTodos();
-      _c.travel     = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
-      _c.trip_todos = lsTripTodos();
+      _c.projects        = lsGet('gd_projects', []);
+      _c.todos           = lsTodos();
+      _c.travel          = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
+      _c.trip_todos      = lsTripTodos();
+      _c.trip_companions = lsGet('gd_trip_companions', {});
     }
     async function loadRemote() {
       try {
-        var ss = await Promise.all([ref('projects').get(), ref('todos').get(), ref('travel').get(), ref('trip_todos').get()]);
-        _c.projects   = ss[0].exists ? (ss[0].data().items || []) : _c.projects;
-        _c.todos      = ss[1].exists ? (ss[1].data().data  || {}) : _c.todos;
-        _c.travel     = ss[2].exists ? ss[2].data()               : _c.travel;
-        _c.trip_todos = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_todos;
+        var ss = await Promise.all([ref('projects').get(), ref('todos').get(), ref('travel').get(), ref('trip_todos').get(), ref('trip_companions').get()]);
+        _c.projects        = ss[0].exists ? (ss[0].data().items || []) : _c.projects;
+        _c.todos           = ss[1].exists ? (ss[1].data().data  || {}) : _c.todos;
+        _c.travel          = ss[2].exists ? ss[2].data()               : _c.travel;
+        _c.trip_todos      = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_todos;
+        _c.trip_companions = ss[4].exists ? (ss[4].data().data  || {}) : _c.trip_companions;
       } catch(e) {
         console.warn('Firestore unavailable, using localStorage:', e);
       }
@@ -115,7 +117,19 @@
       getTravel:    function()      { return _c.travel || { wishlist:[], visited:[], budgets:[] }; },
       setTravel:    function(v)     { _c.travel = v; try { localStorage.setItem('godji_travel', JSON.stringify(v)); } catch {} write('travel', v); },
       getTripTodos: function(id)    { return (_c.trip_todos || {})[id] || {}; },
-      setTripTodos: function(id, v) { if (!_c.trip_todos) _c.trip_todos = {}; _c.trip_todos[id] = v; try { localStorage.setItem('godji_todos_' + id, JSON.stringify(v)); } catch {} write('trip_todos', { data: _c.trip_todos }); }
+      setTripTodos: function(id, v) { if (!_c.trip_todos) _c.trip_todos = {}; _c.trip_todos[id] = v; try { localStorage.setItem('godji_todos_' + id, JSON.stringify(v)); } catch {} write('trip_todos', { data: _c.trip_todos }); },
+      getTripCompanions: function(id) {
+        var ov = (_c.trip_companions || {})[id];
+        if (ov) return ov;
+        var trip = tripsData.find(function(t) { return t.id === id; });
+        return trip ? (trip.companionIds || []) : [];
+      },
+      setTripCompanions: function(id, ids) {
+        if (!_c.trip_companions) _c.trip_companions = {};
+        _c.trip_companions[id] = ids;
+        try { localStorage.setItem('gd_trip_companions', JSON.stringify(_c.trip_companions)); } catch {}
+        write('trip_companions', { data: _c.trip_companions });
+      }
     };
   })();
 
@@ -536,8 +550,9 @@
   }
 
   function buildTripCard(trip) {
-    var bottom = trip.companionIds
-      ? '<div class="trip-card-bottom">' + buildCompanionStack(trip.companionIds) + '<span class="trip-duration-text">' + trip.duration + '</span></div>'
+    var companions = _db.getTripCompanions(trip.id);
+    var bottom = companions.length
+      ? '<div class="trip-card-bottom">' + buildCompanionStack(companions) + '<span class="trip-duration-text">' + trip.duration + '</span></div>'
       : '<div class="trip-meta">' + trip.companions + ' · ' + trip.duration + '</div>';
     return (
       '<a class="trip-card" href="#trips/' + trip.id + '" onclick="event.preventDefault();openTrip(\'' + trip.id + '\')">' +
@@ -843,16 +858,16 @@
       calendarHTML += '</div></div>';
     }
 
-    var companionsRowHTML = '';
-    if (trip.companionIds && trip.companionIds.length) {
-      companionsRowHTML = '<div class="trip-companions-row">' +
-        trip.companionIds.map(function(cid) {
-          var f = friendsData.find(function(x) { return x.id === cid; });
-          if (!f) return '';
-          return '<div class="tcr-item"><img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '"><span class="tcr-name">' + f.name + '</span></div>';
-        }).join('') +
-      '</div>';
+    var companions = _db.getTripCompanions(trip.id);
+    var companionsRowHTML = '<div class="trip-companions-row">';
+    if (companions.length) {
+      companionsRowHTML += companions.map(function(cid) {
+        var f = friendsData.find(function(x) { return x.id === cid; });
+        if (!f) return '';
+        return '<div class="tcr-item"><img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '"><span class="tcr-name">' + f.name + '</span></div>';
+      }).join('');
     }
+    companionsRowHTML += '<button class="tcr-edit-btn" onclick="openCompanionsModal(\'' + trip.id + '\')">' + (companions.length ? '✎ แก้ไข' : '+ เพิ่มคน') + '</button></div>';
 
     var jumpChips = trip.days.map(function(day, idx) {
       return '<span class="trip-jump-chip" onclick="jumpToSection(\'trip-sec-' + idx + '\')">' + day.label + '</span>';
@@ -895,15 +910,50 @@
     history.pushState(null, '', '#trips');
   }
 
-  (function buildTripCards() {
+  function openCompanionsModal(tripId) {
+    var currentIds = _db.getTripCompanions(tripId);
+    var modal = document.getElementById('companions-modal');
+    var list = document.getElementById('companions-checklist');
+    modal.dataset.tripId = tripId;
+    list.innerHTML = friendsData.map(function(f) {
+      var checked = currentIds.indexOf(f.id) !== -1 ? 'checked' : '';
+      return '<label class="comp-check-item">' +
+        '<input type="checkbox" value="' + f.id + '" ' + checked + '>' +
+        '<img class="comp-check-avatar" src="' + f.img + '" alt="' + f.name + '">' +
+        '<span class="comp-check-name">' + f.name + '</span>' +
+      '</label>';
+    }).join('');
+    openAuthModal('companions-modal');
+  }
+
+  function saveCompanions() {
+    var modal = document.getElementById('companions-modal');
+    var tripId = modal.dataset.tripId;
+    var boxes = modal.querySelectorAll('input[type=checkbox]:checked');
+    var ids = Array.prototype.map.call(boxes, function(c) { return c.value; });
+    _db.setTripCompanions(tripId, ids);
+    closeAuthModal('companions-modal');
+    buildTripCards();
+    var trip = tripsData.find(function(t) { return t.id === tripId; });
+    if (trip && document.getElementById('trips-detail').style.display !== 'none') {
+      document.getElementById('trip-detail-body').innerHTML = buildTripDetail(trip);
+    }
+    renderPeople();
+  }
+
+  function buildTripCards() {
     var vGrid = document.getElementById('visited-trips-grid');
     var pGrid = document.getElementById('planning-trips-grid');
+    if (!vGrid || !pGrid) return;
+    vGrid.innerHTML = '';
+    pGrid.innerHTML = '';
     tripsData.forEach(function(trip) {
       var html = buildTripCard(trip);
       if (trip.status === 'visited') vGrid.innerHTML += html;
       else pGrid.innerHTML += html;
     });
-  })();
+  }
+  buildTripCards();
 
   function renderPeople() {
     var grid = document.getElementById('people-grid');
@@ -911,12 +961,37 @@
     if (!grid) return;
     if (countEl) countEl.textContent = friendsData.length + ' คน';
     grid.innerHTML = friendsData.map(function(f) {
-      var trips = tripsData.filter(function(t) {
-        return t.companionIds && t.companionIds.indexOf(f.id) !== -1;
+      var allTrips = tripsData.filter(function(t) {
+        return _db.getTripCompanions(t.id).indexOf(f.id) !== -1;
       });
-      var tripsHTML = trips.length
-        ? '<div class="person-trips">' + trips.map(function(t) { return '<span class="person-trip-tag">' + t.name + '</span>'; }).join('') + '</div>'
-        : '<span style="font-size:0.8rem;color:var(--muted)">ยังไม่มีทริปที่บันทึกไว้</span>';
+      var visitedTrips  = allTrips.filter(function(t) { return t.status === 'visited'; });
+      var planningTrips = allTrips.filter(function(t) { return t.status !== 'visited'; });
+
+      var tripsHTML = '';
+      if (visitedTrips.length) {
+        tripsHTML += '<div class="person-trips-group">' +
+          '<div class="person-trips-label">ไปแล้ว</div>' +
+          '<div class="person-trips">' + visitedTrips.map(function(t) {
+            return '<span class="person-trip-tag visited">' + t.name + '</span>';
+          }).join('') + '</div></div>';
+      }
+      if (planningTrips.length) {
+        tripsHTML += '<div class="person-trips-group">' +
+          '<div class="person-trips-label planning">กำลังวางแผน</div>' +
+          '<div class="person-trips">' + planningTrips.map(function(t) {
+            return '<span class="person-trip-tag planning">' + t.name + '</span>';
+          }).join('') + '</div></div>';
+      }
+      if (!tripsHTML) {
+        tripsHTML = '<span style="font-size:0.8rem;color:var(--muted)">ยังไม่มีทริปที่บันทึกไว้</span>';
+      }
+
+      var subText = allTrips.length
+        ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
+          (visitedTrips.length && planningTrips.length ? ' · ' : '') +
+          (planningTrips.length ? planningTrips.length + ' แผน' : '')
+        : 'ซิโบเล็ต ซิโบติ้ว';
+
       return (
         '<div class="flip-wrapper" onclick="toggleFlip(this)">' +
           '<div class="flip-inner">' +
@@ -924,7 +999,7 @@
               '<img class="f-photo" src="' + f.img + '" alt="' + f.name + '">' +
               '<div class="f-overlay">' +
                 '<span class="fname">' + f.name + '</span>' +
-                '<span class="f-sub">' + (trips.length ? trips.length + ' ทริปด้วยกัน' : 'ซิโบเล็ต ซิโบติ้ว') + '</span>' +
+                '<span class="f-sub">' + subText + '</span>' +
               '</div>' +
             '</div>' +
             '<div class="flip-back">' +
@@ -933,7 +1008,6 @@
                 '<span class="back-flip-hint">← กลับ</span>' +
               '</div>' +
               '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.85rem">' + f.name + '</span>' +
-              '<div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">ทริปด้วยกัน</div>' +
               tripsHTML +
             '</div>' +
           '</div>' +
@@ -1276,10 +1350,11 @@
       const div = document.createElement('div');
       div.className = 'proj-card';
       div.innerHTML = `
-        <div class="proj-card-head">
+        <div class="proj-card-head" onclick="toggleProjCard(this)">
           <span class="proj-card-name">${proj.name}</span>
-          <div class="proj-card-actions">
-            <span class="proj-card-action" onclick="deleteProj(${pi})">ลบ</span>
+          <div class="proj-head-right">
+            <span class="proj-card-action" onclick="event.stopPropagation();deleteProj(${pi})">ลบ</span>
+            <span class="proj-chevron">▾</span>
           </div>
         </div>
         ${proj.desc ? `<p class="proj-card-desc">${proj.desc}</p>` : ''}
@@ -1288,19 +1363,21 @@
           <span class="proj-progress-pct">${pct}%</span>
         </div>
 
-        <div class="proj-section-label">Tasks</div>
-        <div class="proj-tasks" id="proj-tasks-${pi}"></div>
-        <div class="proj-add-row">
-          <input class="proj-add-input" id="proj-task-input-${pi}" type="text" placeholder="เพิ่ม task..." onkeydown="if(event.key==='Enter')addProjTask(${pi})">
-          <button class="proj-add-mini-btn" onclick="addProjTask(${pi})">+ เพิ่ม</button>
-        </div>
+        <div class="proj-body">
+          <div class="proj-section-label">Tasks</div>
+          <div class="proj-tasks" id="proj-tasks-${pi}"></div>
+          <div class="proj-add-row">
+            <input class="proj-add-input" id="proj-task-input-${pi}" type="text" placeholder="เพิ่ม task..." onkeydown="if(event.key==='Enter')addProjTask(${pi})">
+            <button class="proj-add-mini-btn" onclick="addProjTask(${pi})">+ เพิ่ม</button>
+          </div>
 
-        <div class="proj-section-label">Milestones</div>
-        <div class="proj-milestones" id="proj-ms-${pi}"></div>
-        <div class="proj-add-row">
-          <input class="proj-add-input" id="proj-ms-input-${pi}" type="text" placeholder="เพิ่ม milestone..." onkeydown="if(event.key==='Enter')addProjMs(${pi})">
-          <input class="proj-add-date" id="proj-ms-date-${pi}" type="date">
-          <button class="proj-add-mini-btn" onclick="addProjMs(${pi})">+ เพิ่ม</button>
+          <div class="proj-section-label">Milestones</div>
+          <div class="proj-milestones" id="proj-ms-${pi}"></div>
+          <div class="proj-add-row">
+            <input class="proj-add-input" id="proj-ms-input-${pi}" type="text" placeholder="เพิ่ม milestone..." onkeydown="if(event.key==='Enter')addProjMs(${pi})">
+            <input class="proj-add-date" id="proj-ms-date-${pi}" type="date">
+            <button class="proj-add-mini-btn" onclick="addProjMs(${pi})">+ เพิ่ม</button>
+          </div>
         </div>
       `;
       cards.appendChild(div);
@@ -1383,6 +1460,10 @@
     closeProjModal();
     renderProjects();
   }
+  function toggleProjCard(headEl) {
+    headEl.closest('.proj-card').classList.toggle('collapsed');
+  }
+
   function deleteProj(pi) {
     if (!confirm('ลบ project นี้?')) return;
     const projs = getProjects();
@@ -1480,6 +1561,8 @@
       renderProjects();
       renderCal();
       renderTodo();
+      buildTripCards();
+      renderPeople();
     });
   }
 

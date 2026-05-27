@@ -65,9 +65,22 @@
   var _db = (function() {
     var _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null, friends_extra: null };
     function ref(n) { return _fs.collection('app').doc(n); }
+    var _syncTimer;
+    function showSync(state) {
+      var el = document.getElementById('sync-status');
+      if (!el) return;
+      clearTimeout(_syncTimer);
+      var labels = { saving: '↑ กำลัง sync…', saved: '✓ sync แล้ว', error: '⚠ sync ล้มเหลว', local: '○ เก็บในเครื่อง' };
+      el.className = 'sync-status ' + state;
+      el.textContent = labels[state] || '';
+      if (state === 'saved') _syncTimer = setTimeout(function() { el.textContent = ''; el.className = 'sync-status'; }, 3000);
+    }
     function write(n, data) {
-      if (!_currentUser) return;
-      ref(n).set(data).catch(function(e) { console.warn('Firestore write:', e); });
+      if (!_currentUser) { showSync('local'); return; }
+      showSync('saving');
+      ref(n).set(data)
+        .then(function() { showSync('saved'); })
+        .catch(function(e) { console.warn('Firestore write:', e); showSync('error'); });
     }
     function lsGet(key, def) {
       try { return JSON.parse(localStorage.getItem(key) || 'null') || def; } catch { return def; }

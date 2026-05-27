@@ -116,6 +116,21 @@
 
     .sidebar-spacer { flex: 1; }
 
+    /* ── Sync status ── */
+    .sync-status {
+      display: block;
+      font-size: 0.68rem;
+      padding: 0.2rem 1.25rem 0;
+      color: rgba(255,255,255,0.25);
+      min-height: 1.1rem;
+      transition: color 0.3s;
+      letter-spacing: 0.01em;
+    }
+    .sync-status.saved  { color: #6bcb77; }
+    .sync-status.error  { color: #e07070; }
+    .sync-status.saving { color: rgba(255,255,255,0.35); }
+    .sync-status.local  { color: rgba(255,255,255,0.2); }
+
     .sidebar-footer {
       padding: 0 1rem 0 1.25rem;
       font-size: 0.65rem;

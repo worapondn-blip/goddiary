@@ -50,6 +50,9 @@
   <span class="nav-item" data-page="school" onclick="showPage('school',this)">
     <span class="nav-dot"></span>School
   </span>
+  <span class="nav-item" data-page="finance" onclick="showPage('finance',this)">
+    <span class="nav-dot"></span>Finance
+  </span>
 
   <div class="sidebar-controls">
     <span id="auth-btn">Sign in</span>
@@ -454,6 +457,126 @@
     </div>
   </div>
 
+
+  <!-- Finance -->
+  <div id="page-finance" class="page">
+    <div class="page-inner narrow">
+      <div class="page-head">
+        <h2>Finance.</h2>
+        <span class="count">Wealth tracker</span>
+      </div>
+      <p class="page-sub">สินทรัพย์ หนี้สิน และสุขภาพการเงิน</p>
+
+      <div class="fin-tabs">
+        <span class="fin-tab active" data-tab="wealth" onclick="switchFinTab('wealth')">Wealth</span>
+        <span class="fin-tab" data-tab="health" onclick="switchFinTab('health')">Health Score</span>
+        <span class="fin-tab" data-tab="expenses" onclick="switchFinTab('expenses')">Expenses</span>
+      </div>
+
+      <!-- Wealth Panel -->
+      <div id="fin-wealth" class="fin-panel">
+        <div class="fin-summary">
+          <div class="fin-sum-card fin-green">
+            <span class="fin-sum-label">สินทรัพย์</span>
+            <span class="fin-sum-val" id="fin-total-assets">฿0</span>
+          </div>
+          <div class="fin-sum-card fin-red">
+            <span class="fin-sum-label">หนี้สิน</span>
+            <span class="fin-sum-val" id="fin-total-liab">฿0</span>
+          </div>
+          <div class="fin-sum-card">
+            <span class="fin-sum-label">Net Worth</span>
+            <span class="fin-sum-val" id="fin-net-worth">฿0</span>
+          </div>
+        </div>
+
+        <div class="fin-chart-wrap">
+          <canvas id="fin-bar-canvas"></canvas>
+        </div>
+
+        <div class="fin-section">
+          <div class="fin-section-head">
+            <span class="fin-section-title">สินทรัพย์</span>
+            <button class="fin-add-btn" onclick="openFinModal('asset')">+ เพิ่ม</button>
+          </div>
+          <div id="fin-assets-list"></div>
+        </div>
+
+        <div class="fin-section">
+          <div class="fin-section-head">
+            <span class="fin-section-title">หนี้สิน</span>
+            <button class="fin-add-btn" onclick="openFinModal('liability')">+ เพิ่ม</button>
+          </div>
+          <div id="fin-liab-list"></div>
+        </div>
+      </div>
+
+      <!-- Health Score Panel -->
+      <div id="fin-health" class="fin-panel" style="display:none">
+        <div class="fin-monthly-settings">
+          <div class="fin-monthly-row">
+            <div class="fin-monthly-field">
+              <label class="fin-monthly-label">รายได้/เดือน (฿)</label>
+              <input id="fin-monthly-income" class="fin-monthly-input" type="number" min="0" placeholder="25000" oninput="saveMonthlySettings()">
+            </div>
+            <div class="fin-monthly-field">
+              <label class="fin-monthly-label">ค่าใช้จ่าย/เดือน (฿)</label>
+              <input id="fin-monthly-expenses" class="fin-monthly-input" type="number" min="0" placeholder="15000" oninput="saveMonthlySettings()">
+            </div>
+            <div class="fin-monthly-field">
+              <label class="fin-monthly-label">เงินออม/เดือน (฿)</label>
+              <input id="fin-monthly-savings" class="fin-monthly-input" type="number" min="0" placeholder="10000" oninput="saveMonthlySettings()">
+            </div>
+          </div>
+        </div>
+        <div class="fin-radar-wrap">
+          <canvas id="fin-radar-canvas"></canvas>
+        </div>
+        <div class="fin-score-card">
+          <span class="fin-score-val" id="fin-score-val">-</span>
+          <span class="fin-score-label" id="fin-score-label">คะแนนสุขภาพการเงิน</span>
+          <div class="fin-score-dims" id="fin-score-dims"></div>
+        </div>
+      </div>
+
+      <!-- Expenses Panel -->
+      <div id="fin-expenses" class="fin-panel" style="display:none">
+
+        <!-- Wallet row -->
+        <div class="exp-wallets-row">
+          <div class="exp-wallets-scroll" id="exp-wallets-scroll"></div>
+          <button class="exp-wallet-mgmt-btn" onclick="openTransferModal()" title="โอนเงินระหว่างกระเป๋า">⇄</button>
+          <button class="exp-wallet-mgmt-btn" onclick="openWalletMgmt()" title="จัดการกระเป๋า">⚙</button>
+        </div>
+
+        <!-- Add form -->
+        <div class="exp-add-form">
+          <div class="exp-add-row1">
+            <input id="exp-input" class="exp-input" type="text" placeholder="รายละเอียด เช่น กาแฟ, ค่าไฟ...">
+            <input id="exp-amount" class="exp-amount-input" type="number" min="0" placeholder="฿" onkeydown="if(event.key==='Enter')addExpense()">
+          </div>
+          <div class="exp-wallet-selector" id="exp-wallet-selector"></div>
+          <div class="exp-type-toggle">
+            <span class="exp-ttype active" data-type="expense" onclick="setAddType('expense')">รายจ่าย</span>
+            <span class="exp-ttype" data-type="income" onclick="setAddType('income')">รายรับ</span>
+          </div>
+          <button class="exp-add-btn" onclick="addExpense()">+ บันทึก</button>
+        </div>
+
+        <!-- Period filter -->
+        <div class="exp-filter-tabs">
+          <span class="exp-ftab active" data-period="today" onclick="switchExpPeriod('today')">วันนี้</span>
+          <span class="exp-ftab" data-period="week" onclick="switchExpPeriod('week')">สัปดาห์นี้</span>
+          <span class="exp-ftab" data-period="month" onclick="switchExpPeriod('month')">เดือนนี้</span>
+        </div>
+
+        <div class="exp-summary" id="exp-summary"></div>
+        <div class="exp-list" id="exp-list"></div>
+      </div>
+
+    </div>
+  </div>
+
 </main>
 
 <button class="scroll-top-btn" id="scroll-top-btn" title="กลับด้านบน">↑</button>
@@ -611,6 +734,57 @@
 <!-- Read-only Banner -->
 <div id="readonly-banner" style="display:none;position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#2C1608;color:#FDF6EE;padding:0.5rem 1.2rem;border-radius:20px;font-size:0.82rem;z-index:9999;box-shadow:0 2px 12px rgba(0,0,0,0.25)">
   ดูอย่างเดียว — บัญชีนี้ยังไม่ได้รับสิทธิ์แก้ไข
+</div>
+
+<!-- Transfer Modal -->
+<div id="transfer-modal" class="auth-overlay" onclick="if(event.target===this)closeTransferModal()">
+  <div class="auth-card" style="max-width:360px;text-align:left">
+    <button class="auth-close" onclick="closeTransferModal()">&times;</button>
+    <h2 class="auth-title" style="text-align:left;font-size:1.1rem;margin-bottom:1rem">โอนเงินระหว่างกระเป๋า</h2>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem">จาก</p>
+    <select id="transfer-from" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.75rem"></select>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem">ไปยัง</p>
+    <select id="transfer-to" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.75rem"></select>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem">จำนวนเงิน (บาท)</p>
+    <input id="transfer-amount" type="number" min="0" placeholder="เช่น 500" onkeydown="if(event.key==='Enter')saveTransfer()" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:1rem">
+    <div style="display:flex;gap:0.5rem">
+      <button class="auth-cancel-btn" onclick="closeTransferModal()" style="flex:1">ยกเลิก</button>
+      <button class="auth-confirm-btn" onclick="saveTransfer()" style="flex:2">⇄ โอน</button>
+    </div>
+  </div>
+</div>
+
+<!-- Wallet Management Modal -->
+<div id="wallet-mgmt-modal" class="auth-overlay" onclick="if(event.target===this)closeWalletMgmt()">
+  <div class="auth-card" style="max-width:380px;text-align:left">
+    <button class="auth-close" onclick="closeWalletMgmt()">&times;</button>
+    <h2 class="auth-title" style="text-align:left;font-size:1.1rem;margin-bottom:1rem">จัดการกระเป๋า</h2>
+    <div id="wallet-mgmt-list"></div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+    <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.65rem">เพิ่มกระเป๋าใหม่</p>
+    <input id="wallet-new-name" type="text" placeholder="ชื่อกระเป๋า เช่น ท่องเที่ยว" onkeydown="if(event.key==='Enter')addWallet()" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.75rem">
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.45rem">เลือกสี</p>
+    <div class="wallet-color-row" id="wallet-color-swatches"></div>
+    <button class="auth-confirm-btn" onclick="addWallet()" style="width:100%;margin-top:0.9rem">+ เพิ่มกระเป๋า</button>
+  </div>
+</div>
+
+<!-- Finance Add Modal -->
+<div id="fin-modal" class="auth-overlay" onclick="if(event.target===this)closeFinModal()">
+  <div class="auth-card" style="max-width:360px;text-align:left">
+    <button class="auth-close" onclick="closeFinModal()">&times;</button>
+    <h2 class="auth-title" id="fin-modal-title" style="text-align:left;font-size:1.1rem;margin-bottom:1rem">เพิ่มสินทรัพย์</h2>
+    <label class="fin-modal-label">ชื่อ</label>
+    <input id="fin-modal-name" type="text" placeholder="เช่น หุ้น US, เงินออม KTB..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.85rem">
+    <label class="fin-modal-label">จำนวนเงิน (บาท)</label>
+    <input id="fin-modal-amount" type="number" min="0" placeholder="เช่น 100000" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.85rem">
+    <label class="fin-modal-label">ประเภท</label>
+    <select id="fin-modal-cat" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit;margin-bottom:1.1rem"></select>
+    <div style="display:flex;gap:0.5rem">
+      <button class="auth-cancel-btn" onclick="closeFinModal()" style="flex:1">ยกเลิก</button>
+      <button class="auth-confirm-btn" onclick="saveFinModal()" style="flex:2">บันทึก</button>
+    </div>
+  </div>
 </div>
 
 <!-- Profile Edit Modal -->

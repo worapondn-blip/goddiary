@@ -79,6 +79,8 @@
       btn.title = '';
       btn.onclick = signIn;
       showReadOnlyBanner(false);
+      _db.clearCache();
+      renderProjects(); renderCal(); renderTodo(); renderPeople();
     }
   });
 
@@ -140,6 +142,7 @@
       _c.friends_extra   = lsGet(lsKey('gd_friends_extra'), []);
     }
     async function loadRemote() {
+      if (!_currentUser) return;
       try {
         // travel โหลดจาก shared collection (ไม่แยก user)
         var travelSnap = await sharedRef('travel').get();
@@ -176,11 +179,12 @@
       }
     }
     return {
+      clearCache:   function() { _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null, friends_extra: null }; },
       loadLocal:    loadLocal,
       loadRemote:   loadRemote,
-      getProjects:  function()      { return _c.projects || []; },
+      getProjects:  function()      { if (_c.projects === null) loadLocal(); return _c.projects || []; },
       setProjects:  function(v)     { _c.projects = v; try { localStorage.setItem(lsKey('gd_projects'), JSON.stringify(v)); } catch {} write('projects', { items: v }); },
-      getTodos:     function(k)     { return (_c.todos || {})[k] || []; },
+      getTodos:     function(k)     { if (_c.todos === null) loadLocal(); return (_c.todos || {})[k] || []; },
       setTodos:     function(k, v)  {
         if (!_c.todos) _c.todos = {};
         _c.todos[k] = v;
@@ -774,6 +778,7 @@
     }
     if (pageId === 'portfolio') renderPortfolio();
     if (pageId === 'school') renderSchoolPage();
+    if (pageId === 'finance') renderFinance();
   }
 
   function handleHash() {
@@ -2733,6 +2738,570 @@
     var stockValue = assets.reduce(function(s,a){return s+a.valueTHB;},0);
     var totalCost  = assets.reduce(function(s,a){return s+a.costTHB;},0);
     portRenderHoldings(assets, stockValue, totalCost);
+  }
+
+  /* ── Finance ── */
+  var _finData = null;
+  var _finBarChart = null;
+  var _finRadarChart = null;
+
+  function finDefaultData() {
+    return {
+      assets: [{ id:1, name:'หุ้น US', amount:100000, cat:'investment' }],
+      liabilities: [{ id:1, name:'หนี้ กยศ.', amount:255900, cat:'education' }],
+      monthly_income: 25000,
+      monthly_savings: 10000,
+      monthly_expenses: 15000
+    };
+  }
+
+  function finLoad() {
+    if (_finData) return;
+    try { _finData = JSON.parse(localStorage.getItem('gd_finance') || 'null') || finDefaultData(); }
+    catch(e) { _finData = finDefaultData(); }
+  }
+
+  function finSave() {
+    try { localStorage.setItem('gd_finance', JSON.stringify(_finData)); } catch(e) {}
+    if (_currentUser && _isAllowed) {
+      _fs.collection('users').doc(_currentUser.uid).collection('data').doc('finance')
+        .set(_finData).catch(function(e) { console.warn('fin save:', e); });
+    }
+  }
+
+  function finEsc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function finCatLabel(cat) {
+    return ({investment:'การลงทุน',savings:'เงินออม',emergency:'เงินฉุกเฉิน',cash:'เงินสด',property:'อสังหาฯ',vehicle:'ยานพาหนะ',education:'กู้การศึกษา',mortgage:'บ้าน',car:'รถยนต์',credit:'บัตรเครดิต',other:'อื่นๆ'})[cat] || cat;
+  }
+
+  function renderFinance() {
+    finLoad();
+    renderWealthPanel();
+    renderHealthPanel();
+  }
+
+  function renderWealthPanel() {
+    var assets = _finData.assets || [];
+    var liabs  = _finData.liabilities || [];
+    var totalA = assets.reduce(function(s,a){return s+a.amount;},0);
+    var totalL = liabs.reduce(function(s,a){return s+a.amount;},0);
+    var netW   = totalA - totalL;
+
+    function setEl(id,txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
+    setEl('fin-total-assets','฿'+totalA.toLocaleString());
+    setEl('fin-total-liab','฿'+totalL.toLocaleString());
+
+    var nwEl = document.getElementById('fin-net-worth');
+    if (nwEl) {
+      nwEl.textContent = (netW>=0?'+':'-')+'฿'+Math.abs(netW).toLocaleString();
+      nwEl.style.color = netW>=0?'#3D7A52':'#C04040';
+    }
+
+    var aEl = document.getElementById('fin-assets-list');
+    if (aEl) aEl.innerHTML = assets.length ? assets.map(function(a){
+      return '<div class="fin-item"><div class="fin-item-info"><div class="fin-item-name">'+finEsc(a.name)+'</div><div class="fin-item-cat">'+finCatLabel(a.cat)+'</div></div>'+
+        '<span class="fin-item-amount" style="color:#3D7A52">฿'+a.amount.toLocaleString()+'</span>'+
+        '<button class="fin-item-del" onclick="delFinItem(\'asset\','+a.id+')">×</button></div>';
+    }).join('') : '<p class="fin-empty">ยังไม่มีสินทรัพย์</p>';
+
+    var lEl = document.getElementById('fin-liab-list');
+    if (lEl) lEl.innerHTML = liabs.length ? liabs.map(function(a){
+      return '<div class="fin-item"><div class="fin-item-info"><div class="fin-item-name">'+finEsc(a.name)+'</div><div class="fin-item-cat">'+finCatLabel(a.cat)+'</div></div>'+
+        '<span class="fin-item-amount" style="color:#C04040">฿'+a.amount.toLocaleString()+'</span>'+
+        '<button class="fin-item-del" onclick="delFinItem(\'liability\','+a.id+')">×</button></div>';
+    }).join('') : '<p class="fin-empty">ยังไม่มีหนี้สิน</p>';
+
+    if (typeof Chart !== 'undefined') renderFinBarChart(totalA, totalL);
+  }
+
+  function renderFinBarChart(totalA, totalL) {
+    var ctx = document.getElementById('fin-bar-canvas');
+    if (!ctx) return;
+    if (_finBarChart) _finBarChart.destroy();
+    var isDark = document.body.classList.contains('dark');
+    var gc = isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.06)';
+    var tc = isDark?'#C4956A':'#7A5C3F';
+    _finBarChart = new Chart(ctx,{
+      type:'bar',
+      data:{ labels:['สินทรัพย์','หนี้สิน'], datasets:[{data:[totalA,totalL],backgroundColor:['rgba(61,122,82,0.65)','rgba(192,64,64,0.65)'],borderColor:['#3D7A52','#C04040'],borderWidth:1.5,borderRadius:8}] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ y:{ticks:{callback:function(v){return '฿'+(v/1000).toFixed(0)+'k';},color:tc},grid:{color:gc}}, x:{ticks:{color:tc},grid:{display:false}} } }
+    });
+  }
+
+  function saveMonthlySettings() {
+    finLoad();
+    var incEl = document.getElementById('fin-monthly-income');
+    var expEl = document.getElementById('fin-monthly-expenses');
+    var savEl = document.getElementById('fin-monthly-savings');
+    var inc = parseFloat(incEl ? incEl.value : 0);
+    var exp = parseFloat(expEl ? expEl.value : 0);
+    var sav = parseFloat(savEl ? savEl.value : 0);
+    if (inc > 0) _finData.monthly_income   = inc;
+    if (exp > 0) _finData.monthly_expenses = exp;
+    if (sav > 0) _finData.monthly_savings  = sav;
+    finSave();
+    renderHealthPanel();
+  }
+
+  function renderHealthPanel() {
+    finLoad();
+    var incEl = document.getElementById('fin-monthly-income');
+    var expEl = document.getElementById('fin-monthly-expenses');
+    var savEl = document.getElementById('fin-monthly-savings');
+    if (incEl && !incEl.matches(':focus')) incEl.value = _finData.monthly_income   || '';
+    if (expEl && !expEl.matches(':focus')) expEl.value = _finData.monthly_expenses || '';
+    if (savEl && !savEl.matches(':focus')) savEl.value = _finData.monthly_savings  || '';
+    var assets = _finData.assets || [];
+    var liabs  = _finData.liabilities || [];
+    var totalA = assets.reduce(function(s,a){return s+a.amount;},0);
+    var totalL = liabs.reduce(function(s,a){return s+a.amount;},0);
+    var netW   = totalA - totalL;
+    var inc = _finData.monthly_income   || 25000;
+    var exp = _finData.monthly_expenses || 15000;
+    var sav = _finData.monthly_savings  || 10000;
+    var invest = assets.filter(function(a){return a.cat==='investment';}).reduce(function(s,a){return s+a.amount;},0);
+    var emerg  = assets.filter(function(a){return a.cat==='emergency';}).reduce(function(s,a){return s+a.amount;},0);
+    var liquid = assets.filter(function(a){return a.cat==='cash'||a.cat==='savings'||a.cat==='emergency';}).reduce(function(s,a){return s+a.amount;},0);
+
+    var savRate = inc>0?sav/inc:0;
+    var scoreOom   = savRate>=0.3?4:savRate>=0.2?3:savRate>=0.1?2:savRate>0?1:0;
+    var scoreNW    = netW>1000000?4:netW>0?3:netW>-100000?2:netW>-300000?1:0;
+    var emMos      = exp>0?emerg/exp:0;
+    var scoreEmerg = emMos>=6?4:emMos>=3?3:emMos>=1?2:emMos>0?1:0;
+    var liqMos     = exp>0?liquid/exp:0;
+    var scoreLiq   = liqMos>=6?4:liqMos>=3?3:liqMos>=1?2:liqMos>0?1:0;
+    var fireT      = exp*12*25;
+    var scoreIndep = fireT>0?(invest/fireT>=1?4:invest/fireT>=0.5?3:invest/fireT>=0.1?2:invest>0?1:0):0;
+    var scoreDream = 3;
+
+    var dims = [
+      {label:'ความฝัน',  score:scoreDream},
+      {label:'สภาพคล่อง',score:scoreLiq},
+      {label:'ฉุกเฉิน',  score:scoreEmerg},
+      {label:'การออม',   score:scoreOom},
+      {label:'ฐานะ',     score:scoreNW},
+      {label:'อิสรภาพ',  score:scoreIndep}
+    ];
+    var total = dims.reduce(function(s,d){return s+d.score;},0);
+    var pct   = total/24;
+    var lbl   = pct>=0.75?'ดีมาก':pct>=0.5?'ดี':pct>=0.25?'พอใช้':'ต้องปรับปรุง';
+
+    var sEl = document.getElementById('fin-score-val');
+    if (sEl) sEl.textContent = total+'/24 — '+lbl;
+
+    var dEl = document.getElementById('fin-score-dims');
+    if (dEl) dEl.innerHTML = dims.map(function(d){
+      return '<div class="fin-score-dim-row"><span class="fin-score-dim-label">'+d.label+'</span>'+
+        '<div class="fin-score-dim-bar-wrap"><div class="fin-score-dim-bar" style="width:'+Math.round(d.score/4*100)+'%"></div></div>'+
+        '<span class="fin-score-dim-num">'+d.score+'</span></div>';
+    }).join('');
+
+    if (typeof Chart !== 'undefined') renderFinRadarChart(dims.map(function(d){return d.score;}));
+  }
+
+  function renderFinRadarChart(scores) {
+    var ctx = document.getElementById('fin-radar-canvas');
+    if (!ctx) return;
+    if (_finRadarChart) _finRadarChart.destroy();
+    var isDark = document.body.classList.contains('dark');
+    var gc = isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.08)';
+    var pc = isDark?'#C4956A':'#7A5C3F';
+    var tc = isDark?'#EDD8BE':'#2C1608';
+    _finRadarChart = new Chart(ctx,{
+      type:'radar',
+      data:{ labels:['ความฝัน','สภาพคล่อง','ฉุกเฉิน','การออม','ฐานะ','อิสรภาพ'],
+        datasets:[{data:scores,backgroundColor:isDark?'rgba(196,149,106,0.2)':'rgba(122,92,63,0.2)',borderColor:pc,pointBackgroundColor:pc,borderWidth:2,pointRadius:4}] },
+      options:{ responsive:true,
+        scales:{ r:{min:0,max:4,ticks:{stepSize:1,display:false},grid:{color:gc},pointLabels:{font:{family:'Mali',size:11},color:tc}} },
+        plugins:{legend:{display:false}} }
+    });
+  }
+
+  var _finModalType = 'asset';
+
+  function openFinModal(type) {
+    _finModalType = type;
+    var titleEl = document.getElementById('fin-modal-title');
+    var catEl   = document.getElementById('fin-modal-cat');
+    if (titleEl) titleEl.textContent = type==='asset'?'เพิ่มสินทรัพย์':'เพิ่มหนี้สิน';
+    if (catEl) catEl.innerHTML = type==='asset'
+      ? '<option value="investment">การลงทุน</option><option value="savings">เงินออม</option><option value="emergency">เงินฉุกเฉิน</option><option value="cash">เงินสด</option><option value="property">อสังหาฯ</option><option value="vehicle">ยานพาหนะ</option><option value="other">อื่นๆ</option>'
+      : '<option value="education">กู้การศึกษา</option><option value="mortgage">บ้าน</option><option value="car">รถยนต์</option><option value="credit">บัตรเครดิต</option><option value="other">อื่นๆ</option>';
+    var nEl = document.getElementById('fin-modal-name');
+    var aEl = document.getElementById('fin-modal-amount');
+    if (nEl) nEl.value = '';
+    if (aEl) aEl.value = '';
+    openAuthModal('fin-modal');
+  }
+
+  function closeFinModal() { closeAuthModal('fin-modal'); }
+
+  function saveFinModal() {
+    var name   = (document.getElementById('fin-modal-name').value || '').trim();
+    var amount = parseFloat(document.getElementById('fin-modal-amount').value) || 0;
+    var cat    = document.getElementById('fin-modal-cat').value;
+    if (!name || amount <= 0) return;
+    finLoad();
+    var item = { id:Date.now(), name:name, amount:amount, cat:cat };
+    if (_finModalType==='asset') _finData.assets.push(item);
+    else _finData.liabilities.push(item);
+    finSave();
+    closeFinModal();
+    renderWealthPanel();
+    renderHealthPanel();
+  }
+
+  function delFinItem(type, id) {
+    finLoad();
+    if (type==='asset') _finData.assets = _finData.assets.filter(function(a){return a.id!==id;});
+    else _finData.liabilities = _finData.liabilities.filter(function(a){return a.id!==id;});
+    finSave();
+    renderWealthPanel();
+    renderHealthPanel();
+  }
+
+  function switchFinTab(tab) {
+    document.querySelectorAll('.fin-tab').forEach(function(el){ el.classList.toggle('active', el.dataset.tab===tab); });
+    document.getElementById('fin-wealth').style.display   = tab==='wealth'  ?'':'none';
+    document.getElementById('fin-health').style.display   = tab==='health'  ?'':'none';
+    document.getElementById('fin-expenses').style.display = tab==='expenses'?'':'none';
+    if (tab==='health')   renderHealthPanel();
+    if (tab==='expenses') renderExpenses();
+  }
+
+  /* ── Wallets ── */
+  var _walletData      = null;
+  var _selectedWallet  = null;  // id หรือ null = ทั้งหมด
+  var _addWalletId     = null;
+  var _addType         = 'expense';
+  var _newWalletColor  = '#C06030';
+  var WALLET_COLORS    = ['#C06030','#9060C0','#3A70B0','#308060','#C04060','#806840','#2C8080','#A05020'];
+
+  function walletDefaultData() {
+    return [
+      { id:1, name:'อาหาร',        color:'#C06030' },
+      { id:2, name:'ฟุ่มเฟือย',    color:'#9060C0' },
+      { id:3, name:'รายจ่ายคงที่', color:'#3A70B0' },
+      { id:4, name:'เงินเก็บ',     color:'#308060' },
+    ];
+  }
+
+  function walletLoad() {
+    if (_walletData) return;
+    try { _walletData = JSON.parse(localStorage.getItem('gd_wallets') || 'null') || walletDefaultData(); }
+    catch(e) { _walletData = walletDefaultData(); }
+    if (!Array.isArray(_walletData) || !_walletData.length) _walletData = walletDefaultData();
+  }
+
+  function walletSave() {
+    try { localStorage.setItem('gd_wallets', JSON.stringify(_walletData)); } catch(e) {}
+    if (_currentUser && _isAllowed) {
+      _fs.collection('users').doc(_currentUser.uid).collection('data').doc('wallets')
+        .set({ items: _walletData }).catch(function(e) { console.warn('wallet save:', e); });
+    }
+  }
+
+  function walletById(id) {
+    walletLoad();
+    return _walletData.find(function(w){ return w.id === id; }) || { id:0, name:'อื่นๆ', color:'#A67C52' };
+  }
+
+  /* ── Expenses ── */
+  var _expData   = null;
+  var _expPeriod = 'today';
+
+  function expLoad() {
+    if (_expData) return;
+    try { _expData = JSON.parse(localStorage.getItem('gd_expenses') || '[]'); }
+    catch(e) { _expData = []; }
+    if (!Array.isArray(_expData)) _expData = [];
+  }
+
+  function expSave() {
+    try { localStorage.setItem('gd_expenses', JSON.stringify(_expData)); } catch(e) {}
+    if (_currentUser && _isAllowed) {
+      _fs.collection('users').doc(_currentUser.uid).collection('data').doc('expenses')
+        .set({ items: _expData }).catch(function(e) { console.warn('exp save:', e); });
+    }
+  }
+
+  function expFilterItems() {
+    expLoad();
+    var now   = new Date();
+    var today = now.toISOString().slice(0,10);
+    if (_expPeriod === 'today') return _expData.filter(function(e){ return e.date === today; });
+    if (_expPeriod === 'week') {
+      var weekAgo = new Date(now - 7*24*3600*1000).toISOString().slice(0,10);
+      return _expData.filter(function(e){ return e.date >= weekAgo; });
+    }
+    return _expData.filter(function(e){ return e.date.slice(0,7) === today.slice(0,7); });
+  }
+
+  function thDate(d) {
+    var mo = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    var p  = d.split('-');
+    return parseInt(p[2])+' '+mo[parseInt(p[1])-1]+' '+(parseInt(p[0])+543);
+  }
+
+  function setAddType(type) {
+    _addType = type;
+    document.querySelectorAll('.exp-ttype').forEach(function(el){
+      el.classList.toggle('active', el.dataset.type === type);
+    });
+  }
+
+  function addExpense() {
+    var textEl = document.getElementById('exp-input');
+    var amtEl  = document.getElementById('exp-amount');
+    var text   = (textEl ? textEl.value || '' : '').trim();
+    var amount = parseFloat(amtEl ? amtEl.value : 0) || 0;
+    if (!text && !amount) return;
+    walletLoad();
+    if (!_addWalletId && _walletData.length) _addWalletId = _walletData[0].id;
+    var now = new Date();
+    expLoad();
+    var rec = { id:Date.now(), text:text||(_addType==='income'?'รายรับ':'รายจ่าย'), amount:amount, walletId:_addWalletId, date:now.toISOString().slice(0,10), ts:now.getTime() };
+    if (_addType === 'income') rec.type = 'income';
+    _expData.unshift(rec);
+    expSave();
+    if (textEl) textEl.value = '';
+    if (amtEl)  amtEl.value  = '';
+    renderExpenses();
+  }
+
+  function delExpense(id) {
+    expLoad();
+    _expData = _expData.filter(function(e){ return e.id !== id; });
+    expSave();
+    renderExpenses();
+  }
+
+  function renderExpenses() {
+    walletLoad();
+    renderWalletRow();
+    renderWalletSelector();
+    renderExpList();
+  }
+
+  function renderWalletRow() {
+    var items  = expFilterItems();
+    var totals = {};
+    items.forEach(function(e){
+      if (e.type === 'transfer') {
+        totals[e.fromWalletId] = (totals[e.fromWalletId]||0) - (e.amount||0);
+        totals[e.toWalletId]   = (totals[e.toWalletId]  ||0) + (e.amount||0);
+      } else if (e.type === 'income') {
+        totals[e.walletId] = (totals[e.walletId]||0) + (e.amount||0);
+      } else {
+        totals[e.walletId] = (totals[e.walletId]||0) - (e.amount||0);
+      }
+    });
+    var nonTransfer = items.filter(function(e){ return e.type!=='transfer'; });
+    var totalIncome  = nonTransfer.filter(function(e){ return e.type==='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var totalExpense = nonTransfer.filter(function(e){ return e.type!=='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var grandTotal = totalIncome - totalExpense;
+
+    var el = document.getElementById('exp-wallets-scroll');
+    if (!el) return;
+    el.innerHTML = _walletData.map(function(w){
+      var isActive = _selectedWallet === w.id;
+      var tot = totals[w.id] || 0;
+      var amtColor = tot >= 0 ? '#3D7A52' : '#C04040';
+      return '<div class="exp-wallet-card'+(isActive?' active':'')+'"'+
+        ' onclick="filterByWallet('+w.id+')">'+
+        '<div class="exp-wallet-card-name" style="color:'+w.color+'">'+finEsc(w.name)+'</div>'+
+        '<div class="exp-wallet-card-amt" style="color:'+amtColor+'">'+(tot<0?'-':'')+'฿'+Math.abs(tot).toLocaleString()+'</div></div>';
+    }).join('') +
+    '<div class="exp-wallet-card'+((!_selectedWallet)?' active':'')+'" onclick="filterByWallet(null)">'+
+      '<div class="exp-wallet-card-name" style="color:var(--muted)">ทั้งหมด</div>'+
+      '<div class="exp-wallet-card-amt" style="color:'+(grandTotal>=0?'#3D7A52':'#C04040')+'">'+(grandTotal<0?'-':'')+'฿'+Math.abs(grandTotal).toLocaleString()+'</div></div>';
+  }
+
+  function filterByWallet(id) {
+    _selectedWallet = id;
+    renderExpenses();
+  }
+
+  function renderWalletSelector() {
+    var el = document.getElementById('exp-wallet-selector');
+    if (!el) return;
+    walletLoad();
+    el.innerHTML = _walletData.map(function(w){
+      var sel = _addWalletId === w.id;
+      return '<span class="exp-ws-pill" style="border-color:'+w.color+';background:'+(sel?w.color:'transparent')+';color:'+(sel?'#fff':w.color)+'" onclick="selectAddWallet('+w.id+')">'+finEsc(w.name)+'</span>';
+    }).join('');
+  }
+
+  function selectAddWallet(id) {
+    _addWalletId = id;
+    renderWalletSelector();
+  }
+
+  function renderExpList() {
+    var items = expFilterItems();
+    if (_selectedWallet) {
+      items = items.filter(function(e){
+        return e.type === 'transfer'
+          ? (e.fromWalletId === _selectedWallet || e.toWalletId === _selectedWallet)
+          : e.walletId === _selectedWallet;
+      });
+    }
+    var nonTransfer = items.filter(function(e){ return e.type !== 'transfer'; });
+    var incomes  = nonTransfer.filter(function(e){ return e.type === 'income'; });
+    var expenses = nonTransfer.filter(function(e){ return e.type !== 'income'; });
+    var totalInc = incomes.reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var totalExp = expenses.reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var net = totalInc - totalExp;
+    var today = new Date().toISOString().slice(0,10);
+
+    var sEl = document.getElementById('exp-summary');
+    if (sEl) sEl.innerHTML =
+      '<div><span class="exp-sum-label">รายรับ</span><span class="exp-sum-val fin-green">+฿'+totalInc.toLocaleString()+'</span></div>'+
+      '<div><span class="exp-sum-label">รายจ่าย</span><span class="exp-sum-val fin-red">-฿'+totalExp.toLocaleString()+'</span></div>'+
+      '<div><span class="exp-sum-label">คงเหลือ</span><span class="exp-sum-val" style="color:'+(net>=0?'#3D7A52':'#C04040')+'">'+(net<0?'-':'')+'฿'+Math.abs(net).toLocaleString()+'</span></div>';
+
+    var lEl = document.getElementById('exp-list');
+    if (!lEl) return;
+    if (!items.length) { lEl.innerHTML = '<p class="fin-empty">ยังไม่มีรายการ — กรอกด้านบนได้เลยค่ะ</p>'; return; }
+
+    var groups = {};
+    items.forEach(function(e){ if (!groups[e.date]) groups[e.date]=[]; groups[e.date].push(e); });
+    var dates = Object.keys(groups).sort().reverse();
+    lEl.innerHTML = dates.map(function(d){
+      return '<div class="exp-date-label">'+(d===today?'วันนี้':thDate(d))+'</div>'+
+        groups[d].map(function(e){
+          if (e.type === 'transfer') {
+            var wFrom = walletById(e.fromWalletId);
+            var wTo   = walletById(e.toWalletId);
+            var isFrom = _selectedWallet === e.fromWalletId;
+            var dispAmt = isFrom ? '-฿'+(e.amount||0).toLocaleString() : '+฿'+(e.amount||0).toLocaleString();
+            var dispColor = isFrom ? '#C04040' : '#3D7A52';
+            return '<div class="exp-item transfer">'+
+              '<span class="exp-item-dot" style="background:#999"></span>'+
+              '<div class="exp-item-info"><span class="exp-item-text">⇄ '+finEsc(wFrom.name)+' → '+finEsc(wTo.name)+'</span><span class="exp-item-cat">โอนเงิน</span></div>'+
+              '<span class="exp-item-amt" style="color:'+dispColor+'">'+(_selectedWallet ? dispAmt : '฿'+(e.amount||0).toLocaleString())+'</span>'+
+              '<button class="fin-item-del" onclick="delExpense('+e.id+')">×</button></div>';
+          }
+          var w = walletById(e.walletId);
+          var isIncome = e.type === 'income';
+          return '<div class="exp-item'+(isIncome?' income':'')+'">' +
+            '<span class="exp-item-dot" style="background:'+w.color+'"></span>'+
+            '<div class="exp-item-info"><span class="exp-item-text">'+finEsc(e.text||'รายจ่าย')+'</span><span class="exp-item-cat">'+finEsc(w.name)+'</span></div>'+
+            '<span class="exp-item-amt" style="color:'+(isIncome?'#3D7A52':'inherit')+'">'+(isIncome?'+':'')+(e.amount?'฿'+e.amount.toLocaleString():'—')+'</span>'+
+            '<button class="fin-item-del" onclick="delExpense('+e.id+')">×</button></div>';
+        }).join('');
+    }).join('');
+  }
+
+  function switchExpPeriod(period) {
+    _expPeriod = period;
+    document.querySelectorAll('.exp-ftab').forEach(function(el){ el.classList.toggle('active', el.dataset.period===period); });
+    renderExpenses();
+  }
+
+  /* ── Wallet Management ── */
+  function openWalletMgmt() {
+    walletLoad();
+    renderWalletMgmtList();
+    renderWalletColorSwatches();
+    var nEl = document.getElementById('wallet-new-name');
+    if (nEl) nEl.value = '';
+    _newWalletColor = WALLET_COLORS[0];
+    openAuthModal('wallet-mgmt-modal');
+  }
+
+  function closeWalletMgmt() {
+    closeAuthModal('wallet-mgmt-modal');
+    renderExpenses();
+  }
+
+  function renderWalletMgmtList() {
+    var el = document.getElementById('wallet-mgmt-list');
+    if (!el) return;
+    el.innerHTML = _walletData.map(function(w){
+      return '<div class="wallet-mgmt-item">'+
+        '<span class="wallet-mgmt-dot" style="background:'+w.color+'"></span>'+
+        '<span class="wallet-mgmt-name">'+finEsc(w.name)+'</span>'+
+        '<button class="wallet-mgmt-del" onclick="deleteWallet('+w.id+')">×</button></div>';
+    }).join('');
+  }
+
+  function renderWalletColorSwatches() {
+    var el = document.getElementById('wallet-color-swatches');
+    if (!el) return;
+    el.innerHTML = WALLET_COLORS.map(function(c){
+      var sel = c === _newWalletColor;
+      return '<div class="wallet-color-swatch'+(sel?' selected':'')+'" style="background:'+c+';color:'+c+'" onclick="selectWalletColor(\''+c+'\')"></div>';
+    }).join('');
+  }
+
+  function selectWalletColor(color) {
+    _newWalletColor = color;
+    renderWalletColorSwatches();
+  }
+
+  function addWallet() {
+    var nEl = document.getElementById('wallet-new-name');
+    var name = (nEl ? nEl.value || '' : '').trim();
+    if (!name) return;
+    walletLoad();
+    _walletData.push({ id:Date.now(), name:name, color:_newWalletColor });
+    walletSave();
+    if (nEl) nEl.value = '';
+    _newWalletColor = WALLET_COLORS[0];
+    renderWalletMgmtList();
+    renderWalletColorSwatches();
+  }
+
+  function deleteWallet(id) {
+    walletLoad();
+    if (_walletData.length <= 1) return;
+    _walletData = _walletData.filter(function(w){ return w.id !== id; });
+    walletSave();
+    if (_selectedWallet === id) _selectedWallet = null;
+    if (_addWalletId   === id) _addWalletId   = null;
+    renderWalletMgmtList();
+  }
+
+  /* ── Transfer Modal ── */
+  function openTransferModal() {
+    walletLoad();
+    var fromEl = document.getElementById('transfer-from');
+    var toEl   = document.getElementById('transfer-to');
+    if (!fromEl || !toEl) return;
+    var opts = _walletData.map(function(w){
+      return '<option value="'+w.id+'">'+finEsc(w.name)+'</option>';
+    }).join('');
+    fromEl.innerHTML = opts;
+    toEl.innerHTML   = opts;
+    if (_walletData.length > 1) toEl.selectedIndex = 1;
+    var amtEl = document.getElementById('transfer-amount');
+    if (amtEl) amtEl.value = '';
+    openAuthModal('transfer-modal');
+  }
+
+  function closeTransferModal() {
+    closeAuthModal('transfer-modal');
+  }
+
+  function saveTransfer() {
+    var fromEl = document.getElementById('transfer-from');
+    var toEl   = document.getElementById('transfer-to');
+    var amtEl  = document.getElementById('transfer-amount');
+    var fromId = fromEl ? parseInt(fromEl.value) : null;
+    var toId   = toEl   ? parseInt(toEl.value)   : null;
+    var amount = amtEl  ? parseFloat(amtEl.value) : 0;
+    if (!fromId || !toId || fromId === toId || !(amount > 0)) return;
+    expLoad();
+    var today = new Date().toISOString().slice(0,10);
+    _expData.push({ id:Date.now(), type:'transfer', fromWalletId:fromId, toWalletId:toId, amount:amount, date:today, ts:Date.now() });
+    expSave();
+    closeTransferModal();
+    renderExpenses();
   }
 
   initApp();

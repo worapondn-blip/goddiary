@@ -608,5 +608,27 @@
 <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script defer src="app.js"></script>
 
+<!-- Read-only Banner -->
+<div id="readonly-banner" style="display:none;position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#2C1608;color:#FDF6EE;padding:0.5rem 1.2rem;border-radius:20px;font-size:0.82rem;z-index:9999;box-shadow:0 2px 12px rgba(0,0,0,0.25)">
+  ดูอย่างเดียว — บัญชีนี้ยังไม่ได้รับสิทธิ์แก้ไข
+</div>
+
+<!-- Profile Edit Modal -->
+<div id="profile-edit-modal" class="auth-overlay" onclick="closeAuthModal('profile-edit-modal',event)">
+  <div class="auth-card" style="max-width:380px">
+    <button class="auth-close" onclick="closeAuthModal('profile-edit-modal')">&times;</button>
+    <h2 class="auth-title">แก้ไขโปรไฟล์</h2>
+    <form onsubmit="saveProfileEdit(event)">
+      <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">ชื่อ</label>
+      <input id="profile-edit-name" type="text" required style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;margin-bottom:0.8rem">
+      <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">Bio (ไม่กี่คำ)</label>
+      <textarea id="profile-edit-bio" rows="2" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;resize:vertical;box-sizing:border-box;font-family:inherit;margin-bottom:0.8rem"></textarea>
+      <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">URL รูปโปรไฟล์ (ไม่บังคับ)</label>
+      <input id="profile-edit-img" type="url" placeholder="https://..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;margin-bottom:1rem">
+      <button type="submit" class="auth-confirm-btn" style="width:100%">บันทึก</button>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>

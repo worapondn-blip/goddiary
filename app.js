@@ -10,6 +10,7 @@
   const _fs   = firebase.firestore();
   const _auth = firebase.auth();
   let _currentUser = null;
+  let _isAllowed   = false;
 
   function openAuthModal(id) {
     var el = document.getElementById(id);
@@ -42,29 +43,54 @@
     console.error('Redirect result error:', err.code, err.message);
   });
 
-  _auth.onAuthStateChanged(function(user) {
+  function showReadOnlyBanner(show) {
+    var el = document.getElementById('readonly-banner');
+    if (el) el.style.display = show ? 'block' : 'none';
+  }
+
+  _auth.onAuthStateChanged(async function(user) {
     _currentUser = user;
+    _isAllowed   = false;
     var btn = document.getElementById('auth-btn');
     if (!btn) return;
     if (user) {
-      btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : 'Godji');
+      try {
+        var cfg = await _fs.collection('shared').doc('config').get();
+        var allowed = cfg.exists ? (cfg.data().allowedEmails || []) : [];
+        _isAllowed = allowed.includes(user.email);
+      } catch(e) { _isAllowed = false; }
+
+      btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : user.email);
       btn.title = 'Sign out';
       btn.onclick = function() { openAuthModal('signout-modal'); };
-      // โหลด Firestore ทุกครั้งที่มี user — ทั้งกรณี sign in ใหม่ และ reload ขณะ sign in อยู่แล้ว
+      showReadOnlyBanner(!_isAllowed);
+
       _db.loadRemote().then(function() {
         renderProjects(); renderCal(); renderTodo();
       });
+
+      if (_isAllowed) {
+        _db.ensureUserProfile(user).then(function() { renderPeople(); });
+      } else {
+        renderPeople();
+      }
     } else {
       btn.textContent = 'Sign in';
       btn.title = '';
       btn.onclick = signIn;
+      showReadOnlyBanner(false);
     }
   });
 
   /* ── DB Layer (Firestore + localStorage fallback) ── */
   var _db = (function() {
     var _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null, friends_extra: null };
-    function ref(n) { return _fs.collection('app').doc(n); }
+    function ref(n) {
+      if (!_currentUser) return null;
+      return _fs.collection('users').doc(_currentUser.uid).collection('data').doc(n);
+    }
+    function sharedRef(n) { return _fs.collection('shared').doc(n); }
+    function lsKey(k) { return _currentUser ? k + '_u_' + _currentUser.uid : k; }
     var _syncTimer;
     function showSync(state) {
       var el = document.getElementById('sync-status');
@@ -86,38 +112,64 @@
       try { return JSON.parse(localStorage.getItem(key) || 'null') || def; } catch { return def; }
     }
     function lsTodos() {
+      var uid = _currentUser ? _currentUser.uid : '';
+      var prefix = uid ? 'todos_u_' + uid + '_' : 'todos_';
       var r = {};
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.startsWith('todos_')) { try { r[k.slice(6)] = JSON.parse(localStorage.getItem(k) || '[]'); } catch {} }
+        if (k && k.startsWith(prefix)) { try { r[k.slice(prefix.length)] = JSON.parse(localStorage.getItem(k) || '[]'); } catch {} }
       }
       return r;
     }
     function lsTripTodos() {
+      var uid = _currentUser ? _currentUser.uid : '';
+      var prefix = uid ? 'godji_todos_u_' + uid + '_' : 'godji_todos_';
       var r = {};
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.startsWith('godji_todos_')) { try { r[k.slice(12)] = JSON.parse(localStorage.getItem(k) || '{}'); } catch {} }
+        if (k && k.startsWith(prefix)) { try { r[k.slice(prefix.length)] = JSON.parse(localStorage.getItem(k) || '{}'); } catch {} }
       }
       return r;
     }
     function loadLocal() {
-      _c.projects        = lsGet('gd_projects', []);
+      _c.projects        = lsGet(lsKey('gd_projects'), []);
       _c.todos           = lsTodos();
-      _c.travel          = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
+      _c.travel          = lsGet('gd_travel_shared', { wishlist:[], visited:[], budgets:[] });
       _c.trip_todos      = lsTripTodos();
-      _c.trip_companions = lsGet('gd_trip_companions', {});
-      _c.friends_extra   = lsGet('gd_friends_extra', []);
+      _c.trip_companions = lsGet(lsKey('gd_trip_companions'), {});
+      _c.friends_extra   = lsGet(lsKey('gd_friends_extra'), []);
     }
     async function loadRemote() {
       try {
-        var ss = await Promise.all([ref('projects').get(), ref('todos').get(), ref('travel').get(), ref('trip_todos').get(), ref('trip_companions').get()]);
+        // travel โหลดจาก shared collection (ไม่แยก user)
+        var travelSnap = await sharedRef('travel').get();
+        _c.travel = travelSnap.exists ? travelSnap.data() : _c.travel;
+        try { localStorage.setItem('gd_travel_shared', JSON.stringify(_c.travel)); } catch {}
+
+        var names = ['projects','todos','trip_todos','trip_companions'];
+        var ss = await Promise.all(names.map(function(n) { return ref(n).get(); }));
+
+        // ครั้งแรก — ถ้าไม่มีข้อมูลใน user path เลย ให้ migrate จาก legacy path
+        var hasAnyData = ss.some(function(s) { return s.exists; });
+        if (!hasAnyData) {
+          var legacyRef = function(n) { return _fs.collection('app').doc(n); };
+          var ls = await Promise.all(names.map(function(n) { return legacyRef(n).get(); }));
+          var batch = _fs.batch();
+          ls.forEach(function(s, i) { if (s.exists) batch.set(ref(names[i]), s.data()); });
+          await batch.commit();
+          ss = await Promise.all(names.map(function(n) { return ref(n).get(); }));
+        }
+
         _c.projects        = ss[0].exists ? (ss[0].data().items || []) : _c.projects;
         _c.todos           = ss[1].exists ? (ss[1].data().data  || {}) : _c.todos;
-        _c.travel          = ss[2].exists ? ss[2].data()               : _c.travel;
-        _c.trip_todos      = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_todos;
-        _c.trip_companions = ss[4].exists ? (ss[4].data().data  || {}) : _c.trip_companions;
+        _c.trip_todos      = ss[2].exists ? (ss[2].data().data  || {}) : _c.trip_todos;
+        _c.trip_companions = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_companions;
+
         var fss = await ref('friends_extra').get();
+        if (!fss.exists) {
+          var lf = await _fs.collection('app').doc('friends_extra').get();
+          if (lf.exists) { await ref('friends_extra').set(lf.data()); fss = await ref('friends_extra').get(); }
+        }
         _c.friends_extra = fss.exists ? (fss.data().data || []) : _c.friends_extra;
       } catch(e) {
         console.warn('Firestore unavailable, using localStorage:', e);
@@ -127,13 +179,51 @@
       loadLocal:    loadLocal,
       loadRemote:   loadRemote,
       getProjects:  function()      { return _c.projects || []; },
-      setProjects:  function(v)     { _c.projects = v; try { localStorage.setItem('gd_projects', JSON.stringify(v)); } catch {} write('projects', { items: v }); },
+      setProjects:  function(v)     { _c.projects = v; try { localStorage.setItem(lsKey('gd_projects'), JSON.stringify(v)); } catch {} write('projects', { items: v }); },
       getTodos:     function(k)     { return (_c.todos || {})[k] || []; },
-      setTodos:     function(k, v)  { if (!_c.todos) _c.todos = {}; _c.todos[k] = v; try { localStorage.setItem('todos_' + k, JSON.stringify(v)); } catch {} write('todos', { data: _c.todos }); },
+      setTodos:     function(k, v)  {
+        if (!_c.todos) _c.todos = {};
+        _c.todos[k] = v;
+        var uid = _currentUser ? _currentUser.uid : '';
+        try { localStorage.setItem(uid ? 'todos_u_' + uid + '_' + k : 'todos_' + k, JSON.stringify(v)); } catch {}
+        write('todos', { data: _c.todos });
+      },
       getTravel:    function()      { return _c.travel || { wishlist:[], visited:[], budgets:[] }; },
-      setTravel:    function(v)     { _c.travel = v; try { localStorage.setItem('godji_travel', JSON.stringify(v)); } catch {} write('travel', v); },
+      setTravel:    function(v)     {
+        _c.travel = v;
+        try { localStorage.setItem('gd_travel_shared', JSON.stringify(v)); } catch {}
+        showSync('saving');
+        sharedRef('travel').set(v)
+          .then(function() { showSync('saved'); })
+          .catch(function(e) { console.warn('Firestore write (travel):', e); showSync('error'); });
+      },
+      getComments: function(tripId, cb) {
+        return _fs.collection('trip_comments').doc(tripId).collection('items')
+          .orderBy('ts').onSnapshot(function(snap) {
+            cb(snap.docs.map(function(d) { return Object.assign({ _id: d.id }, d.data()); }));
+          }, function(e) { console.warn('comments listener:', e); cb([]); });
+      },
+      addComment: function(tripId, text) {
+        if (!_currentUser) return Promise.reject('not logged in');
+        return _fs.collection('trip_comments').doc(tripId).collection('items').add({
+          uid:    _currentUser.uid,
+          name:   _currentUser.displayName || 'Anonymous',
+          avatar: _currentUser.photoURL || '',
+          text:   text,
+          ts:     firebase.firestore.FieldValue.serverTimestamp()
+        });
+      },
+      deleteComment: function(tripId, commentId) {
+        return _fs.collection('trip_comments').doc(tripId).collection('items').doc(commentId).delete();
+      },
       getTripTodos: function(id)    { return (_c.trip_todos || {})[id] || {}; },
-      setTripTodos: function(id, v) { if (!_c.trip_todos) _c.trip_todos = {}; _c.trip_todos[id] = v; try { localStorage.setItem('godji_todos_' + id, JSON.stringify(v)); } catch {} write('trip_todos', { data: _c.trip_todos }); },
+      setTripTodos: function(id, v) {
+        if (!_c.trip_todos) _c.trip_todos = {};
+        _c.trip_todos[id] = v;
+        var uid = _currentUser ? _currentUser.uid : '';
+        try { localStorage.setItem(uid ? 'godji_todos_u_' + uid + '_' + id : 'godji_todos_' + id, JSON.stringify(v)); } catch {}
+        write('trip_todos', { data: _c.trip_todos });
+      },
       getTripCompanions: function(id) {
         var ov = (_c.trip_companions || {})[id];
         if (ov) return ov;
@@ -143,7 +233,7 @@
       setTripCompanions: function(id, ids) {
         if (!_c.trip_companions) _c.trip_companions = {};
         _c.trip_companions[id] = ids;
-        try { localStorage.setItem('gd_trip_companions', JSON.stringify(_c.trip_companions)); } catch {}
+        try { localStorage.setItem(lsKey('gd_trip_companions'), JSON.stringify(_c.trip_companions)); } catch {}
         write('trip_companions', { data: _c.trip_companions });
       },
       getFriendsAll: function() {
@@ -153,20 +243,47 @@
         if (!_c.friends_extra) _c.friends_extra = [];
         var f = { id: 'ex_' + Date.now(), name: name.trim(), img: '', fb: '' };
         _c.friends_extra.push(f);
-        try { localStorage.setItem('gd_friends_extra', JSON.stringify(_c.friends_extra)); } catch {}
+        try { localStorage.setItem(lsKey('gd_friends_extra'), JSON.stringify(_c.friends_extra)); } catch {}
         write('friends_extra', { data: _c.friends_extra });
         return f;
+      },
+      profileRef: function(uid) {
+        return _fs.collection('shared').doc('user_profiles').collection('profiles').doc(uid);
+      },
+      ensureUserProfile: async function(user) {
+        var r = this.profileRef(user.uid);
+        var snap = await r.get();
+        if (!snap.exists) {
+          await r.set({
+            uid:            user.uid,
+            email:          user.email,
+            name:           user.displayName || user.email,
+            img:            user.photoURL || '',
+            bio:            '',
+            linkedFriendId: '',
+            createdAt:      firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+      },
+      getProfiles: async function() {
+        try {
+          var snap = await _fs.collection('shared').doc('user_profiles').collection('profiles').get();
+          return snap.docs.map(function(d) { return d.data(); });
+        } catch(e) { return []; }
+      },
+      saveProfile: function(uid, data) {
+        return this.profileRef(uid).update(data);
       }
     };
   })();
 
   /* ── School ── */
-  var SCHOOL_KEY = 'gd_school_progress';
+  function schoolKey() { return 'gd_school_' + (_currentUser ? _currentUser.uid : 'guest'); }
   function schoolGetProgress() {
-    try { return JSON.parse(localStorage.getItem(SCHOOL_KEY)) || { completed: [], quiz_scores: {} }; } catch(e) { return { completed: [], quiz_scores: {} }; }
+    try { return JSON.parse(localStorage.getItem(schoolKey())) || { completed: [], quiz_scores: {} }; } catch(e) { return { completed: [], quiz_scores: {} }; }
   }
   function schoolSaveProgress(p) {
-    try { localStorage.setItem(SCHOOL_KEY, JSON.stringify(p)); } catch(e) {}
+    try { localStorage.setItem(schoolKey(), JSON.stringify(p)); } catch(e) {}
   }
   function schoolMarkComplete(lessonId, score) {
     var p = schoolGetProgress();
@@ -196,7 +313,7 @@
         tags: ['planning'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p>ก่อนลงทุน ต้องตอบ 2 คำถามให้ได้:<br>① <strong>เป้าหมายคืออะไร?</strong> — เงินเท่าไหร่ ภายในกี่ปี?<br>② <strong>กองทุนฉุกเฉินพร้อมหรือยัง?</strong> — ค่าใช้จ่าย 3–6 เดือนในบัญชีที่แตะได้ทันที</p><p>ลำดับ: <strong>กองทุนฉุกเฉิน → จ่ายหนี้ดอกเบี้ยสูง → ลงทุนระยะยาว</strong></p><ul><li>เป้าหมายระยะสั้น (&lt;3 ปี) → ไม่ควรลงหุ้น</li><li>เป้าหมายระยะยาว (3+ ปี) → ตลาดหุ้น historical เฉลี่ย 10%/ปี</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — เป้าหมาย Godji', body: '<p>🎯 <strong>เงินล้านก่อน 30</strong> = 6 ปี → เหมาะกับหุ้น<br>🎯 <strong>ชำระหนี้ กยศ. 255,900 บาท</strong> = 2–3 ปี → ผสม<br>🎯 <strong>ทริปต่างประเทศ</strong> = &lt;1 ปี → เงินสด/ออมทรัพย์</p><p>ออม 10,000 บาท/เดือน แบ่งตามเป้าหมาย ไม่ใช่ลงทุนทั้งหมดในหุ้น</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — วางแผนเป้าหมาย', body: '<p>🎯 <strong>เงินล้านก่อน 30</strong> = 6 ปี → เหมาะกับหุ้น<br>🎯 <strong>ชำระหนี้ดอกเบี้ยสูง</strong> = 2–3 ปี → ผสม<br>🎯 <strong>ทริปต่างประเทศ</strong> = &lt;1 ปี → เงินสด/ออมทรัพย์</p><p>แบ่งเงินออมตามเป้าหมาย ไม่ใช่ลงทุนทั้งหมดในหุ้น</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>เป้าหมายชัด → กลยุทธ์ถูก</strong> ลงทุนผิดประเภทกับระยะเวลา = เสี่ยงสูงโดยไม่จำเป็น</p>' }
         ],
         quiz: [
@@ -224,13 +341,13 @@
         tags: ['overview'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p>4 สินทรัพย์หลัก:</p><ul><li><strong>หุ้น (Stocks)</strong> — เป็นเจ้าของบริษัท ผลตอบแทนสูง ความเสี่ยงสูง เหมาะระยะยาว</li><li><strong>พันธบัตร (Bonds)</strong> — กู้ยืมให้รัฐ/บริษัท ดอกเบี้ยสม่ำเสมอ ความเสี่ยงต่ำ</li><li><strong>กองทุนรวม / ETF</strong> — รวมเงินหลายคน กระจายความเสี่ยงอัตโนมัติ เริ่มต้นง่าย</li><li><strong>อสังหาริมทรัพย์</strong> — ทรัพย์สินจริง ค่าเช่า + มูลค่าเพิ่ม ต้องใช้เงินก้อนใหญ่</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 10 ปี', body: '<p>เงินต้น 100,000 บาท × 10 ปี:<br>💵 ออมทรัพย์ 1%: <strong>110,462 บาท</strong><br>📜 พันธบัตร 4%: <strong>148,024 บาท</strong><br>📊 ETF S&P 500 10%: <strong>259,374 บาท</strong></p><p>Godji เลือกหุ้น US เป็น core เพราะ time horizon 6+ ปี และ savings rate 40%</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 10 ปี', body: '<p>เงินต้น 100,000 บาท × 10 ปี:<br>💵 ออมทรัพย์ 1%: <strong>110,462 บาท</strong><br>📜 พันธบัตร 4%: <strong>148,024 บาท</strong><br>📊 ETF S&P 500 10%: <strong>259,374 บาท</strong></p><p>นักลงทุนระยะยาวเลือกหุ้น US เป็น core เพราะ time horizon 6+ ปี และ savings rate สูงพอรับความผันผวน</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ไม่มีสินทรัพย์ใด "ดีที่สุด" เสมอ</strong> — เลือกตาม risk profile, time horizon, และเงินที่มี กระจาย asset class ช่วยลดความผันผวนรวม</p>' }
         ],
         quiz: [
           { q: 'สินทรัพย์ใดเหมาะกับนักลงทุนที่ต้องการรายได้สม่ำเสมอและความเสี่ยงต่ำ?', options: ['Growth stocks', 'Crypto', 'พันธบัตรรัฐบาล', 'Startup equity'], correct: 2 },
           { q: 'ETF คืออะไร?', options: ['หุ้นของบริษัทเดียว', 'กองทุนที่รวมหลาย asset ซื้อขายได้บนตลาดหุ้น', 'พันธบัตรรัฐบาล', 'บัญชีออมทรัพย์พิเศษ'], correct: 1 },
-          { q: 'Godji เลือกหุ้น US เป็น core เพราะอะไร?', options: ['หุ้น US ไม่มีภาษี', 'มี time horizon 6+ ปี และ savings rate สูงพอรับความผันผวน', 'หุ้น US ราคาถูกกว่าไทย', 'หุ้นไทยไม่มีโบรกเกอร์'], correct: 1 }
+          { q: 'นักลงทุนที่มี time horizon 6+ ปีและ savings rate สูง ควรเลือก asset ไหนเป็น core?', options: ['หุ้น US ไม่มีภาษี', 'หุ้น US / Global ETF เพราะ time horizon นานพอรับความผันผวน', 'หุ้น US ราคาถูกกว่าไทย', 'หุ้นไทยไม่มีโบรกเกอร์'], correct: 1 }
         ]
       }
     ]},
@@ -272,7 +389,7 @@
         tags: ['strategy', 'หุ้น'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Buy & Hold</strong> = ซื้อหุ้นในบริษัทที่เชื่อมั่น แล้วถือระยะยาว 3+ ปี ไม่สนใจความผันผวนระยะสั้น</p><ul><li><strong>vs Trading</strong> — trader ซื้อ-ขายถี่ หวังกำไรระยะสั้น ต้องเสียค่า commission + ภาษี + เวลา</li><li>ผลตอบแทน S&P 500 เฉลี่ย ~10%/ปี แต่ถ้าพลาดวัน best 20 วันใน 20 ปี เหลือแค่ ~2%</li><li>Compound growth: $100k × (1.10)^10 = $259k โดยไม่ต้องทำอะไร</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — พอร์ต Godji', body: '<p><span class="ticker-tag">AMZN</span> ถ้าซื้อ $100 ในปี 2012 → ปัจจุบัน ~$2,000+ (x20 ใน 12 ปี)</p><p>Godji เลือก Buy & Hold เพราะ: เงินเดือน 25k, ออม 10k/เดือน — ไม่มีเวลา trade ทุกวัน และ fundamentals ของ GOOGL, NVDA, AMZN ยังแข็งแกร่ง</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — Buy & Hold ระยะยาว', body: '<p><span class="ticker-tag">AMZN</span> ถ้าซื้อ $100 ในปี 2012 → ปัจจุบัน ~$2,000+ (x20 ใน 12 ปี)</p><p>นักลงทุนที่มีงานประจำมักเลือก Buy & Hold เพราะไม่มีเวลา trade ทุกวัน และ fundamentals ของหุ้นที่เลือกยังแข็งแกร่ง</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>"Time in the market beats timing the market"</strong> — อยู่ในตลาดนานกว่าสำคัญกว่าพยายามจับจังหวะ เลือกบริษัทดี ถือนาน ไม่แตะถ้าไม่มี kill condition</p>' }
         ],
         quiz: [
@@ -321,7 +438,7 @@
         tags: ['งบการเงิน', 'AMZN'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Free Cash Flow (FCF)</strong> = Operating Cash Flow − Capital Expenditure (CapEx)</p><p>FCF คือเงินสดจริงที่บริษัทสร้างได้ หลังจ่ายค่าลงทุนในโรงงาน/อุปกรณ์แล้ว<br>บริษัทมีกำไรบนบัญชีได้โดยไม่มีเงินสด — FCF จึงสำคัญกว่า Net Income บางครั้ง</p><ul><li>FCF สูง = บริษัทสร้างเงินจริง buyback/ปันผล/ลงทุนต่อได้โดยไม่พึ่งหนี้</li><li>FCF Yield = FCF ÷ Market Cap — เปรียบเหมือน "ดอกเบี้ย" ที่บริษัทให้คุณ</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — AMZN FCF Turnaround', body: '<p><span class="ticker-tag">AMZN</span>:<br>FY2021: FCF = <strong>−$19B</strong> (ลงทุน fulfillment centers + AWS infrastructure มหาศาล)<br>FY2024: FCF = <strong>+$38B</strong> (AWS profitable, logistics ปันผลได้แล้ว)</p><p>นี่คือเหตุผลหลักที่ Godji ถือ AMZN — FCF turnaround ครั้งนี้ไม่ใช่เรื่องบังเอิญ</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — AMZN FCF Turnaround', body: '<p><span class="ticker-tag">AMZN</span>:<br>FY2021: FCF = <strong>−$19B</strong> (ลงทุน fulfillment centers + AWS infrastructure มหาศาล)<br>FY2024: FCF = <strong>+$38B</strong> (AWS profitable, logistics ปันผลได้แล้ว)</p><p>FCF turnaround ครั้งนี้ไม่ใช่เรื่องบังเอิญ — เป็นผลจาก scale ที่ถึงจุดคุ้มทุน</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p>บริษัทที่ FCF เติบโตสม่ำเสมอ = engine ที่แข็งแกร่ง <strong>อย่าซื้อบริษัท FCF ติดลบเรื้อรัง</strong> ถ้าไม่รู้ว่าเมื่อไหร่จะ turn profitable</p>' }
         ],
         quiz: [
@@ -371,7 +488,7 @@
         tags: ['moat', 'strategy'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Economic Moat</strong> = ความได้เปรียบทางการแข่งขันที่ทนทาน — ปกป้อง margin และ revenue จากคู่แข่ง</p><p>Hamilton Helmer\'s <strong>7 Powers</strong>:<br>① Scale Economies &nbsp;② Network Effects &nbsp;③ Counter-Positioning &nbsp;④ Switching Costs<br>⑤ Branding &nbsp;⑥ Cornered Resource &nbsp;⑦ Process Power</p><p>บริษัทที่มีหลาย Power พร้อมกัน = moat หนาที่สุด</p>' },
-          { type: 'example', heading: 'ตัวอย่าง — พอร์ต Godji', body: '<p><span class="ticker-tag">GOOGL</span>: Network Effects (Search, YouTube, Maps ยิ่งมีคนใช้ยิ่งดี) + Scale Economies<br><span class="ticker-tag">NVDA</span>: Switching Costs (CUDA ecosystem — เปลี่ยน GPU ต้อง rewrite code ทั้งหมด) + Cornered Resource<br><span class="ticker-tag">ASML</span>: Counter-Positioning (monopoly EUV lithography ที่ไม่มีใครทำได้)</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — 7 Powers ในหุ้นจริง', body: '<p><span class="ticker-tag">GOOGL</span>: Network Effects (Search, YouTube, Maps ยิ่งมีคนใช้ยิ่งดี) + Scale Economies<br><span class="ticker-tag">NVDA</span>: Switching Costs (CUDA ecosystem — เปลี่ยน GPU ต้อง rewrite code ทั้งหมด) + Cornered Resource<br><span class="ticker-tag">ASML</span>: Counter-Positioning (monopoly EUV lithography ที่ไม่มีใครทำได้)</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ก่อนซื้อหุ้น ถามว่า <strong>"บริษัทนี้มี moat อะไร?"</strong> ถ้าตอบไม่ได้ อย่าซื้อ — ยิ่ง moat แข็งแกร่ง ยิ่ง hold ได้นาน</p>' }
         ],
         quiz: [
@@ -387,7 +504,7 @@
         tags: ['risk', 'checklist'],
         sections: [
           { type: 'concept', heading: 'แนวคิด', body: '<p>สัญญาณอันตรายที่ควร reconsider position:</p><ul><li><strong>Gross Margin หดตัวต่อเนื่อง</strong> — pricing power หายไป</li><li><strong>Revenue growth ชะลอ + Debt พุ่ง</strong> — กู้เงินมาพยุงยอดขาย</li><li><strong>FCF ติดลบเรื้อรัง</strong> โดยไม่มี path to profitability ชัดเจน</li><li><strong>Insider selling มหาศาล</strong> — คนในรู้อะไรที่เราไม่รู้</li><li><strong>Accounting changes บ่อย</strong> — อาจซ่อน loss</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — SOFI', body: '<p><span class="ticker-tag">SOFI</span> ใน portfolio Godji ถือ <em>น้อยมาก</em> เพราะ:<br>— ยังขาดทุน GAAP (แม้ adjusted profitable)<br>— Gross margin ต่ำกว่า fintech peer อื่น<br>— Revenue growth ดี แต่ยังไม่ชัดว่า moat จะสร้างได้จริงไหม<br>→ Risk position ไม่ใช่ core holding</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — SOFI', body: '<p><span class="ticker-tag">SOFI</span> เป็น risk position <em>น้อยมาก</em> เพราะ:<br>— ยังขาดทุน GAAP (แม้ adjusted profitable)<br>— Gross margin ต่ำกว่า fintech peer อื่น<br>— Revenue growth ดี แต่ยังไม่ชัดว่า moat จะสร้างได้จริงไหม<br>→ Risk position ไม่ใช่ core holding</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p>Red flag ไม่ได้แปลว่า "ขายทันที" แต่ต้องอธิบายได้ว่าทำไมถึงยังถือ — ถ้าอธิบายไม่ได้ ลด position ก่อน</p>' }
         ],
         quiz: [
@@ -399,11 +516,11 @@
         ]
       }
     ]},
-    { moduleId: 4, levelLabel: 'ระดับ 4', levelColor: 'purple', moduleTitle: 'พอร์ตของ Godji', lessons: [
+    { moduleId: 4, levelLabel: 'ระดับ 4', levelColor: 'purple', moduleTitle: 'พอร์ต Case Study', lessons: [
       {
-        id: '4-1', title: 'ทำไม Godji ถือ GOOGL, NVDA, AMZN?', icon: 'briefcase',
+        id: '4-1', title: 'ทำไมถึงเลือก GOOGL, NVDA, AMZN?', icon: 'briefcase',
         desc: 'Thesis + kill condition สำหรับ 3 หุ้นหลัก',
-        tags: ['portfolio', 'Godji'],
+        tags: ['portfolio', 'case study'],
         sections: [
           { type: 'concept', heading: 'Thesis Construction', body: '<p>การเลือกหุ้น core position ต้องตอบได้ 3 ข้อ:<br>① <strong>Moat</strong> — บริษัทมีความได้เปรียบที่ยั่งยืนอะไร?<br>② <strong>Revenue Durability</strong> — รายได้จะยังมาเรื่อยๆ แม้ macro เปลี่ยนหรือไม่?<br>③ <strong>Kill Condition</strong> — เมื่อไหร่ถึงจะขาย?</p>' },
           { type: 'example', heading: 'Thesis — 3 Core Positions', body: '<p><span class="ticker-tag">GOOGL</span>: Moat = Search monopoly + YouTube + Cloud. Kill condition = AI ทำให้ Search revenue ลดลง 20%+ YoY ต่อเนื่อง 2 quarters</p><p><span class="ticker-tag">NVDA</span>: Moat = CUDA ecosystem + H100/B100 supply monopoly. Kill condition = AMD/Intel ดึง enterprise customers ได้ &gt;20%</p><p><span class="ticker-tag">AMZN</span>: Moat = AWS (80% operating income) + logistics flywheel. Kill condition = AWS market share ลดลง QoQ ต่อเนื่อง หรือ FCF กลับไปติดลบ</p>' },
@@ -411,21 +528,21 @@
         ],
         quiz: [
           { q: 'Kill Condition คืออะไร?', options: ['ราคาหุ้นลงเกิน 10%', 'เงื่อนไขที่กำหนดไว้ล่วงหน้าว่าจะขายเมื่อ thesis พัง', 'เมื่อ P/E สูงกว่าตลาด', 'เมื่อ CEO ออก'], correct: 1 },
-          { q: 'NVDA ใน Godji\'s thesis — Kill condition หลักคืออะไร?', options: ['ราคาลงเกิน 30%', 'AMD/Intel ดึง enterprise GPU market share ได้ >20%', 'NVDA ออก product ใหม่', 'Fed ขึ้น interest rate'], correct: 1 },
+          { q: 'NVDA — Kill condition หลักคืออะไร?', options: ['ราคาลงเกิน 30%', 'AMD/Intel ดึง enterprise GPU market share ได้ >20%', 'NVDA ออก product ใหม่', 'Fed ขึ้น interest rate'], correct: 1 },
           { q: 'AMZN มีกำไร operating income จากส่วนไหนเป็นหลัก?', options: ['E-commerce', 'AWS (Amazon Web Services)', 'Advertising', 'Prime Video'], correct: 1 }
         ]
       },
       {
         id: '4-2', title: 'วางแผนสู่เป้าหมาย 1 ล้าน', icon: 'trophy',
         desc: 'เส้นทาง compound สู่เงินล้านก่อน 30',
-        tags: ['planning', 'Godji'],
+        tags: ['planning', 'compound'],
         sections: [
-          { type: 'concept', heading: 'Compound Growth Calculator', body: '<p>สูตร: <strong>FV = PV × (1+r)^n + PMT × [(1+r)^n − 1] / r</strong><br>PV = มูลค่าปัจจุบัน, r = return ต่อปี, n = จำนวนปี, PMT = ออมต่อปี</p><p>Godji\'s scenario:<br>PV = ~100,000 บาท (US portfolio)<br>PMT = 10,000 บาท/เดือน = 120,000 บาท/ปี<br>r = 10%/ปี (S&P 500 historical avg)<br>เป้า = 1,000,000 บาท</p>' },
-          { type: 'example', heading: 'Projection — เส้นทางสู่ 1 ล้าน', body: '<p>ที่ r=10%:<br>ปีที่ 5 (2031): <strong>~660,000 บาท</strong><br>ปีที่ 6 (2032): <strong>~847,000 บาท</strong><br>ปีที่ 7 (2033): <strong>~1,052,000 บาท ✓</strong></p><p>ถ้า portfolio outperform (r=15%):<br>ปีที่ 5 (2031): <strong>~820,000 บาท</strong><br>ปีที่ 6 (2032): <strong>~1,063,000 บาท ✓</strong></p><p>เป้าหมาย <strong>เงินล้านก่อน 30</strong> (2032, อายุ 30) → ทำได้ถ้าวินัยออม 10k/เดือน</p>' },
+          { type: 'concept', heading: 'Compound Growth Calculator', body: '<p>สูตร: <strong>FV = PV × (1+r)^n + PMT × [(1+r)^n − 1] / r</strong><br>PV = มูลค่าปัจจุบัน, r = return ต่อปี, n = จำนวนปี, PMT = ออมต่อปี</p><p>ตัวอย่าง scenario:<br>PV = ~100,000 บาท<br>PMT = 10,000 บาท/เดือน = 120,000 บาท/ปี<br>r = 10%/ปี (S&P 500 historical avg)<br>เป้า = 1,000,000 บาท</p>' },
+          { type: 'example', heading: 'Projection — เส้นทางสู่ 1 ล้าน', body: '<p>ที่ r=10%:<br>ปีที่ 5: <strong>~660,000 บาท</strong><br>ปีที่ 6: <strong>~847,000 บาท</strong><br>ปีที่ 7: <strong>~1,052,000 บาท ✓</strong></p><p>ถ้า portfolio outperform (r=15%):<br>ปีที่ 5: <strong>~820,000 บาท</strong><br>ปีที่ 6: <strong>~1,063,000 บาท ✓</strong></p><p>เป้าหมาย <strong>1 ล้านภายใน 7 ปี</strong> → ทำได้ถ้าวินัยออม 10k/เดือน</p>' },
           { type: 'takeaway', heading: 'Key Takeaway', body: '<p>เงินล้านไม่ได้เกิดจาก "หุ้นปัง" วันเดียว แต่จาก <strong>ออมสม่ำเสมอ + ถือนาน + อย่าขายตอนตลาดร่วง</strong> — compound ทำงานให้เองในระยะยาว</p>' }
         ],
         quiz: [
-          { q: 'ที่ r=10%/ปี Godji จะถึง 1 ล้านในปีประมาณ?', options: ['2029', '2031', '2033', '2040'], correct: 2 },
+          { q: 'ที่ r=10%/ปี เริ่ม PV=100k + ออม 10k/เดือน จะถึง 1 ล้านในปีที่เท่าไหร่?', options: ['ปีที่ 3', 'ปีที่ 5', 'ปีที่ 7', 'ปีที่ 10'], correct: 2 },
           { q: 'ถ้า portfolio outperform ที่ r=15% จะถึง 1 ล้านเร็วขึ้นอีกประมาณกี่ปี?', options: ['1 ปี', '2–3 ปี', '5 ปี', '10 ปี'], correct: 0 },
           { q: 'ปัจจัยที่สำคัญที่สุดในการถึงเป้า 1 ล้านคือ?', options: ['เลือกหุ้นให้ถูกทุกตัว', 'ออมสม่ำเสมอ + ถือนาน + ไม่ขายตอนตลาดร่วง', 'ลงทุนเฉพาะ crypto', 'ซื้อ-ขายถี่เพื่อจับ swing'], correct: 1 }
         ]
@@ -839,11 +956,11 @@
 
   /* ── Trips ── */
   var friendsData = [
-    { id: 'godji', name: 'Godji', img: 'Avatars/God.png', fb: '', isMe: true },
-    { id: 'tac',  name: 'แทค',  img: 'Avatars/Friends/Tac.png',  fb: '' },
-    { id: 'tong', name: 'ตอง',  img: 'Avatars/Friends/Tong.png', fb: 'https://web.facebook.com/sukunya.meekhun.2025' },
-    { id: 'peet', name: 'พีท',  img: 'Avatars/Friends/Peet.png', fb: 'https://web.facebook.com/peerawat.uton' },
-    { id: 'boat', name: 'โบ๊ท', img: 'Avatars/Friends/Boat.png', fb: 'https://web.facebook.com/thawatchai.sap' }
+    { id: 'godji', name: 'Godji', img: 'Avatars/God.png', fb: '', isMe: true, googleUid: '' },
+    { id: 'tac',  name: 'แทค',  img: 'Avatars/Friends/Tac.png',  fb: '', googleUid: '' },
+    { id: 'tong', name: 'ตอง',  img: 'Avatars/Friends/Tong.png', fb: 'https://web.facebook.com/sukunya.meekhun.2025', googleUid: '' },
+    { id: 'peet', name: 'พีท',  img: 'Avatars/Friends/Peet.png', fb: 'https://web.facebook.com/peerawat.uton', googleUid: '' },
+    { id: 'boat', name: 'โบ๊ท', img: 'Avatars/Friends/Boat.png', fb: 'https://web.facebook.com/thawatchai.sap', googleUid: '' }
   ];
 
   var tripsData = [
@@ -1362,7 +1479,19 @@
     if (todosHTML) jumpChips.push('<span class="trip-jump-chip" onclick="jumpToSection(\'trip-sec-todos\')">To-do</span>');
     if (budgetHTML) jumpChips.push('<span class="trip-jump-chip" onclick="jumpToSection(\'trip-sec-budget\')">Budget</span>');
     if (notesHTML) jumpChips.push('<span class="trip-jump-chip" onclick="jumpToSection(\'trip-sec-notes\')">หมายเหตุ</span>');
+    jumpChips.push('<span class="trip-jump-chip" onclick="jumpToSection(\'trip-sec-comments\')">ความคิดเห็น</span>');
     var jumpNavHTML = '<div class="trip-jump-nav">' + jumpChips.join('') + '</div>';
+
+    var commentsHTML = (
+      '<div class="trip-comments" id="trip-sec-comments">' +
+        '<div class="trip-sec-title">ความคิดเห็น</div>' +
+        '<div id="comments-list-' + trip.id + '" class="comments-list"></div>' +
+        '<form class="comment-form" onsubmit="submitComment(event,\'' + trip.id + '\')">' +
+          '<textarea class="comment-input" name="text" placeholder="เขียนความคิดเห็น..." rows="2" required></textarea>' +
+          '<button class="comment-submit" type="submit">ส่ง</button>' +
+        '</form>' +
+      '</div>'
+    );
 
     return (
       '<div class="trip-detail-head">' +
@@ -1376,8 +1505,76 @@
       '<div class="trip-detail-layout">' +
         '<div class="trip-detail-main"><div class="days-list">' + daysHTML + '</div></div>' +
         '<div class="trip-detail-aside" id="trip-sec-aside">' + calendarHTML + todosHTML + budgetHTML + notesHTML + '</div>' +
-      '</div>'
+      '</div>' +
+      commentsHTML
     );
+  }
+
+  var _commentUnsubscribe = null;
+  function renderComments(tripId) {
+    if (_commentUnsubscribe) { _commentUnsubscribe(); _commentUnsubscribe = null; }
+    _commentUnsubscribe = _db.getComments(tripId, function(items) {
+      var el = document.getElementById('comments-list-' + tripId);
+      if (!el) return;
+      if (!items.length) {
+        el.innerHTML = '<div class="comments-empty">ยังไม่มีความคิดเห็น — เป็นคนแรกที่แสดงความคิดเห็นค่ะ</div>';
+        return;
+      }
+      el.innerHTML = items.map(function(c) {
+        var avatarHTML = c.avatar
+          ? '<img class="comment-avatar" src="' + c.avatar + '" referrerpolicy="no-referrer">'
+          : '<div class="comment-avatar comment-avatar-init">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
+        var tsLabel = c.ts ? new Date(c.ts.seconds * 1000).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '';
+        var isOwn = _currentUser && _currentUser.uid === c.uid;
+        return (
+          '<div class="comment-item">' +
+            avatarHTML +
+            '<div class="comment-body">' +
+              '<div class="comment-meta"><span class="comment-name">' + c.name + '</span><span class="comment-ts">' + tsLabel + '</span>' +
+                (isOwn ? '<button class="comment-delete" onclick="deleteComment(\'' + tripId + '\',\'' + c._id + '\')">ลบ</button>' : '') +
+              '</div>' +
+              '<div class="comment-text">' + c.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    });
+  }
+
+  function openProfileEdit() {
+    if (!_currentUser || !_isAllowed) return;
+    _db.profileRef(_currentUser.uid).get().then(function(snap) {
+      var p = snap.exists ? snap.data() : {};
+      document.getElementById('profile-edit-name').value = p.name || _currentUser.displayName || '';
+      document.getElementById('profile-edit-bio').value  = p.bio  || '';
+      document.getElementById('profile-edit-img').value  = p.img  || _currentUser.photoURL || '';
+      openAuthModal('profile-edit-modal');
+    });
+  }
+
+  function saveProfileEdit(e) {
+    e.preventDefault();
+    if (!_currentUser || !_isAllowed) return;
+    var name = document.getElementById('profile-edit-name').value.trim();
+    var bio  = document.getElementById('profile-edit-bio').value.trim();
+    var img  = document.getElementById('profile-edit-img').value.trim();
+    _db.saveProfile(_currentUser.uid, { name: name, bio: bio, img: img }).then(function() {
+      closeAuthModal('profile-edit-modal');
+      renderPeople();
+    });
+  }
+
+  function submitComment(e, tripId) {
+    e.preventDefault();
+    if (!_currentUser) { alert('กรุณา Sign in ก่อนแสดงความคิดเห็นค่ะ'); return; }
+    var form = e.target;
+    var text = form.text.value.trim();
+    if (!text) return;
+    _db.addComment(tripId, text).then(function() { form.reset(); }).catch(function(err) { console.warn('addComment:', err); });
+  }
+
+  function deleteComment(tripId, commentId) {
+    _db.deleteComment(tripId, commentId).catch(function(err) { console.warn('deleteComment:', err); });
   }
 
   function openTrip(id, skipHistory) {
@@ -1388,9 +1585,11 @@
     document.getElementById('trips-detail').style.display = 'block';
     document.querySelector('.main').scrollTop = 0;
     if (!skipHistory) history.pushState(null, '', '#trips/' + id);
+    renderComments(id);
   }
 
   function closeTrip() {
+    if (_commentUnsubscribe) { _commentUnsubscribe(); _commentUnsubscribe = null; }
     document.getElementById('trips-detail').style.display = 'none';
     document.getElementById('trips-list').style.display = 'block';
     history.pushState(null, '', '#trips');
@@ -1461,73 +1660,102 @@
   }
   buildTripCards();
 
-  function renderPeople() {
+  function buildPersonCard(f, isSelf) {
+    var allTrips = tripsData.filter(function(t) {
+      return _db.getTripCompanions(t.id).indexOf(f.id) !== -1;
+    });
+    var visitedTrips  = allTrips.filter(function(t) { return t.status === 'visited'; });
+    var planningTrips = allTrips.filter(function(t) { return t.status !== 'visited'; });
+
+    var tripsHTML = '';
+    if (visitedTrips.length) {
+      tripsHTML += '<div class="person-trips-group"><div class="person-trips-label">ไปแล้ว</div>' +
+        '<div class="person-trips">' + visitedTrips.map(function(t) {
+          return '<span class="person-trip-tag visited">' + t.name + '</span>';
+        }).join('') + '</div></div>';
+    }
+    if (planningTrips.length) {
+      tripsHTML += '<div class="person-trips-group"><div class="person-trips-label planning">กำลังวางแผน</div>' +
+        '<div class="person-trips">' + planningTrips.map(function(t) {
+          return '<span class="person-trip-tag planning">' + t.name + '</span>';
+        }).join('') + '</div></div>';
+    }
+    if (!tripsHTML) {
+      tripsHTML = '<span style="font-size:0.8rem;color:var(--muted)">ยังไม่มีทริปที่บันทึกไว้</span>';
+    }
+
+    var roleTag  = f.isMe ? 'เจ้าของ' : 'ซิโบเล็ต ซิโบติ้ว';
+    var subText  = f.isMe ? 'เจ้าของ goddiary'
+      : allTrips.length
+        ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
+          (visitedTrips.length && planningTrips.length ? ' · ' : '') +
+          (planningTrips.length ? planningTrips.length + ' แผน' : '')
+        : 'ซิโบเล็ต ซิโบติ้ว';
+
+    var bioHTML = f.bio ? '<p style="font-size:0.78rem;color:var(--muted);margin:0.25rem 0 0.75rem">' + f.bio + '</p>' : '';
+    var editBtn = isSelf && _isAllowed
+      ? '<button class="profile-edit-btn" onclick="event.stopPropagation();openProfileEdit()">✎ แก้ไขโปรไฟล์</button>'
+      : '';
+
+    var imgHTML = f.img
+      ? '<img class="f-photo" src="' + f.img + '" alt="' + f.name + '" referrerpolicy="no-referrer">'
+      : '<div class="f-photo f-photo-init">' + (f.name || '?').charAt(0).toUpperCase() + '</div>';
+
+    return (
+      '<div class="flip-wrapper" onclick="toggleFlip(this)">' +
+        '<div class="flip-inner">' +
+          '<div class="flip-front">' +
+            imgHTML +
+            '<div class="f-overlay">' +
+              (f.isMe ? '<span class="f-me-badge">เจ้าของ</span>' : '') +
+              (isSelf && !f.isMe ? '<span class="f-me-badge" style="background:var(--green-mid)">ฉัน</span>' : '') +
+              '<span class="fname">' + f.name + '</span>' +
+              '<span class="f-sub">' + subText + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flip-back">' +
+            '<div class="back-top">' +
+              '<span class="back-role-tag">' + roleTag + '</span>' +
+              '<span class="back-flip-hint">← กลับ</span>' +
+            '</div>' +
+            '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.25rem">' + f.name + '</span>' +
+            bioHTML +
+            editBtn +
+            tripsHTML +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  async function renderPeople() {
     var grid = document.getElementById('people-grid');
     var countEl = document.getElementById('people-count');
     if (!grid) return;
-    if (countEl) countEl.textContent = friendsData.length + ' คน';
-    grid.innerHTML = friendsData.map(function(f) {
-      var allTrips = tripsData.filter(function(t) {
-        return _db.getTripCompanions(t.id).indexOf(f.id) !== -1;
-      });
-      var visitedTrips  = allTrips.filter(function(t) { return t.status === 'visited'; });
-      var planningTrips = allTrips.filter(function(t) { return t.status !== 'visited'; });
 
-      var tripsHTML = '';
-      if (visitedTrips.length) {
-        tripsHTML += '<div class="person-trips-group">' +
-          '<div class="person-trips-label">ไปแล้ว</div>' +
-          '<div class="person-trips">' + visitedTrips.map(function(t) {
-            return '<span class="person-trip-tag visited">' + t.name + '</span>';
-          }).join('') + '</div></div>';
+    var profiles = await _db.getProfiles();
+    var merged = friendsData.map(function(f) { return Object.assign({}, f); });
+
+    // merge Firestore profiles เข้า friendsData
+    profiles.forEach(function(p) {
+      var linked = p.linkedFriendId ? merged.find(function(f) { return f.id === p.linkedFriendId; }) : null;
+      if (linked) {
+        if (p.img) linked.img = p.img;
+        if (p.bio) linked.bio = p.bio;
+        linked._uid = p.uid;
+      } else {
+        // ยังไม่ได้ link → เพิ่มการ์ดใหม่เฉพาะถ้าไม่ซ้ำ
+        var exists = merged.find(function(f) { return f._uid === p.uid; });
+        if (!exists) {
+          merged.push({ id: 'user_' + p.uid, name: p.name, img: p.img, bio: p.bio, fb: '', _uid: p.uid });
+        }
       }
-      if (planningTrips.length) {
-        tripsHTML += '<div class="person-trips-group">' +
-          '<div class="person-trips-label planning">กำลังวางแผน</div>' +
-          '<div class="person-trips">' + planningTrips.map(function(t) {
-            return '<span class="person-trip-tag planning">' + t.name + '</span>';
-          }).join('') + '</div></div>';
-      }
-      if (!tripsHTML) {
-        tripsHTML = '<span style="font-size:0.8rem;color:var(--muted)">ยังไม่มีทริปที่บันทึกไว้</span>';
-      }
+    });
 
-      var subText = f.isMe
-        ? 'เจ้าของ goddiary'
-        : allTrips.length
-          ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
-            (visitedTrips.length && planningTrips.length ? ' · ' : '') +
-            (planningTrips.length ? planningTrips.length + ' แผน' : '')
-          : 'ซิโบเล็ต ซิโบติ้ว';
-
-      var roleTag = f.isMe ? 'ฉัน' : 'ซิโบเล็ต ซิโบติ้ว';
-      var backExtra = f.isMe
-        ? '<p style="font-size:0.78rem;color:var(--muted);margin:0.25rem 0 0.75rem">เจ้าของระบบนี้ — สร้างเพื่อดูแลทุกมิติของชีวิต</p>'
-        : '';
-
-      return (
-        '<div class="flip-wrapper" onclick="toggleFlip(this)">' +
-          '<div class="flip-inner">' +
-            '<div class="flip-front">' +
-              '<img class="f-photo" src="' + f.img + '" alt="' + f.name + '">' +
-              '<div class="f-overlay">' +
-                (f.isMe ? '<span class="f-me-badge">ฉัน</span>' : '') +
-                '<span class="fname">' + f.name + '</span>' +
-                '<span class="f-sub">' + subText + '</span>' +
-              '</div>' +
-            '</div>' +
-            '<div class="flip-back">' +
-              '<div class="back-top">' +
-                '<span class="back-role-tag">' + roleTag + '</span>' +
-                '<span class="back-flip-hint">← กลับ</span>' +
-              '</div>' +
-              '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.5rem">' + f.name + '</span>' +
-              backExtra +
-              tripsHTML +
-            '</div>' +
-          '</div>' +
-        '</div>'
-      );
+    if (countEl) countEl.textContent = merged.length + ' คน';
+    grid.innerHTML = merged.map(function(f) {
+      var isSelf = _currentUser && (f._uid === _currentUser.uid || (f.googleUid && f.googleUid === _currentUser.uid));
+      return buildPersonCard(f, isSelf);
     }).join('');
   }
   renderPeople();

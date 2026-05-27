@@ -13,14 +13,19 @@
 
   function signIn() {
     var provider = new firebase.auth.GoogleAuthProvider();
-    if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-      _auth.signInWithRedirect(provider);
-    } else {
-      _auth.signInWithPopup(provider).catch(function() {
+    _auth.signInWithPopup(provider).catch(function(err) {
+      if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
         _auth.signInWithRedirect(provider);
-      });
-    }
+      } else {
+        console.error('Sign-in error:', err.code, err.message);
+      }
+    });
   }
+
+  // หลัง redirect กลับมา — ต้อง pick up ผลลัพธ์
+  _auth.getRedirectResult().catch(function(err) {
+    console.error('Redirect result error:', err.code, err.message);
+  });
 
   _auth.onAuthStateChanged(function(user) {
     var justSignedIn = !_currentUser && !!user;

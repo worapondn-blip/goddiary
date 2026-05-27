@@ -28,7 +28,6 @@
   });
 
   _auth.onAuthStateChanged(function(user) {
-    var justSignedIn = !_currentUser && !!user;
     _currentUser = user;
     var btn = document.getElementById('auth-btn');
     if (!btn) return;
@@ -36,11 +35,10 @@
       btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : 'Godji');
       btn.title = 'Sign out';
       btn.onclick = function() { _auth.signOut(); };
-      if (justSignedIn) {
-        _db.loadRemote().then(function() {
-          renderProjects(); renderCal(); renderTodo();
-        });
-      }
+      // โหลด Firestore ทุกครั้งที่มี user — ทั้งกรณี sign in ใหม่ และ reload ขณะ sign in อยู่แล้ว
+      _db.loadRemote().then(function() {
+        renderProjects(); renderCal(); renderTodo();
+      });
     } else {
       btn.textContent = 'Sign in';
       btn.title = '';

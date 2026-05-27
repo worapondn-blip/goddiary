@@ -34,7 +34,9 @@
     if (user) {
       btn.textContent = '● ' + (user.displayName ? user.displayName.split(' ')[0] : 'Godji');
       btn.title = 'Sign out';
-      btn.onclick = function() { _auth.signOut(); };
+      btn.onclick = function() {
+        if (confirm('ต้องการ Sign out ใช่ไหม?')) { _auth.signOut(); }
+      };
       // โหลด Firestore ทุกครั้งที่มี user — ทั้งกรณี sign in ใหม่ และ reload ขณะ sign in อยู่แล้ว
       _db.loadRemote().then(function() {
         renderProjects(); renderCal(); renderTodo();

@@ -1172,11 +1172,17 @@
       margin-top: 2rem;
       align-items: start;
     }
+    /* mobile: Calendar → Todo → Projects */
+    .cal-card { order: 1; }
+    .todo-card { order: 2; }
+    .proj-widget-card { order: 3; }
     @media (min-width: 769px) {
       .home-widgets {
         grid-template-columns: auto 2fr 1fr;
         gap: 1.5rem;
       }
+      /* desktop: reset to HTML source order (Calendar | Projects | Todo) */
+      .cal-card, .proj-widget-card, .todo-card { order: 0; }
     }
 
     /* Projects widget (home) */

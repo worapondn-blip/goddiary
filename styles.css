@@ -1724,3 +1724,20 @@
 
     body.dark .port-chart-box,
     body.dark .port-table-wrap { background: #251508; }
+
+    body.dark .hero-btn.primary,
+    body.dark .proj-add-btn,
+    body.dark .proj-add-mini-btn,
+    body.dark .proj-modal-save,
+    body.dark .form-submit,
+    body.dark .todo-add-btn,
+    body.dark .scroll-top-btn,
+    body.dark .tvs-btn.active { background: #C4956A; color: #1C1008; border-color: #C4956A; }
+
+    body.dark .todo-check.checked,
+    body.dark .todo-check.done,
+    body.dark .proj-ms-check.done { background: #C4956A; border-color: #C4956A; color: #1C1008; }
+
+    body.dark .cal-day.today { background: #C4956A; color: #1C1008; }
+
+    body.dark .trip-jump-chip:hover { background: #C4956A; color: #1C1008; border-color: #C4956A; }

@@ -160,6 +160,449 @@
     };
   })();
 
+  /* ── School ── */
+  var SCHOOL_KEY = 'gd_school_progress';
+  function schoolGetProgress() {
+    try { return JSON.parse(localStorage.getItem(SCHOOL_KEY)) || { completed: [], quiz_scores: {} }; } catch(e) { return { completed: [], quiz_scores: {} }; }
+  }
+  function schoolSaveProgress(p) {
+    try { localStorage.setItem(SCHOOL_KEY, JSON.stringify(p)); } catch(e) {}
+  }
+  function schoolMarkComplete(lessonId, score) {
+    var p = schoolGetProgress();
+    if (!p.completed.includes(lessonId)) p.completed.push(lessonId);
+    p.quiz_scores[lessonId] = score;
+    schoolSaveProgress(p);
+  }
+
+  var SCHOOL_CURRICULUM = [
+    { moduleId: 0, levelLabel: 'ระดับ 1', levelColor: 'green', moduleTitle: 'รู้จักการลงทุน', lessons: [
+      { id: '0-1', title: 'ทำไมต้องลงทุน?', icon: 'trend-up',
+        desc: 'เงินเฟ้อกินค่าเงิน ออมทรัพย์อย่างเดียวไม่พอ',
+        tags: ['concept', 'motivation'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>เงินเฟ้อ (Inflation)</strong> คืออัตราที่ราคาสินค้าเพิ่มขึ้นทุกปี ประเทศไทยเฉลี่ย ~2–3%/ปี — แปลว่าเงิน 100 บาทวันนี้ ปีหน้ามีมูลค่าซื้อของได้แค่ ~97–98 บาท</p><ul><li>ดอกเบี้ยออมทรัพย์ไทยปัจจุบัน ~0.5–1.5%/ปี</li><li>เงินเฟ้อ 3% − ดอกเบี้ย 1% = มูลค่าจริงลดลง 2%/ปีโดยไม่ทำอะไร</li><li>ลงทุนอย่างถูกต้อง = เอาชนะเงินเฟ้อ + สร้างความมั่งคั่งระยะยาว</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — เงิน 10,000 บาทใน 10 ปี', body: '<p>ฝากออมทรัพย์ 1%/ปี → <strong>11,046 บาท</strong><br>ลงทุน S&P 500 เฉลี่ย 10%/ปี → <strong>25,937 บาท</strong></p><p>ส่วนต่าง: <strong>+14,891 บาท</strong> — จากการไม่ทำอะไรเพิ่มเลย แค่เปลี่ยนที่วางเงิน</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ไม่ลงทุน ≠ ปลอดภัย</strong> — เงินที่นอนในบัญชีกำลังถูกเงินเฟ้อกัดกินทุกวัน การลงทุนคือการทำให้เงินทำงานแทนคุณ</p>' }
+        ],
+        quiz: [
+          { q: 'เงินเฟ้อ (Inflation) คืออะไร?', options: ['ดอกเบี้ยเงินกู้ที่เพิ่มขึ้น', 'อัตราที่ราคาสินค้าและบริการเพิ่มขึ้นตามเวลา', 'ภาษีเงินได้ประจำปี', 'อัตราแลกเปลี่ยน'], correct: 1 },
+          { q: 'ถ้าเงินเฟ้อ 3% และดอกเบี้ยออมทรัพย์ 1% มูลค่าที่แท้จริงเปลี่ยนอย่างไร?', options: ['เพิ่มขึ้น 2% ต่อปี', 'ลดลง 2% ต่อปี', 'ไม่เปลี่ยน', 'เพิ่มขึ้น 4% ต่อปี'], correct: 1 },
+          { q: 'ข้อใดถูกต้องที่สุดเกี่ยวกับการ "ไม่ลงทุน"?', options: ['ปลอดภัยที่สุด เพราะไม่มีความเสี่ยง', 'เป็นความเสี่ยงชนิดหนึ่ง เพราะเงินเสื่อมมูลค่าจากเงินเฟ้อ', 'ดีกว่าลงทุน ถ้าตลาดผันผวน', 'ไม่มีผลอะไรในระยะยาว'], correct: 1 }
+        ]
+      },
+      { id: '0-2', title: 'ตั้งเป้าหมายการเงิน', icon: 'target',
+        desc: 'เป้าหมายชัด มีกองทุนฉุกเฉินก่อน แล้วค่อยลงทุน',
+        tags: ['planning'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>ก่อนลงทุน ต้องตอบ 2 คำถามให้ได้:<br>① <strong>เป้าหมายคืออะไร?</strong> — เงินเท่าไหร่ ภายในกี่ปี?<br>② <strong>กองทุนฉุกเฉินพร้อมหรือยัง?</strong> — ค่าใช้จ่าย 3–6 เดือนในบัญชีที่แตะได้ทันที</p><p>ลำดับ: <strong>กองทุนฉุกเฉิน → จ่ายหนี้ดอกเบี้ยสูง → ลงทุนระยะยาว</strong></p><ul><li>เป้าหมายระยะสั้น (&lt;3 ปี) → ไม่ควรลงหุ้น</li><li>เป้าหมายระยะยาว (3+ ปี) → ตลาดหุ้น historical เฉลี่ย 10%/ปี</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — เป้าหมาย Godji', body: '<p>🎯 <strong>เงินล้านก่อน 30</strong> = 6 ปี → เหมาะกับหุ้น<br>🎯 <strong>ชำระหนี้ กยศ. 255,900 บาท</strong> = 2–3 ปี → ผสม<br>🎯 <strong>ทริปต่างประเทศ</strong> = &lt;1 ปี → เงินสด/ออมทรัพย์</p><p>ออม 10,000 บาท/เดือน แบ่งตามเป้าหมาย ไม่ใช่ลงทุนทั้งหมดในหุ้น</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>เป้าหมายชัด → กลยุทธ์ถูก</strong> ลงทุนผิดประเภทกับระยะเวลา = เสี่ยงสูงโดยไม่จำเป็น</p>' }
+        ],
+        quiz: [
+          { q: 'กองทุนฉุกเฉิน (Emergency Fund) ควรมีเท่าไหร่?', options: ['1 เดือนของรายได้', 'ค่าใช้จ่าย 3–6 เดือน', 'เงินออม 1 ปีเต็ม', 'ไม่จำเป็น ถ้ามีประกัน'], correct: 1 },
+          { q: 'เป้าหมายระยะสั้น (1–2 ปี) ควรใช้ instrument ไหน?', options: ['ลงทุนในหุ้นเต็มที่', 'กองทุนรวมหุ้น 100%', 'เงินสดหรือตราสารหนี้ระยะสั้น', 'Crypto'], correct: 2 },
+          { q: 'ลำดับที่ถูกต้องก่อนลงทุนหุ้นคือ?', options: ['ลงทุนหุ้นก่อน แล้วค่อยสร้างกองทุนฉุกเฉิน', 'กองทุนฉุกเฉิน → หนี้ดอกเบี้ยสูง → ลงทุนระยะยาว', 'จ่ายหนี้ทั้งหมดก่อน ค่อยลงทุน', 'ทำพร้อมกันได้เลย'], correct: 1 }
+        ]
+      },
+      { id: '0-3', title: 'ความเสี่ยง vs ผลตอบแทน', icon: 'scales',
+        desc: 'ความเสี่ยงรับได้ (risk profile) สำคัญกว่าการเลือกหุ้น',
+        tags: ['concept'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>กฎเหล็กการลงทุน: <strong>ผลตอบแทนสูงขึ้น = ความเสี่ยงสูงขึ้นเสมอ</strong></p><ul><li><strong>Risk Profile</strong> = ระดับความเสี่ยงที่รับได้โดยไม่ตัดสินใจผิดพลาด</li><li>ปัจจัย: อายุ, เวลาลงทุน, สภาพการเงิน, นิสัยส่วนตัว</li><li>คนอายุน้อย = รับความเสี่ยงได้สูงกว่า เพราะมีเวลา recover</li></ul><p>📉 เงินฝาก 1–2%/ปี &nbsp; 📊 พันธบัตร 3–5%/ปี &nbsp; 📈 หุ้น ~10%/ปี (ผันผวนสูง)</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — S&P 500 ปี 2008 vs 2024', body: '<p>S&P 500 ปี 2008: <strong>−38%</strong> (วิกฤต Subprime)<br>S&P 500 ปี 2009: <strong>+26%</strong> (ฟื้นตัว)<br>S&P 500 ปี 2024: <strong>+25%</strong></p><p>คนที่ขาย panic ปี 2008 ขาดทุนจริง คนที่ถือรอดได้กำไรทบต้น ความเสี่ยงที่ควบคุมไม่ได้คือ <em>ตัวเอง</em> ไม่ใช่ตลาด</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>รู้ risk profile ตัวเองก่อนลงทุน</strong> ถ้ารับการลดลง 30% ไม่ได้โดยไม่ panic ขาย → อย่าลงหุ้น 100%</p>' }
+        ],
+        quiz: [
+          { q: 'Risk Profile คืออะไร?', options: ['อัตราผลตอบแทนที่คาดหวัง', 'ระดับความเสี่ยงที่นักลงทุนรับได้โดยไม่ตัดสินใจผิดพลาด', 'จำนวนหุ้นในพอร์ต', 'P/E Ratio ของพอร์ต'], correct: 1 },
+          { q: 'นักลงทุนอายุน้อยมักมี risk profile แบบไหน?', options: ['ต่ำกว่า เพราะประสบการณ์น้อย', 'สูงกว่า เพราะมีเวลา recover จากความผันผวน', 'เหมือนกันทุกคน', 'ขึ้นอยู่กับเงินเดือนอย่างเดียว'], correct: 1 },
+          { q: 'S&P 500 ลง 38% ปี 2008 แต่คนที่ถือต่อได้อะไร?', options: ['ขาดทุนถาวร', 'ได้กำไรทบต้นจากการฟื้นตัวในปีถัดๆ มา', 'ได้เงินปันผลพิเศษ', 'ไม่มีผลอะไร'], correct: 1 }
+        ]
+      },
+      { id: '0-4', title: 'ภาพรวมสินทรัพย์', icon: 'squares-four',
+        desc: 'หุ้น พันธบัตร กองทุน อสังหาฯ — เลือกอะไรเหมาะกับใคร',
+        tags: ['overview'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>4 สินทรัพย์หลัก:</p><ul><li><strong>หุ้น (Stocks)</strong> — เป็นเจ้าของบริษัท ผลตอบแทนสูง ความเสี่ยงสูง เหมาะระยะยาว</li><li><strong>พันธบัตร (Bonds)</strong> — กู้ยืมให้รัฐ/บริษัท ดอกเบี้ยสม่ำเสมอ ความเสี่ยงต่ำ</li><li><strong>กองทุนรวม / ETF</strong> — รวมเงินหลายคน กระจายความเสี่ยงอัตโนมัติ เริ่มต้นง่าย</li><li><strong>อสังหาริมทรัพย์</strong> — ทรัพย์สินจริง ค่าเช่า + มูลค่าเพิ่ม ต้องใช้เงินก้อนใหญ่</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 10 ปี', body: '<p>เงินต้น 100,000 บาท × 10 ปี:<br>💵 ออมทรัพย์ 1%: <strong>110,462 บาท</strong><br>📜 พันธบัตร 4%: <strong>148,024 บาท</strong><br>📊 ETF S&P 500 10%: <strong>259,374 บาท</strong></p><p>Godji เลือกหุ้น US เป็น core เพราะ time horizon 6+ ปี และ savings rate 40%</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ไม่มีสินทรัพย์ใด "ดีที่สุด" เสมอ</strong> — เลือกตาม risk profile, time horizon, และเงินที่มี กระจาย asset class ช่วยลดความผันผวนรวม</p>' }
+        ],
+        quiz: [
+          { q: 'สินทรัพย์ใดเหมาะกับนักลงทุนที่ต้องการรายได้สม่ำเสมอและความเสี่ยงต่ำ?', options: ['Growth stocks', 'Crypto', 'พันธบัตรรัฐบาล', 'Startup equity'], correct: 2 },
+          { q: 'ETF คืออะไร?', options: ['หุ้นของบริษัทเดียว', 'กองทุนที่รวมหลาย asset ซื้อขายได้บนตลาดหุ้น', 'พันธบัตรรัฐบาล', 'บัญชีออมทรัพย์พิเศษ'], correct: 1 },
+          { q: 'Godji เลือกหุ้น US เป็น core เพราะอะไร?', options: ['หุ้น US ไม่มีภาษี', 'มี time horizon 6+ ปี และ savings rate สูงพอรับความผันผวน', 'หุ้น US ราคาถูกกว่าไทย', 'หุ้นไทยไม่มีโบรกเกอร์'], correct: 1 }
+        ]
+      }
+    ]},
+    { moduleId: 1, levelLabel: 'ระดับ 2', levelColor: 'amber', moduleTitle: 'พื้นฐานหุ้น', lessons: [
+      {
+        id: '1-1', title: 'หุ้นคืออะไร?', icon: 'chart-line-up',
+        desc: 'หุ้นคือความเป็นเจ้าของ ไม่ใช่แค่ตัวเลข',
+        tags: ['concept', 'เริ่มต้น'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>เมื่อบริษัทต้องการระดมทุน สามารถออก <strong>หุ้น (Stock / Share)</strong> ขายให้สาธารณะ ผู้ที่ซื้อหุ้นคือ <strong>เจ้าของบริษัทส่วนหนึ่ง</strong> — มีสิทธิ์รับผลกำไร (dividend) และมูลค่าหุ้นเพิ่มขึ้นหากบริษัทเติบโต</p><ul><li>ราคาหุ้นขึ้นลงตามอุปสงค์อุปทานในตลาด</li><li>ตลาดหุ้น US ใหญ่ที่สุดในโลก — NYSE + NASDAQ รวม market cap ~$50+ trillion</li><li>หุ้น ≠ การพนัน ถ้าเราซื้อเพราะเข้าใจธุรกิจ</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่างจริง — GOOGL', body: '<p><span class="ticker-tag">GOOGL</span> (Alphabet) มีหุ้นหมุนเวียน ~12 พันล้านหน่วย ซื้อ 1 หุ้น = เป็นเจ้าของประมาณ <strong>1 ใน 12 พันล้าน</strong> ของ Alphabet ซึ่งครอบครอง Google Search, YouTube, Google Cloud และ Waymo</p><p>มูลค่าบริษัท (Market Cap) ~$4.3 trillion USD — ใหญ่กว่า GDP ของหลายประเทศรวมกัน</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>หุ้น = ความเป็นเจ้าของธุรกิจ</strong> ไม่ใช่แค่ตัวเลขที่ขึ้นลง การซื้อหุ้นควรถามว่า "อยากเป็นเจ้าของธุรกิจนี้ไหม?" ไม่ใช่ "ราคาจะขึ้นพรุ่งนี้ไหม?"</p>' }
+        ],
+        quiz: [
+          { q: 'การซื้อหุ้น 1 หน่วยหมายความว่าอะไร?', options: ['ซื้อหนี้ของบริษัท', 'เป็นเจ้าของส่วนหนึ่งของบริษัท', 'กู้เงินให้บริษัท', 'รับประกันผลตอบแทน'], correct: 1 },
+          { q: 'ราคาหุ้นถูกกำหนดจากอะไรเป็นหลัก?', options: ['รัฐบาลกำหนด', 'อุปสงค์อุปทานในตลาด', 'CEO ของบริษัทกำหนด', 'ธนาคารกลาง'], correct: 1 },
+          { q: 'ตลาดหุ้น US หลักมี 2 แห่งคือ?', options: ['LSE + TSX', 'NYSE + NASDAQ', 'SGX + ASX', 'HKEX + SSE'], correct: 1 }
+        ]
+      },
+      {
+        id: '1-2', title: 'วิธีอ่านราคาหุ้นเบื้องต้น', icon: 'chart-bar',
+        desc: 'อ่าน price, market cap, 52W range ให้เป็น',
+        tags: ['หุ้น', 'basics'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>เมื่อดูหุ้น ตัวเลขสำคัญที่ต้องอ่านเป็น:</p><ul><li><strong>Price</strong> — ราคาล่าสุด ณ ตลาดเปิด</li><li><strong>Market Cap</strong> = Price × Shares Outstanding = มูลค่าบริษัทรวม</li><li><strong>52W High / Low</strong> — ราคาสูงสุด/ต่ำสุดใน 1 ปี บอก range ความผันผวน</li><li><strong>Volume</strong> — จำนวนหุ้นที่เทรดวันนี้ บอกสภาพคล่อง</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่างจริง — NVDA vs VOO', body: '<p><span class="ticker-tag">NVDA</span> ราคา ~$206/หุ้น, 52W range $86–$220, market cap ~$5 trillion<br><span class="ticker-tag">VOO</span> (S&P 500 ETF) ราคา ~$623/หุ้น — แพงกว่า NVDA แต่ market cap เปรียบกันไม่ได้เพราะเป็น ETF</p><p><em>บทเรียน:</em> ราคาเดี่ยวไม่บอกว่าถูกหรือแพง VOO ราคาสูงกว่า NVDA แต่ไม่ได้แปลว่า "แพงกว่า" ในแง่มูลค่า</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดูราคาควบคู่กับ <strong>Market Cap</strong> เสมอ ราคาต่อหุ้นอย่างเดียวไม่มีความหมาย — Apple $230/หุ้น vs Berkshire $700,000/หุ้น ไม่ได้บอกว่า Apple ถูกกว่า</p>' }
+        ],
+        quiz: [
+          { q: 'Market Cap คำนวณอย่างไร?', options: ['Revenue × Profit margin', 'Price × Shares Outstanding', 'Debt ÷ Equity', 'EPS × P/E Ratio'], correct: 1 },
+          { q: 'NVDA ราคา $206 หมายความว่า NVDA แพงกว่าหุ้น $20 หรือไม่?', options: ['ใช่ เสมอ', 'ไม่ใช่ ต้องดู Market Cap และ Fundamentals', 'ใช่ ถ้า Volume สูง', 'ใช่ เพราะ 52W High สูง'], correct: 1 },
+          { q: 'Volume หุ้นบอกอะไร?', options: ['กำไรต่อหุ้น', 'จำนวนหุ้นที่เทรดในวันนั้น (สภาพคล่อง)', 'ราคาเปิดตลาด', 'อัตราการจ่ายปันผล'], correct: 1 },
+          { q: '52-Week Low บอกอะไร?', options: ['กำไรต่ำสุดของบริษัทปีนี้', 'ราคาต่ำสุดที่หุ้นเคยซื้อขายใน 1 ปีที่ผ่านมา', 'มูลค่าขั้นต่ำของบริษัท', 'อัตราเงินปันผลต่ำสุด'], correct: 1 }
+        ]
+      },
+      {
+        id: '1-3', title: 'Buy & Hold คืออะไร?', icon: 'hourglass',
+        desc: 'ถือยาว compound ทำงานให้คุณเอง',
+        tags: ['strategy', 'หุ้น'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Buy & Hold</strong> = ซื้อหุ้นในบริษัทที่เชื่อมั่น แล้วถือระยะยาว 3+ ปี ไม่สนใจความผันผวนระยะสั้น</p><ul><li><strong>vs Trading</strong> — trader ซื้อ-ขายถี่ หวังกำไรระยะสั้น ต้องเสียค่า commission + ภาษี + เวลา</li><li>ผลตอบแทน S&P 500 เฉลี่ย ~10%/ปี แต่ถ้าพลาดวัน best 20 วันใน 20 ปี เหลือแค่ ~2%</li><li>Compound growth: $100k × (1.10)^10 = $259k โดยไม่ต้องทำอะไร</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — พอร์ต Godji', body: '<p><span class="ticker-tag">AMZN</span> ถ้าซื้อ $100 ในปี 2012 → ปัจจุบัน ~$2,000+ (x20 ใน 12 ปี)</p><p>Godji เลือก Buy & Hold เพราะ: เงินเดือน 25k, ออม 10k/เดือน — ไม่มีเวลา trade ทุกวัน และ fundamentals ของ GOOGL, NVDA, AMZN ยังแข็งแกร่ง</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>"Time in the market beats timing the market"</strong> — อยู่ในตลาดนานกว่าสำคัญกว่าพยายามจับจังหวะ เลือกบริษัทดี ถือนาน ไม่แตะถ้าไม่มี kill condition</p>' }
+        ],
+        quiz: [
+          { q: 'Buy & Hold หมายถึงอะไร?', options: ['ซื้อแล้วขายวันเดียวกัน', 'ซื้อแล้วถือระยะยาว 3+ ปี', 'ซื้อทุกวันจันทร์ขายทุกวันศุกร์', 'ซื้อตอนราคาต่ำขายตอนสูงทุกเดือน'], correct: 1 },
+          { q: 'ข้อดีหลักของ Buy & Hold เมื่อเทียบกับ Trading คืออะไร?', options: ['ได้กำไรแน่นอนทุกปี', 'ประหยัดค่า commission และภาษี + ใช้ Compound growth', 'ไม่ต้องวิเคราะห์หุ้นเลย', 'ราคาหุ้นไม่ลดเลย'], correct: 1 },
+          { q: '$100,000 ที่ผลตอบแทน 10%/ปี จะเป็นเท่าไรใน 10 ปี?', options: ['$200,000', '$259,374', '$300,000', '$150,000'], correct: 1 }
+        ]
+      }
+    ]},
+    { moduleId: 2, levelLabel: 'ระดับ 2', levelColor: 'amber', moduleTitle: 'อ่านงบการเงิน', lessons: [
+      {
+        id: '2-1', title: 'Revenue & Gross Profit', icon: 'coins',
+        desc: 'Revenue & Gross Margin — วัด pricing power',
+        tags: ['งบการเงิน', 'GOOGL'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Revenue (รายได้)</strong> = เงินที่บริษัทได้รับจากขายสินค้า/บริการทั้งหมด<br><strong>Gross Profit</strong> = Revenue − Cost of Goods Sold (COGS)<br><strong>Gross Margin %</strong> = Gross Profit ÷ Revenue × 100</p><p>Gross Margin สูง = บริษัทมี pricing power และ cost structure ดี — เครื่องหมายของ moat</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — GOOGL FY2024', body: '<p><span class="ticker-tag">GOOGL</span> FY2024: Revenue ~$350B, Gross Profit ~$203B<br>→ Gross Margin ~<strong>58%</strong> — ทุก $100 ที่ขายได้ เหลือ $58 หลังจ่าย COGS</p><p>เปรียบเทียบ: ร้านสะดวกซื้อทั่วไป gross margin ~25%, Software companies มักอยู่ที่ 60–80%</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดู <strong>Gross Margin trend</strong> ว่าเพิ่มขึ้นหรือลดลง — ถ้าลดทั้งที่ revenue โต อาจหมายถึงราคาสู้คู่แข่งไม่ได้หรือต้นทุนพุ่ง</p>' }
+        ],
+        quiz: [
+          { q: 'Gross Profit คืออะไร?', options: ['กำไรสุทธิหลังภาษี', 'Revenue − Cost of Goods Sold', 'Revenue − ค่าใช้จ่ายทั้งหมด', 'เงินสดในมือ'], correct: 1 },
+          { q: 'GOOGL gross margin ~58% แปลว่าอะไร?', options: ['บริษัทขาดทุน 58%', 'ทุก $100 รายได้ เหลือ $58 หลังจ่ายต้นทุนสินค้า', 'ภาษีอยู่ที่ 58%', 'ค่าใช้จ่ายคิดเป็น 58% ของรายได้'], correct: 1 },
+          { q: 'Gross Margin ที่ดีบ่งบอกอะไร?', options: ['บริษัทมีหนี้น้อย', 'บริษัทมี pricing power และ cost structure แข็งแกร่ง', 'บริษัทจ่ายปันผลสูง', 'บริษัทมีพนักงานน้อย'], correct: 1 },
+          { q: 'Gross Margin ของบริษัท Software โดยทั่วไปอยู่ที่ประมาณ?', options: ['10–20%', '30–40%', '60–80%', '90–100%'], correct: 2 }
+        ]
+      },
+      {
+        id: '2-2', title: 'Net Income & EPS', icon: 'calculator',
+        desc: 'กำไรสุทธิต่อหุ้น ตัวเลขที่ตลาดจับตา',
+        tags: ['งบการเงิน', 'NVDA'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Net Income</strong> = กำไรสุทธิ = Revenue − COGS − Operating Expenses − Interest − Tax<br><strong>EPS (Earnings Per Share)</strong> = Net Income ÷ Shares Outstanding</p><p>EPS บอกว่าบริษัทสร้างกำไรต่อหุ้น 1 หน่วยได้เท่าไร — ตัวเลขที่ตลาดจับตามากที่สุด</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — NVDA EPS Growth', body: '<p><span class="ticker-tag">NVDA</span> EPS growth:<br>FY2023: EPS ~$1.74<br>FY2024: EPS ~$11.93 (+586% YoY!)<br>FY2025: EPS ~$2.99 (GAAP)</p><p>การที่ EPS พุ่งแรงทำให้ราคาหุ้น NVDA วิ่งแรงตาม — ตลาดซื้ออนาคต ไม่ใช่แค่ปัจจุบัน</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดู <strong>EPS growth trend</strong> ว่าเติบโตสม่ำเสมอไหม ถ้า EPS ติดลบหรือหดตัว ต้องถามว่าเพราะอะไร — ลงทุน one-time หรือธุรกิจกำลังมีปัญหา</p>' }
+        ],
+        quiz: [
+          { q: 'EPS ย่อมาจากอะไร?', options: ['Equity Per Share', 'Earnings Per Share', 'Exchange Price Score', 'Estimated Profit Score'], correct: 1 },
+          { q: 'EPS คำนวณอย่างไร?', options: ['Revenue ÷ Shares', 'Net Income ÷ Shares Outstanding', 'Gross Profit ÷ Price', 'Debt ÷ Equity'], correct: 1 },
+          { q: 'ถ้า EPS เพิ่มขึ้นทุกปีแต่ราคาหุ้นไม่ขึ้นเลย แปลว่าอะไร?', options: ['บริษัทแย่ลง', 'อาจเป็นสัญญาณว่าหุ้นถูกกว่าที่ควร (undervalued)', 'ตลาดมองว่า EPS ไม่สำคัญ', 'ไม่มีนัยสำคัญ'], correct: 1 },
+          { q: 'NVDA EPS FY2024 เพิ่มจาก $1.74 เป็น $11.93 คิดเป็นกี่เปอร์เซ็นต์?', options: ['~100%', '~300%', '~586%', '~86%'], correct: 2 }
+        ]
+      },
+      {
+        id: '2-3', title: 'Free Cash Flow คืออะไร?', icon: 'currency-dollar',
+        desc: 'เงินสดจริง ไม่ใช่กำไรบนกระดาษ',
+        tags: ['งบการเงิน', 'AMZN'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Free Cash Flow (FCF)</strong> = Operating Cash Flow − Capital Expenditure (CapEx)</p><p>FCF คือเงินสดจริงที่บริษัทสร้างได้ หลังจ่ายค่าลงทุนในโรงงาน/อุปกรณ์แล้ว<br>บริษัทมีกำไรบนบัญชีได้โดยไม่มีเงินสด — FCF จึงสำคัญกว่า Net Income บางครั้ง</p><ul><li>FCF สูง = บริษัทสร้างเงินจริง buyback/ปันผล/ลงทุนต่อได้โดยไม่พึ่งหนี้</li><li>FCF Yield = FCF ÷ Market Cap — เปรียบเหมือน "ดอกเบี้ย" ที่บริษัทให้คุณ</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — AMZN FCF Turnaround', body: '<p><span class="ticker-tag">AMZN</span>:<br>FY2021: FCF = <strong>−$19B</strong> (ลงทุน fulfillment centers + AWS infrastructure มหาศาล)<br>FY2024: FCF = <strong>+$38B</strong> (AWS profitable, logistics ปันผลได้แล้ว)</p><p>นี่คือเหตุผลหลักที่ Godji ถือ AMZN — FCF turnaround ครั้งนี้ไม่ใช่เรื่องบังเอิญ</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>บริษัทที่ FCF เติบโตสม่ำเสมอ = engine ที่แข็งแกร่ง <strong>อย่าซื้อบริษัท FCF ติดลบเรื้อรัง</strong> ถ้าไม่รู้ว่าเมื่อไหร่จะ turn profitable</p>' }
+        ],
+        quiz: [
+          { q: 'Free Cash Flow คำนวณอย่างไร?', options: ['Net Income − Tax', 'Operating Cash Flow − CapEx', 'Revenue − COGS', 'Gross Profit − Debt'], correct: 1 },
+          { q: 'ทำไม FCF ถึงสำคัญกว่า Net Income ในบางกรณี?', options: ['เพราะ FCF รวม CapEx', 'เพราะ Net Income สามารถถูกบิดเบือนด้วยการบัญชี FCF คือเงินสดจริง', 'เพราะ FCF ไม่ต้องเสียภาษี', 'เพราะ Net Income ไม่เกี่ยวกับธุรกิจ'], correct: 1 },
+          { q: 'AMZN FCF FY2021 ติดลบ −$19B เพราะอะไร?', options: ['ขาดทุนจากธุรกิจ', 'ลงทุนขยาย fulfillment centers + AWS อย่างหนัก', 'จ่ายภาษีสูงมาก', 'ผลจากโควิด'], correct: 1 },
+          { q: 'FCF Yield บอกอะไร?', options: ['อัตราปันผล', 'ผลตอบแทนจากเงินสดที่บริษัทสร้างเทียบกับ market cap', 'อัตราการเติบโตของ revenue', 'P/E ratio'], correct: 1 }
+        ]
+      },
+      {
+        id: '2-4', title: 'Balance Sheet เบื้องต้น', icon: 'notebook',
+        desc: 'Net Cash บอกความแข็งแกร่งทางการเงิน',
+        tags: ['งบการเงิน', 'GOOGL'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Balance Sheet</strong> แสดงฐานะการเงิน ณ จุดเวลาหนึ่ง:<br>Assets (สินทรัพย์) = Liabilities (หนี้สิน) + Equity (ส่วนของผู้ถือหุ้น)</p><ul><li><strong>Cash & Equivalents</strong> — เงินสดในมือ ความปลอดภัยในยามวิกฤต</li><li><strong>Total Debt</strong> — หนี้ระยะสั้น + ระยะยาว</li><li><strong>Net Cash</strong> = Cash − Total Debt (บวก = แข็งแกร่ง, ลบ = เสี่ยง)</li><li><strong>Debt/Equity Ratio</strong> — ยิ่งต่ำยิ่งปลอดภัย</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — GOOGL vs ASML', body: '<p><span class="ticker-tag">GOOGL</span>: Cash ~$110B, Total Debt ~$10B → <strong>Net Cash +$100B</strong> — ปลอดภัยมาก ทำ buyback ได้ไม่จำกัด</p><p><span class="ticker-tag">ASML</span>: Debt สูงกว่า แต่ธุรกิจ monopoly EUV lithography ทำให้ tolerate ได้ — context สำคัญกว่าตัวเลขเดี่ยว</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>บริษัท <strong>Net Cash เป็นบวก</strong> มี cushion รับมือวิกฤตได้ดีกว่า บริษัทที่มีหนี้สูงเสี่ยงมากหาก interest rate ขึ้น หรือ revenue หดตัว</p>' }
+        ],
+        quiz: [
+          { q: 'Net Cash คำนวณอย่างไร?', options: ['Revenue − Debt', 'Cash & Equivalents − Total Debt', 'Assets − Liabilities', 'Net Income − CapEx'], correct: 1 },
+          { q: 'บริษัทที่ Net Cash เป็นลบ แปลว่าอะไร?', options: ['บริษัทไม่มีรายได้', 'บริษัทมีหนี้มากกว่าเงินสดในมือ', 'บริษัทไม่จ่ายภาษี', 'บริษัทมีกำไรสูง'], correct: 1 },
+          { q: 'GOOGL มี Net Cash ~$100B บอกอะไร?', options: ['GOOGL กำลังจะล้มละลาย', 'GOOGL มีความสามารถทำ buyback/ลงทุน/รับมือวิกฤตได้สูง', 'GOOGL ไม่ลงทุนอะไรเลย', 'ราคาหุ้น GOOGL จะขึ้น 100%'], correct: 1 }
+        ]
+      }
+    ]},
+    { moduleId: 3, levelLabel: 'ระดับ 3', levelColor: 'amber', moduleTitle: 'วิเคราะห์หุ้น', lessons: [
+      {
+        id: '3-1', title: 'P/E Ratio คืออะไร?', icon: 'magnifying-glass',
+        desc: 'ตลาดยอมจ่ายกี่เท่าของกำไร? PEG ratio',
+        tags: ['valuation', 'NVDA'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>P/E Ratio</strong> = Price ÷ EPS = ตลาดยอมจ่ายกี่เท่าของกำไรต่อปี</p><ul><li><strong>Forward P/E</strong> — ใช้ EPS คาดการณ์ปีหน้า (relevant กว่า trailing)</li><li><strong>PEG Ratio</strong> = P/E ÷ Growth Rate — P/E สูงอาจ OK ถ้า growth สูงกว่า</li><li>P/E สูง ≠ แพงเสมอไป ต้องดูการเติบโตและ quality ของกำไรด้วย</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — NVDA vs VOO', body: '<p><span class="ticker-tag">NVDA</span> P/E ~50x: แพงกว่าตลาด แต่ EPS เติบโต 500%+ ในปีที่แล้ว<br><span class="ticker-tag">VOO</span> (S&P 500 avg) P/E ~22x: baseline ของตลาด</p><p>ถ้า NVDA โต 30%/ปี, P/E 50x → PEG = 50/30 = 1.67 — ยังอยู่ในเกณฑ์ reasonable สำหรับ AI infrastructure leader</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>P/E เป็นจุดเริ่มต้น ไม่ใช่จุดสิ้นสุด ใช้ <strong>PEG + FCF + Moat</strong> ร่วมกัน ก่อนตัดสินว่าแพงหรือถูก</p>' }
+        ],
+        quiz: [
+          { q: 'P/E Ratio คำนวณอย่างไร?', options: ['EPS ÷ Price', 'Price ÷ EPS', 'Revenue ÷ Net Income', 'Market Cap ÷ Revenue'], correct: 1 },
+          { q: 'Forward P/E ต่างจาก Trailing P/E อย่างไร?', options: ['Forward ใช้กำไรย้อนหลัง Trailing ใช้กำไรคาดการณ์', 'Forward ใช้กำไรคาดการณ์ปีหน้า Trailing ใช้กำไรจริงปีที่แล้ว', 'ไม่ต่างกัน', 'Forward เฉพาะ ETF Trailing เฉพาะหุ้นทั่วไป'], correct: 1 },
+          { q: 'PEG Ratio คืออะไร?', options: ['P/E ÷ Growth Rate', 'Price ÷ Earnings Growth', 'P/B ÷ Equity Growth', 'P/E × Market Cap'], correct: 0 },
+          { q: 'NVDA P/E สูงกว่า VOO แต่ยังน่าลงทุนได้ เพราะ?', options: ['P/E สูง = แพงเสมอ', 'NVDA growth rate สูง ทำให้ PEG reasonable', 'VOO ไม่มี P/E', 'ราคา NVDA ต่ำกว่า VOO'], correct: 1 },
+          { q: 'P/E ~22x ของ S&P 500 หมายถึงอะไร?', options: ['ตลาดยอมจ่าย 22 บาทต่อกำไร 100 บาท', 'ตลาดยอมจ่าย 22 เท่าของกำไรต่อปี', 'บริษัทโต 22% ต่อปี', 'หุ้นจะ drop 22%'], correct: 1 }
+        ]
+      },
+      {
+        id: '3-2', title: 'Moat คืออะไร — 7 Powers', icon: 'castle',
+        desc: '7 Powers ที่ปกป้องธุรกิจจากคู่แข่ง',
+        tags: ['moat', 'strategy'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Economic Moat</strong> = ความได้เปรียบทางการแข่งขันที่ทนทาน — ปกป้อง margin และ revenue จากคู่แข่ง</p><p>Hamilton Helmer\'s <strong>7 Powers</strong>:<br>① Scale Economies &nbsp;② Network Effects &nbsp;③ Counter-Positioning &nbsp;④ Switching Costs<br>⑤ Branding &nbsp;⑥ Cornered Resource &nbsp;⑦ Process Power</p><p>บริษัทที่มีหลาย Power พร้อมกัน = moat หนาที่สุด</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — พอร์ต Godji', body: '<p><span class="ticker-tag">GOOGL</span>: Network Effects (Search, YouTube, Maps ยิ่งมีคนใช้ยิ่งดี) + Scale Economies<br><span class="ticker-tag">NVDA</span>: Switching Costs (CUDA ecosystem — เปลี่ยน GPU ต้อง rewrite code ทั้งหมด) + Cornered Resource<br><span class="ticker-tag">ASML</span>: Counter-Positioning (monopoly EUV lithography ที่ไม่มีใครทำได้)</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ก่อนซื้อหุ้น ถามว่า <strong>"บริษัทนี้มี moat อะไร?"</strong> ถ้าตอบไม่ได้ อย่าซื้อ — ยิ่ง moat แข็งแกร่ง ยิ่ง hold ได้นาน</p>' }
+        ],
+        quiz: [
+          { q: 'Economic Moat คืออะไร?', options: ['คูน้ำล้อมรอบโรงงาน', 'ความได้เปรียบทางการแข่งขันที่ทนทาน', 'อัตรากำไรขั้นต้น', 'จำนวนสิทธิบัตรของบริษัท'], correct: 1 },
+          { q: 'NVDA ใช้ moat ประเภทไหนหลัก?', options: ['Network Effects', 'Switching Costs (CUDA ecosystem)', 'Branding', 'Scale Economies เท่านั้น'], correct: 1 },
+          { q: 'Network Effect คืออะไร?', options: ['เครือข่าย internet ของบริษัท', 'ยิ่งมีคนใช้ product มาก ยิ่ง valuable มากขึ้น', 'จำนวน server ที่บริษัทมี', 'ความเร็ว internet'], correct: 1 },
+          { q: 'ถ้าตอบไม่ได้ว่าบริษัทมี moat อะไร ควรทำอย่างไร?', options: ['ซื้อเลยเพราะ P/E ต่ำ', 'ไม่ซื้อจนกว่าจะเข้าใจ moat', 'ดูแค่ revenue growth', 'ถามนักวิเคราะห์อย่างเดียว'], correct: 1 }
+        ]
+      },
+      {
+        id: '3-3', title: 'Red Flags ที่ควรระวัง', icon: 'warning',
+        desc: 'สัญญาณอันตรายที่ต้อง reconsider',
+        tags: ['risk', 'checklist'],
+        sections: [
+          { type: 'concept', heading: 'แนวคิด', body: '<p>สัญญาณอันตรายที่ควร reconsider position:</p><ul><li><strong>Gross Margin หดตัวต่อเนื่อง</strong> — pricing power หายไป</li><li><strong>Revenue growth ชะลอ + Debt พุ่ง</strong> — กู้เงินมาพยุงยอดขาย</li><li><strong>FCF ติดลบเรื้อรัง</strong> โดยไม่มี path to profitability ชัดเจน</li><li><strong>Insider selling มหาศาล</strong> — คนในรู้อะไรที่เราไม่รู้</li><li><strong>Accounting changes บ่อย</strong> — อาจซ่อน loss</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — SOFI', body: '<p><span class="ticker-tag">SOFI</span> ใน portfolio Godji ถือ <em>น้อยมาก</em> เพราะ:<br>— ยังขาดทุน GAAP (แม้ adjusted profitable)<br>— Gross margin ต่ำกว่า fintech peer อื่น<br>— Revenue growth ดี แต่ยังไม่ชัดว่า moat จะสร้างได้จริงไหม<br>→ Risk position ไม่ใช่ core holding</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>Red flag ไม่ได้แปลว่า "ขายทันที" แต่ต้องอธิบายได้ว่าทำไมถึงยังถือ — ถ้าอธิบายไม่ได้ ลด position ก่อน</p>' }
+        ],
+        quiz: [
+          { q: 'Gross Margin หดตัวต่อเนื่องบ่งบอกอะไร?', options: ['บริษัทกำลังโตเร็ว', 'pricing power อาจหายไปหรือต้นทุนพุ่ง', 'สัญญาณซื้อเพิ่ม', 'P/E กำลังลด'], correct: 1 },
+          { q: 'FCF ติดลบเรื้อรัง อันตรายเพราะอะไร?', options: ['ทำให้ EPS สูงเกินจริง', 'บริษัทอาจต้องกู้หรือออกหุ้นใหม่เพื่อยังชีพ', 'ทำให้ gross margin สูง', 'ไม่มีผลอะไรถ้า revenue โต'], correct: 1 },
+          { q: 'Insider selling ปริมาณมากบอกอะไรได้?', options: ['หุ้นกำลังจะขึ้น', 'คนในบริษัทอาจรู้ข้อมูลเชิงลบที่ยังไม่เปิดเผย', 'บริษัทกำลัง buyback', 'ไม่มีนัยสำคัญ'], correct: 1 },
+          { q: 'SOFI อยู่ใน portfolio แต่เป็น position เล็กเพราะ?', options: ['ราคาแพงเกินไป', 'margin ต่ำและ moat ยังไม่ชัดเจน', 'CEO ขาย insider stock', 'P/E สูงกว่า NVDA'], correct: 1 },
+          { q: 'เจอ Red flag ควรทำอย่างไรก่อน?', options: ['ขายทุกอย่างทันที', 'อธิบายให้ได้ว่าทำไมถึงยังถือ ถ้าไม่ได้ ลด position', 'ซื้อเพิ่มเพราะราคาลง', 'ไม่ต้องทำอะไร'], correct: 1 }
+        ]
+      }
+    ]},
+    { moduleId: 4, levelLabel: 'ระดับ 4', levelColor: 'purple', moduleTitle: 'พอร์ตของ Godji', lessons: [
+      {
+        id: '4-1', title: 'ทำไม Godji ถือ GOOGL, NVDA, AMZN?', icon: 'briefcase',
+        desc: 'Thesis + kill condition สำหรับ 3 หุ้นหลัก',
+        tags: ['portfolio', 'Godji'],
+        sections: [
+          { type: 'concept', heading: 'Thesis Construction', body: '<p>การเลือกหุ้น core position ต้องตอบได้ 3 ข้อ:<br>① <strong>Moat</strong> — บริษัทมีความได้เปรียบที่ยั่งยืนอะไร?<br>② <strong>Revenue Durability</strong> — รายได้จะยังมาเรื่อยๆ แม้ macro เปลี่ยนหรือไม่?<br>③ <strong>Kill Condition</strong> — เมื่อไหร่ถึงจะขาย?</p>' },
+          { type: 'example', heading: 'Thesis — 3 Core Positions', body: '<p><span class="ticker-tag">GOOGL</span>: Moat = Search monopoly + YouTube + Cloud. Kill condition = AI ทำให้ Search revenue ลดลง 20%+ YoY ต่อเนื่อง 2 quarters</p><p><span class="ticker-tag">NVDA</span>: Moat = CUDA ecosystem + H100/B100 supply monopoly. Kill condition = AMD/Intel ดึง enterprise customers ได้ &gt;20%</p><p><span class="ticker-tag">AMZN</span>: Moat = AWS (80% operating income) + logistics flywheel. Kill condition = AWS market share ลดลง QoQ ต่อเนื่อง หรือ FCF กลับไปติดลบ</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ต้อง name kill condition ก่อนซื้อทุกครั้ง</strong> ถ้านึกไม่ออกว่าเมื่อไหร่ควรขาย แปลว่ายังไม่เข้าใจหุ้นพอ</p>' }
+        ],
+        quiz: [
+          { q: 'Kill Condition คืออะไร?', options: ['ราคาหุ้นลงเกิน 10%', 'เงื่อนไขที่กำหนดไว้ล่วงหน้าว่าจะขายเมื่อ thesis พัง', 'เมื่อ P/E สูงกว่าตลาด', 'เมื่อ CEO ออก'], correct: 1 },
+          { q: 'NVDA ใน Godji\'s thesis — Kill condition หลักคืออะไร?', options: ['ราคาลงเกิน 30%', 'AMD/Intel ดึง enterprise GPU market share ได้ >20%', 'NVDA ออก product ใหม่', 'Fed ขึ้น interest rate'], correct: 1 },
+          { q: 'AMZN มีกำไร operating income จากส่วนไหนเป็นหลัก?', options: ['E-commerce', 'AWS (Amazon Web Services)', 'Advertising', 'Prime Video'], correct: 1 }
+        ]
+      },
+      {
+        id: '4-2', title: 'วางแผนสู่เป้าหมาย 1 ล้าน', icon: 'trophy',
+        desc: 'เส้นทาง compound สู่เงินล้านก่อน 30',
+        tags: ['planning', 'Godji'],
+        sections: [
+          { type: 'concept', heading: 'Compound Growth Calculator', body: '<p>สูตร: <strong>FV = PV × (1+r)^n + PMT × [(1+r)^n − 1] / r</strong><br>PV = มูลค่าปัจจุบัน, r = return ต่อปี, n = จำนวนปี, PMT = ออมต่อปี</p><p>Godji\'s scenario:<br>PV = ~100,000 บาท (US portfolio)<br>PMT = 10,000 บาท/เดือน = 120,000 บาท/ปี<br>r = 10%/ปี (S&P 500 historical avg)<br>เป้า = 1,000,000 บาท</p>' },
+          { type: 'example', heading: 'Projection — เส้นทางสู่ 1 ล้าน', body: '<p>ที่ r=10%:<br>ปีที่ 5 (2031): <strong>~660,000 บาท</strong><br>ปีที่ 6 (2032): <strong>~847,000 บาท</strong><br>ปีที่ 7 (2033): <strong>~1,052,000 บาท ✓</strong></p><p>ถ้า portfolio outperform (r=15%):<br>ปีที่ 5 (2031): <strong>~820,000 บาท</strong><br>ปีที่ 6 (2032): <strong>~1,063,000 บาท ✓</strong></p><p>เป้าหมาย <strong>เงินล้านก่อน 30</strong> (2032, อายุ 30) → ทำได้ถ้าวินัยออม 10k/เดือน</p>' },
+          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>เงินล้านไม่ได้เกิดจาก "หุ้นปัง" วันเดียว แต่จาก <strong>ออมสม่ำเสมอ + ถือนาน + อย่าขายตอนตลาดร่วง</strong> — compound ทำงานให้เองในระยะยาว</p>' }
+        ],
+        quiz: [
+          { q: 'ที่ r=10%/ปี Godji จะถึง 1 ล้านในปีประมาณ?', options: ['2029', '2031', '2033', '2040'], correct: 2 },
+          { q: 'ถ้า portfolio outperform ที่ r=15% จะถึง 1 ล้านเร็วขึ้นอีกประมาณกี่ปี?', options: ['1 ปี', '2–3 ปี', '5 ปี', '10 ปี'], correct: 0 },
+          { q: 'ปัจจัยที่สำคัญที่สุดในการถึงเป้า 1 ล้านคือ?', options: ['เลือกหุ้นให้ถูกทุกตัว', 'ออมสม่ำเสมอ + ถือนาน + ไม่ขายตอนตลาดร่วง', 'ลงทุนเฉพาะ crypto', 'ซื้อ-ขายถี่เพื่อจับ swing'], correct: 1 }
+        ]
+      }
+    ]}
+  ];
+
+  function renderSchoolPage() {
+    var p = schoolGetProgress();
+    var totalLessons = SCHOOL_CURRICULUM.reduce(function(s, m) { return s + m.lessons.length; }, 0);
+    var totalDone = p.completed.length;
+    var pct = totalLessons > 0 ? Math.round(totalDone / totalLessons * 100) : 0;
+
+    var pctEl = document.getElementById('school-overall-pct');
+    if (pctEl) pctEl.textContent = pct + '%';
+    var countEl = document.getElementById('school-lesson-count');
+    if (countEl) countEl.textContent = totalDone + '/' + totalLessons + ' บทเรียน';
+
+    var lastIdx = SCHOOL_CURRICULUM.length - 1;
+    var prevIds = SCHOOL_CURRICULUM.slice(0, lastIdx).reduce(function(acc, m) {
+      return acc.concat(m.lessons.map(function(l) { return l.id; }));
+    }, []);
+    var lastUnlocked = prevIds.every(function(id) { return p.completed.includes(id); });
+
+    var container = document.getElementById('school-modules-container');
+    if (!container) return;
+
+    container.innerHTML = SCHOOL_CURRICULUM.map(function(mod, idx) {
+      var isLocked = idx === lastIdx && !lastUnlocked;
+      var modDone = mod.lessons.filter(function(l) { return p.completed.includes(l.id); }).length;
+      var progText = modDone + '/' + mod.lessons.length;
+
+      var divider = idx > 0 ? '<div class="school-level-divider"></div>' : '';
+
+      var headerHtml = '<div class="school-module-header">' +
+        '<span class="school-level-badge badge-' + mod.levelColor + '">' + mod.levelLabel + '</span>' +
+        '<span class="school-module-title">' + mod.moduleTitle + '</span>' +
+        (isLocked ? '<span class="school-module-lock">🔒 เรียนบทก่อนหน้าให้ครบก่อน</span>' : '') +
+        '<span class="school-module-prog">' + progText + '</span>' +
+        '</div>';
+
+      var cardsHtml = '<div class="school-lessons-grid">' +
+        mod.lessons.map(function(lesson) {
+          var done = p.completed.includes(lesson.id);
+          var score = p.quiz_scores[lesson.id];
+          var scoreHtml = (score !== undefined) ? '<span class="school-card-score">' + score + '%</span>' : '';
+          var badgeHtml = done ? '<span class="school-card-badge">✓</span>' : '';
+          var descHtml = lesson.desc ? '<div class="school-card-desc">' + lesson.desc + '</div>' : '';
+          var tagsHtml = (lesson.tags && lesson.tags.length) ? '<div class="school-card-tags">' +
+            lesson.tags.map(function(t) { return '<span class="school-card-tag">' + t + '</span>'; }).join('') +
+            '</div>' : '';
+          var cls = 'school-card' + (isLocked ? ' school-card-locked' : '') + (done ? ' school-card-done' : '');
+          return '<div class="' + cls + '"' + (isLocked ? '' : ' onclick="openLesson(\'' + lesson.id + '\')"') + '>' +
+            '<div class="school-card-emoji"><i class="ph ph-' + lesson.icon + '"></i></div>' +
+            '<div class="school-card-title">' + lesson.title + '</div>' +
+            descHtml + tagsHtml + scoreHtml + badgeHtml + '</div>';
+        }).join('') +
+        '</div>';
+
+      return divider + '<div class="school-module">' + headerHtml + cardsHtml + '</div>';
+    }).join('');
+  }
+
+  var _currentLesson = null;
+  var _quizAnswers = {};
+  var _quizSubmitted = false;
+
+  function openLesson(lessonId) {
+    var lesson = null;
+    for (var i = 0; i < SCHOOL_CURRICULUM.length; i++) {
+      for (var j = 0; j < SCHOOL_CURRICULUM[i].lessons.length; j++) {
+        if (SCHOOL_CURRICULUM[i].lessons[j].id === lessonId) { lesson = SCHOOL_CURRICULUM[i].lessons[j]; break; }
+      }
+      if (lesson) break;
+    }
+    if (!lesson) return;
+    _currentLesson = lesson;
+    _quizAnswers = {};
+    _quizSubmitted = false;
+    document.getElementById('school-lesson-content').innerHTML = buildLessonHTML(lesson);
+    document.getElementById('school-grid-view').style.display = 'none';
+    document.getElementById('school-lesson-view').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function closeLessonModal() {
+    document.getElementById('school-lesson-view').style.display = 'none';
+    document.getElementById('school-grid-view').style.display = '';
+    _currentLesson = null;
+    renderSchoolPage();
+  }
+
+  function buildLessonHTML(lesson) {
+    var p = schoolGetProgress();
+    var done = p.completed.includes(lesson.id);
+    var savedScore = p.quiz_scores[lesson.id];
+    var sectionsHtml = lesson.sections.map(function(sec) {
+      return '<div class="lesson-section lesson-sec-' + sec.type + '">' +
+        '<div class="lesson-sec-label">' + sec.heading + '</div>' +
+        '<div class="lesson-sec-body">' + sec.body + '</div></div>';
+    }).join('');
+    return '<div class="lesson-nav">' +
+      '<button class="lesson-back-btn" onclick="closeLessonModal()">← กลับ</button>' +
+      (done ? '<div class="lesson-complete-badge">🏆 เสร็จแล้ว</div>' : '') +
+      '</div>' +
+      '<div class="lesson-header">' +
+      '<span class="lesson-emoji"><i class="ph ph-' + lesson.icon + '"></i></span>' +
+      '<div><div class="lesson-id">Lesson ' + lesson.id + '</div>' +
+      '<h2 class="lesson-title">' + lesson.title + '</h2></div>' +
+      '</div>' +
+      '<div class="lesson-sections">' + sectionsHtml + '</div>' +
+      '<div class="lesson-quiz-wrap">' + buildQuizHTML(lesson.quiz, done, savedScore) + '</div>';
+  }
+
+  function buildQuizHTML(questions, alreadyDone, savedScore) {
+    var headerHtml = '<div class="quiz-header"><span class="quiz-label">Quiz</span>' +
+      (alreadyDone && savedScore !== undefined ? '<span class="quiz-score-badge">' + savedScore + '%</span>' : '') +
+      '</div>';
+    var questionsHtml = questions.map(function(q, qi) {
+      return '<div class="quiz-question"><div class="quiz-q-text">' + (qi + 1) + '. ' + q.q + '</div>' +
+        '<div class="quiz-options">' +
+        q.options.map(function(opt, oi) {
+          return '<div class="quiz-option" data-qi="' + qi + '" data-oi="' + oi + '" onclick="selectQuizOption(this,' + qi + ',' + oi + ')">' + opt + '</div>';
+        }).join('') + '</div></div>';
+    }).join('');
+    var submitHtml = alreadyDone
+      ? '<p class="quiz-already-done">คุณทำ Quiz นี้แล้ว — คะแนน ' + savedScore + '% &nbsp;ทำใหม่ได้เสมอ</p>' +
+        '<button class="quiz-submit-btn" onclick="submitQuiz()">ส่ง Quiz</button>'
+      : '<button class="quiz-submit-btn" onclick="submitQuiz()">ส่ง Quiz</button>';
+    return headerHtml + '<div class="quiz-questions">' + questionsHtml + '</div>' + submitHtml;
+  }
+
+  function selectQuizOption(el, qi, oi) {
+    if (_quizSubmitted) return;
+    _quizAnswers[qi] = oi;
+    var siblings = document.querySelectorAll('.quiz-option[data-qi="' + qi + '"]');
+    siblings.forEach(function(s) { s.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
+
+  function submitQuiz() {
+    if (!_currentLesson) return;
+    var questions = _currentLesson.quiz;
+    var correct = 0;
+    questions.forEach(function(q, qi) {
+      var chosen = _quizAnswers[qi];
+      var opts = document.querySelectorAll('.quiz-option[data-qi="' + qi + '"]');
+      if (chosen !== undefined) {
+        if (chosen === q.correct) { correct++; if (opts[chosen]) opts[chosen].classList.add('correct'); }
+        else { if (opts[chosen]) opts[chosen].classList.add('wrong'); if (opts[q.correct]) opts[q.correct].classList.add('correct'); }
+      } else {
+        if (opts[q.correct]) opts[q.correct].classList.add('correct');
+      }
+    });
+    var score = Math.round(correct / questions.length * 100);
+    _quizSubmitted = true;
+    schoolMarkComplete(_currentLesson.id, score);
+    var btn = document.querySelector('#school-lesson-content .quiz-submit-btn');
+    if (btn) { btn.textContent = score === 100 ? 'Perfect! 🎉 ' + score + '%' : 'คะแนน: ' + score + '% — ลองใหม่ได้'; btn.onclick = retakeQuiz; }
+    var header = document.querySelector('#school-lesson-content .quiz-header');
+    if (header) {
+      var existing = header.querySelector('.quiz-score-badge');
+      if (existing) { existing.textContent = score + '%'; }
+      else { var badge = document.createElement('span'); badge.className = 'quiz-score-badge'; badge.textContent = score + '%'; header.appendChild(badge); }
+    }
+  }
+
+  function retakeQuiz() {
+    _quizAnswers = {};
+    _quizSubmitted = false;
+    document.querySelectorAll('#school-lesson-content .quiz-option').forEach(function(el) {
+      el.classList.remove('selected', 'correct', 'wrong');
+    });
+    var btn = document.querySelector('#school-lesson-content .quiz-submit-btn');
+    if (btn) { btn.textContent = 'ส่ง Quiz'; btn.onclick = submitQuiz; }
+  }
+
   /* ── Sidebar toggle ── */
   function toggleSidebar() {
     if (window.innerWidth > 768) {
@@ -213,6 +656,7 @@
       requestAnimationFrame(function() { requestAnimationFrame(function() { pageEl.classList.add('anim-ready'); }); });
     }
     if (pageId === 'portfolio') renderPortfolio();
+    if (pageId === 'school') renderSchoolPage();
   }
 
   function handleHash() {
@@ -1617,6 +2061,7 @@
       localStorage.setItem(SEED_KEY, '1');
     }
     renderProjects();
+    renderSchoolPage();
 
     const now = new Date();
     calYear = now.getFullYear();

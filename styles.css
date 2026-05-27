@@ -177,6 +177,8 @@
     }
     .page-inner.narrow {
       max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .page-inner.home-inner {
       max-width: 1200px;
@@ -1750,6 +1752,193 @@
     }
     .todo-add-btn:hover { background: var(--green-mid); }
 
+    /* ── School page ── */
+    .school-instructor {
+      display: flex; align-items: center; gap: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; margin-bottom: 2.25rem;
+    }
+    .school-inst-photo {
+      width: 64px; height: 64px; border-radius: 50%;
+      object-fit: cover; object-position: top;
+      border: 2px solid var(--border); flex-shrink: 0;
+    }
+    .school-inst-body { flex: 1; min-width: 0; }
+    .school-inst-name {
+      font-family: 'Caveat', cursive; font-size: 1.35rem; font-weight: 700;
+      color: var(--green-dark); line-height: 1; margin-bottom: 0.15rem;
+    }
+    .school-inst-role {
+      font-size: 0.68rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.35rem;
+    }
+    .school-inst-quote { font-size: 0.83rem; color: var(--muted); font-style: italic; margin: 0; }
+    .school-inst-progress { margin-left: auto; text-align: center; flex-shrink: 0; }
+    .school-inst-pct {
+      font-family: Georgia, serif; font-size: 1.6rem; font-style: italic;
+      color: var(--green-dark); line-height: 1;
+    }
+    .school-inst-plabel { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .school-module { margin-bottom: 2rem; }
+    .school-module-header {
+      display: flex; align-items: baseline; gap: 0.75rem;
+      margin-bottom: 0.9rem; padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .school-module-num {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--muted);
+    }
+    .school-level-badge {
+      font-size: 11px; font-weight: 500; padding: 3px 10px;
+      border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+    }
+    .badge-green  { background: #EAF3DE; color: #3B6D11; }
+    .badge-amber  { background: #FAEEDA; color: #854F0B; }
+    .badge-purple { background: #EEEDFE; color: #3C3489; }
+    .school-module-title { font-size: 1rem; font-weight: 600; color: var(--green-dark); }
+    .school-module-lock { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+    .school-module-prog { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+    .school-level-divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+    .school-card-desc {
+      font-size: 0.72rem; color: var(--muted); line-height: 1.4; margin-top: 0.35rem;
+    }
+    .school-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.5rem; }
+    .school-card-tag {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 20px;
+      border: 0.5px solid var(--border); color: var(--muted);
+    }
+
+    .school-lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .school-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.35rem 1.25rem 1.2rem;
+      cursor: pointer; position: relative;
+      transition: box-shadow 0.15s, border-color 0.15s; user-select: none;
+    }
+    .school-card:hover { box-shadow: 0 4px 14px rgba(44,22,8,0.1); border-color: var(--green-mid); }
+    .school-card-emoji { font-size: 1.75rem; margin-bottom: 0.75rem; color: var(--green-dark); line-height: 1; }
+    .school-card-title { font-size: 0.875rem; font-weight: 600; color: var(--green-dark); line-height: 1.35; }
+    .school-card-badge {
+      position: absolute; top: 0.65rem; right: 0.7rem;
+      background: var(--green-mid); color: #fff;
+      font-size: 0.65rem; font-weight: 700;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .school-card-score {
+      display: inline-block; margin-top: 0.45rem;
+      font-size: 0.7rem; color: var(--muted);
+      background: var(--green-tag); border-radius: 20px; padding: 0.15rem 0.55rem;
+    }
+    .school-card-done { border-color: var(--green-mid); }
+    .school-card-locked { opacity: 0.42; cursor: not-allowed; pointer-events: none; }
+
+    /* ── Lesson full-page ── */
+    #school-lesson-view { padding-bottom: 3rem; }
+    .lesson-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.75rem;
+    }
+    .lesson-back-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--green-dark); font-size: 0.875rem;
+      padding: 0.45rem 1rem; border-radius: 8px;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .lesson-back-btn:hover { background: var(--green-tag); border-color: var(--green-mid); }
+    .lesson-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .lesson-emoji { font-size: 2.25rem; line-height: 1; flex-shrink: 0; color: var(--green-dark); }
+    .lesson-id { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
+    .lesson-title {
+      font-family: Georgia, serif; font-style: italic;
+      font-size: 1.35rem; font-weight: 400; color: var(--green-dark);
+      line-height: 1.2; margin: 0;
+    }
+    .lesson-complete-badge {
+      margin-left: auto; background: var(--green-mid); color: #fff;
+      font-size: 0.75rem; padding: 0.35rem 0.75rem;
+      border-radius: 20px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+    }
+    .lesson-sections { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 1.75rem; }
+    .lesson-section {
+      padding: 1rem 1.15rem; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--bg);
+    }
+    .lesson-sec-concept { border-left: 3px solid var(--green-mid); }
+    .lesson-sec-example { background: var(--green-tag); }
+    .lesson-sec-takeaway { background: var(--card-bg); border-left: 3px solid var(--green-dark); }
+    .lesson-sec-label {
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.13em; color: var(--muted); margin-bottom: 0.5rem;
+    }
+    .lesson-sec-body { font-size: 0.875rem; color: var(--text); line-height: 1.65; }
+    .lesson-sec-body strong { color: var(--green-dark); }
+    .lesson-sec-body p { margin: 0 0 0.5rem; }
+    .lesson-sec-body p:last-child { margin-bottom: 0; }
+    .lesson-sec-body ul { padding-left: 1.2rem; margin: 0.35rem 0; }
+    .lesson-sec-body li { margin-bottom: 0.25rem; }
+    .ticker-tag {
+      font-size: 0.75rem; font-weight: 700;
+      background: var(--green-dark); color: var(--card-bg);
+      padding: 0.15rem 0.5rem; border-radius: 5px;
+      display: inline-block; margin-right: 0.2rem; vertical-align: baseline;
+    }
+
+    /* ── Quiz ── */
+    .lesson-quiz-wrap { border-top: 1px solid var(--border); padding-top: 1.25rem; }
+    .quiz-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .quiz-label {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.13em; color: var(--muted);
+    }
+    .quiz-score-badge {
+      background: var(--green-mid); color: #fff;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 0.15rem 0.6rem; border-radius: 20px;
+    }
+    .quiz-questions { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.1rem; }
+    .quiz-q-text { font-size: 0.875rem; color: var(--green-dark); font-weight: 600; margin-bottom: 0.55rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.38rem; }
+    .quiz-option {
+      padding: 0.55rem 0.85rem; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 0.83rem; color: var(--text);
+      cursor: pointer; background: var(--card-bg);
+      transition: border-color 0.12s, background 0.12s; user-select: none;
+    }
+    .quiz-option:hover { border-color: var(--green-mid); background: var(--green-tag); }
+    .quiz-option.selected { border-color: var(--green-mid); background: var(--green-tag); }
+    .quiz-option.correct { border-color: #2d7d46; background: #e8f5ed; color: #0A3622; }
+    .quiz-option.wrong   { border-color: #c0605a; background: #fdf0ef; color: #7A1010; }
+    .quiz-submit-btn {
+      width: 100%; padding: 0.72rem 1rem;
+      background: var(--green-dark); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .quiz-submit-btn:hover { background: var(--green-mid); }
+    .quiz-already-done { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; text-align: center; }
+
+    @media (max-width: 600px) {
+      .school-lessons-grid { grid-template-columns: 1fr; }
+      .school-instructor { flex-wrap: wrap; }
+      .school-lesson-card { width: calc(100% - 1.5rem); padding: 1.5rem 1.25rem 1.25rem; }
+      .lesson-header { flex-wrap: wrap; }
+    }
+
     /* ── Dark mode ── */
     body.dark {
       --bg:          #1C1008;
@@ -1817,6 +2006,16 @@
     body.dark .cal-day.today { background: #C4956A; color: #1C1008; }
 
     body.dark .trip-jump-chip:hover { background: #C4956A; color: #1C1008; border-color: #C4956A; }
+
+    body.dark .school-card { background: var(--card-bg); }
+    body.dark .school-instructor { background: var(--card-bg); }
+    body.dark .lesson-sec-concept { background: #1E1208; }
+    body.dark .lesson-sec-example { background: #2A1A08; }
+    body.dark .lesson-sec-takeaway { background: var(--card-bg); }
+    body.dark .lesson-sec-body { color: var(--text); }
+    body.dark .quiz-option { background: var(--card-bg); color: var(--text); }
+    body.dark .quiz-option.correct { background: #0A2218; color: #60C080; border-color: #1A5030; }
+    body.dark .quiz-option.wrong   { background: #2A0808; color: #E08080; border-color: #5A1010; }
 
     /* ── Auth Modals (sign-in + sign-out) ── */
     .auth-overlay {

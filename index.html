@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Godji's OS</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 <body>
 
@@ -45,6 +46,9 @@
   </span>
   <span class="nav-item" data-page="people" onclick="showPage('people',this)">
     <span class="nav-dot"></span>People
+  </span>
+  <span class="nav-item" data-page="school" onclick="showPage('school',this)">
+    <span class="nav-dot"></span>School
   </span>
 
   <div class="sidebar-controls">
@@ -418,6 +422,38 @@
     </div>
   </div>
 
+  <!-- School -->
+  <div id="page-school" class="page">
+    <div class="page-inner narrow">
+
+      <div id="school-grid-view">
+        <div class="page-head">
+          <h2>School.</h2>
+          <span class="count" id="school-lesson-count"></span>
+        </div>
+        <p class="page-sub">เรียนลงทุนกับ Max — ตั้งแต่พื้นฐานถึงวิเคราะห์จริง</p>
+        <div class="school-instructor">
+          <img class="school-inst-photo" src="Avatars/Max.png" alt="Max">
+          <div class="school-inst-body">
+            <div class="school-inst-name">Max</div>
+            <div class="school-inst-role">นักวางแผนความมั่งคั่ง · ผู้สอน</div>
+            <p class="school-inst-quote">"เงินคือเครื่องมือ — เรียนรู้ก่อน ลงทุนทีหลัง"</p>
+          </div>
+          <div class="school-inst-progress">
+            <div class="school-inst-pct" id="school-overall-pct">0%</div>
+            <div class="school-inst-plabel">เสร็จแล้ว</div>
+          </div>
+        </div>
+        <div id="school-modules-container"></div>
+      </div>
+
+      <div id="school-lesson-view" style="display:none">
+        <div id="school-lesson-content"></div>
+      </div>
+
+    </div>
+  </div>
+
 </main>
 
 <button class="scroll-top-btn" id="scroll-top-btn" title="กลับด้านบน">↑</button>
@@ -565,6 +601,7 @@
     <button class="auth-cancel-btn" onclick="closeAuthModal('signout-modal')">ยกเลิก</button>
   </div>
 </div>
+
 
 <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>

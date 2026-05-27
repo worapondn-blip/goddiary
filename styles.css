@@ -163,6 +163,9 @@
     .page-inner.narrow {
       max-width: 820px;
     }
+    .page-inner.home-inner {
+      max-width: 1200px;
+    }
 
     /* ── Section heading ── */
     .page-head {
@@ -1215,23 +1218,24 @@
 
     /* ── Home widgets — mobile-first, stack vertically ── */
     .home-widgets {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
       margin-top: 2rem;
-      align-items: start;
     }
-    /* mobile: Calendar → Todo → Projects */
-    .cal-card { order: 1; }
-    .todo-card { order: 2; }
-    .proj-widget-card { order: 3; }
+    .home-col-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
     @media (min-width: 769px) {
       .home-widgets {
-        grid-template-columns: auto 2fr 1fr;
+        flex-direction: row;
+        align-items: start;
         gap: 1.5rem;
       }
-      /* desktop: reset to HTML source order (Calendar | Projects | Todo) */
-      .cal-card, .proj-widget-card, .todo-card { order: 0; }
+      .home-col-left { flex-shrink: 0; }
+      .proj-widget-card { flex: 1; min-width: 0; }
     }
 
     /* Projects widget (home) */

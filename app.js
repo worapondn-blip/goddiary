@@ -222,10 +222,10 @@
   /* ── Team flip cards ── */
   var teamData = [
     {
-      name: 'Godji', role: 'เจ้าของ', sub: 'Production Engineer', img: 'Avatars/God-cool.png',
+      name: 'Godji', role: 'เจ้าของ', sub: 'เจ้าของ goddiary', img: 'Avatars/God-cool.png',
       tagline: 'เป้าหมาย: เงินล้านก่อน 30 · สุขภาพ · 3 ภาษา · YouTube',
-      personality: 'Production Engineer วัย 24 ที่สร้างระบบนี้ขึ้นเพื่อดูแลทุกมิติของชีวิต ชอบ systems thinking และ long-term mindset ไม่ชอบปล่อยให้อะไรหลุดจากการควบคุม',
-      duties: ['ตั้งเป้าหมายชีวิตและ OKR รายปี', 'สั่งการทีมและตัดสินใจขั้นสุดท้าย', 'ลงทุนระยะยาว (US stocks, กยศ.)', 'สร้างระบบ goddiary เพื่อจัดการทุกมิติ']
+      personality: 'คนที่สร้างระบบนี้ขึ้นเพื่อดูแลทุกมิติของชีวิต ชอบ systems thinking และ long-term mindset ไม่ชอบปล่อยให้อะไรหลุดจากการควบคุม',
+      duties: ['ตั้งเป้าหมายชีวิตและ OKR รายปี', 'สั่งการทีมและตัดสินใจขั้นสุดท้าย', 'ลงทุนระยะยาว (US stocks)', 'สร้างระบบ goddiary เพื่อจัดการทุกมิติ']
     },
     {
       name: 'June', role: 'Chief of Staff', sub: 'หัวหน้าทีม', img: 'Avatars/June.png',
@@ -1036,7 +1036,7 @@
       }
 
       var subText = f.isMe
-        ? 'Production Engineer · 24'
+        ? 'เจ้าของ goddiary'
         : allTrips.length
           ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
             (visitedTrips.length && planningTrips.length ? ' · ' : '') +

@@ -423,7 +423,7 @@
         ]},
         { label: 'Day 2', date: 'อาทิตย์ 1 มิ.ย.', place: 'ภูผาม่าน → ร้านฮักฮูก → เชียงคาน', items: [
           { time: '06:00', text: 'Check out Hai-Na Garden House', transit: '~1.5 ชม.' },
-          { time: '07:30', text: '7-Eleven สาขาออนซอน ภูผาม่าน', note: 'จุดถ่ายรูป วิวภูเขา' },
+          { time: '07:30', text: '7-Eleven สาขาออนซอน ภูผาม่าน', note: 'จุดถ่ายรูป วิวภูเขา', url: 'https://www.google.com/maps/search/?api=1&query=7-Eleven+ออนซอน+ภูผาม่าน+ขอนแก่น' },
           { time: '08:00', text: 'Somewhere cafe', transit: '~1 ชม.', note: '⚠️ ยังไม่ได้หาร้าน — เช็คก่อนออกทริป' },
           { time: '10:00', text: 'ถ้ำพญานาคราช', duration: '~1 ชม.', transit: '~20 นาที', note: '⚠️ วันอาทิตย์ รอบเช้าเดียว ONLY | โทร 043-001-753',
             details: 'วันอาทิตย์เปิดเฉพาะรอบเช้าเท่านั้น วันธรรมดาเปิดรอบ 13:30', url: 'https://www.google.com/maps/search/?api=1&query=Phaya+Nakarat+Cave+Phuphaman+Khon+Kaen' },

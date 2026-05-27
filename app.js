@@ -63,7 +63,7 @@
 
   /* ── DB Layer (Firestore + localStorage fallback) ── */
   var _db = (function() {
-    var _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null };
+    var _c = { projects: null, todos: null, travel: null, trip_todos: null, trip_companions: null, friends_extra: null };
     function ref(n) { return _fs.collection('app').doc(n); }
     function write(n, data) {
       if (!_currentUser) return;
@@ -94,6 +94,7 @@
       _c.travel          = lsGet('godji_travel', { wishlist:[], visited:[], budgets:[] });
       _c.trip_todos      = lsTripTodos();
       _c.trip_companions = lsGet('gd_trip_companions', {});
+      _c.friends_extra   = lsGet('gd_friends_extra', []);
     }
     async function loadRemote() {
       try {
@@ -103,6 +104,8 @@
         _c.travel          = ss[2].exists ? ss[2].data()               : _c.travel;
         _c.trip_todos      = ss[3].exists ? (ss[3].data().data  || {}) : _c.trip_todos;
         _c.trip_companions = ss[4].exists ? (ss[4].data().data  || {}) : _c.trip_companions;
+        var fss = await ref('friends_extra').get();
+        _c.friends_extra = fss.exists ? (fss.data().data || []) : _c.friends_extra;
       } catch(e) {
         console.warn('Firestore unavailable, using localStorage:', e);
       }
@@ -129,6 +132,17 @@
         _c.trip_companions[id] = ids;
         try { localStorage.setItem('gd_trip_companions', JSON.stringify(_c.trip_companions)); } catch {}
         write('trip_companions', { data: _c.trip_companions });
+      },
+      getFriendsAll: function() {
+        return friendsData.concat(_c.friends_extra || []);
+      },
+      addFriend: function(name) {
+        if (!_c.friends_extra) _c.friends_extra = [];
+        var f = { id: 'ex_' + Date.now(), name: name.trim(), img: '', fb: '' };
+        _c.friends_extra.push(f);
+        try { localStorage.setItem('gd_friends_extra', JSON.stringify(_c.friends_extra)); } catch {}
+        write('friends_extra', { data: _c.friends_extra });
+        return f;
       }
     };
   })();
@@ -541,10 +555,14 @@
 
   function buildCompanionStack(ids) {
     if (!ids || !ids.length) return '';
+    var all = _db.getFriendsAll();
     return '<div class="companion-stack">' +
       ids.map(function(cid) {
-        var f = friendsData.find(function(x) { return x.id === cid; });
-        return f ? '<img class="comp-avatar" src="' + f.img + '" alt="' + f.name + '" title="' + f.name + '">' : '';
+        var f = all.find(function(x) { return x.id === cid; });
+        if (!f) return '';
+        if (f.img) return '<img class="comp-avatar" src="' + f.img + '" alt="' + f.name + '" title="' + f.name + '">';
+        var initials = f.name.charAt(0).toUpperCase();
+        return '<span class="comp-avatar comp-avatar-initials" title="' + f.name + '">' + initials + '</span>';
       }).join('') +
     '</div>';
   }
@@ -859,12 +877,16 @@
     }
 
     var companions = _db.getTripCompanions(trip.id);
+    var allFriends = _db.getFriendsAll();
     var companionsRowHTML = '<div class="trip-companions-row">';
     if (companions.length) {
       companionsRowHTML += companions.map(function(cid) {
-        var f = friendsData.find(function(x) { return x.id === cid; });
+        var f = allFriends.find(function(x) { return x.id === cid; });
         if (!f) return '';
-        return '<div class="tcr-item"><img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '"><span class="tcr-name">' + f.name + '</span></div>';
+        var avatarHTML = f.img
+          ? '<img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '">'
+          : '<span class="tcr-avatar comp-avatar-initials">' + f.name.charAt(0).toUpperCase() + '</span>';
+        return '<div class="tcr-item">' + avatarHTML + '<span class="tcr-name">' + f.name + '</span></div>';
       }).join('');
     }
     companionsRowHTML += '<button class="tcr-edit-btn" onclick="openCompanionsModal(\'' + trip.id + '\')">' + (companions.length ? '✎ แก้ไข' : '+ เพิ่มคน') + '</button></div>';
@@ -913,17 +935,37 @@
   function openCompanionsModal(tripId) {
     var currentIds = _db.getTripCompanions(tripId);
     var modal = document.getElementById('companions-modal');
-    var list = document.getElementById('companions-checklist');
     modal.dataset.tripId = tripId;
-    list.innerHTML = friendsData.map(function(f) {
+    renderCompanionChecklist(currentIds);
+    openAuthModal('companions-modal');
+  }
+
+  function renderCompanionChecklist(currentIds) {
+    var list = document.getElementById('companions-checklist');
+    var all = _db.getFriendsAll();
+    list.innerHTML = all.map(function(f) {
       var checked = currentIds.indexOf(f.id) !== -1 ? 'checked' : '';
+      var avatar = f.img
+        ? '<img class="comp-check-avatar" src="' + f.img + '" alt="' + f.name + '">'
+        : '<span class="comp-check-avatar comp-avatar-initials">' + f.name.charAt(0).toUpperCase() + '</span>';
       return '<label class="comp-check-item">' +
         '<input type="checkbox" value="' + f.id + '" ' + checked + '>' +
-        '<img class="comp-check-avatar" src="' + f.img + '" alt="' + f.name + '">' +
+        avatar +
         '<span class="comp-check-name">' + f.name + '</span>' +
       '</label>';
     }).join('');
-    openAuthModal('companions-modal');
+  }
+
+  function addNewCompanion() {
+    var input = document.getElementById('new-companion-input');
+    var name = (input.value || '').trim();
+    if (!name) return;
+    var f = _db.addFriend(name);
+    input.value = '';
+    var modal = document.getElementById('companions-modal');
+    var currentIds = _db.getTripCompanions(modal.dataset.tripId);
+    currentIds.push(f.id);
+    renderCompanionChecklist(currentIds);
   }
 
   function saveCompanions() {

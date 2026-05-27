@@ -1904,6 +1904,30 @@
     .comp-check-item input { width: 1rem; height: 1rem; accent-color: var(--green-mid); flex-shrink: 0; }
     .comp-check-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
     .comp-check-name { font-size: 0.88rem; font-weight: 500; color: var(--text); }
+    .comp-avatar-initials {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--green-tag); color: var(--green-mid);
+      font-weight: 700; font-size: 0.75rem;
+    }
+    .companion-stack .comp-avatar-initials { width: 28px; height: 28px; border-radius: 50%; font-size: 0.7rem; }
+    .tcr-avatar.comp-avatar-initials { width: 36px; height: 36px; border-radius: 50%; font-size: 0.85rem; }
+    .comp-check-avatar.comp-avatar-initials { width: 32px; height: 32px; border-radius: 50%; }
+
+    .comp-add-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .comp-add-input {
+      flex: 1; padding: 0.55rem 0.75rem;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 0.85rem; color: var(--text);
+    }
+    .comp-add-input:focus { outline: none; border-color: var(--green-mid); }
+    .comp-add-btn {
+      padding: 0.55rem 0.85rem; background: var(--green-tag);
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 0.82rem; color: var(--green-dark); cursor: pointer;
+      white-space: nowrap;
+    }
+    .comp-add-btn:hover { border-color: var(--green-mid); }
+
     .comp-save-btn { background: var(--green-dark); color: var(--bg); margin-bottom: 0.65rem; }
     .comp-save-btn:hover { background: var(--green-mid); }
 

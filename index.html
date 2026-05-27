@@ -509,6 +509,10 @@
     <h2 class="auth-title">ผู้ร่วมทริป</h2>
     <p class="auth-sub">เลือกคนที่ไปด้วยกัน</p>
     <div id="companions-checklist" class="companions-checklist"></div>
+    <div class="comp-add-row">
+      <input id="new-companion-input" class="comp-add-input" type="text" placeholder="เพิ่มคนใหม่..." onkeydown="if(event.key==='Enter')addNewCompanion()">
+      <button class="comp-add-btn" onclick="addNewCompanion()">+ เพิ่ม</button>
+    </div>
     <button class="auth-confirm-btn comp-save-btn" onclick="saveCompanions()">บันทึก</button>
     <button class="auth-cancel-btn" onclick="closeAuthModal('companions-modal')">ยกเลิก</button>
   </div>

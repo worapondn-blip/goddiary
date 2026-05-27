@@ -1937,3 +1937,15 @@
     .person-trips-label.planning { color: #C4956A; }
     .person-trip-tag.visited { background: var(--green-tag); color: var(--green-dark); border-color: var(--border); }
     .person-trip-tag.planning { background: #2A1E04; color: #C4956A; border: 1px solid #6A5010; }
+
+    .f-me-badge {
+      display: inline-block;
+      background: var(--green-mid);
+      color: #1C1008;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      margin-bottom: 0.3rem;
+    }

@@ -222,6 +222,12 @@
   /* ── Team flip cards ── */
   var teamData = [
     {
+      name: 'Godji', role: 'เจ้าของ', sub: 'Production Engineer', img: 'Avatars/God-cool.png',
+      tagline: 'เป้าหมาย: เงินล้านก่อน 30 · สุขภาพ · 3 ภาษา · YouTube',
+      personality: 'Production Engineer วัย 24 ที่สร้างระบบนี้ขึ้นเพื่อดูแลทุกมิติของชีวิต ชอบ systems thinking และ long-term mindset ไม่ชอบปล่อยให้อะไรหลุดจากการควบคุม',
+      duties: ['ตั้งเป้าหมายชีวิตและ OKR รายปี', 'สั่งการทีมและตัดสินใจขั้นสุดท้าย', 'ลงทุนระยะยาว (US stocks, กยศ.)', 'สร้างระบบ goddiary เพื่อจัดการทุกมิติ']
+    },
+    {
       name: 'June', role: 'Chief of Staff', sub: 'หัวหน้าทีม', img: 'Avatars/June.png',
       tagline: 'รับงานทุกอย่าง — ส่งให้คนที่ใช่เสมอ',
       personality: 'นิ่ง เฉียบ พูดน้อยแต่ตรงประเด็น ไม่ตื่นตระหนก มองภาพใหญ่เสมอ ไม่มีงานเฉพาะของตัวเอง — หน้าที่คือรับงานและส่งให้คนที่ใช่',
@@ -376,6 +382,7 @@
 
   /* ── Trips ── */
   var friendsData = [
+    { id: 'godji', name: 'Godji', img: 'Avatars/God.png', fb: '', isMe: true },
     { id: 'tac',  name: 'แทค',  img: 'Avatars/Friends/Tac.png',  fb: '' },
     { id: 'tong', name: 'ตอง',  img: 'Avatars/Friends/Tong.png', fb: 'https://web.facebook.com/sukunya.meekhun.2025' },
     { id: 'peet', name: 'พีท',  img: 'Avatars/Friends/Peet.png', fb: 'https://web.facebook.com/peerawat.uton' },
@@ -1028,11 +1035,18 @@
         tripsHTML = '<span style="font-size:0.8rem;color:var(--muted)">ยังไม่มีทริปที่บันทึกไว้</span>';
       }
 
-      var subText = allTrips.length
-        ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
-          (visitedTrips.length && planningTrips.length ? ' · ' : '') +
-          (planningTrips.length ? planningTrips.length + ' แผน' : '')
-        : 'ซิโบเล็ต ซิโบติ้ว';
+      var subText = f.isMe
+        ? 'Production Engineer · 24'
+        : allTrips.length
+          ? (visitedTrips.length ? visitedTrips.length + ' ทริปไปแล้ว' : '') +
+            (visitedTrips.length && planningTrips.length ? ' · ' : '') +
+            (planningTrips.length ? planningTrips.length + ' แผน' : '')
+          : 'ซิโบเล็ต ซิโบติ้ว';
+
+      var roleTag = f.isMe ? 'ฉัน' : 'ซิโบเล็ต ซิโบติ้ว';
+      var backExtra = f.isMe
+        ? '<p style="font-size:0.78rem;color:var(--muted);margin:0.25rem 0 0.75rem">เจ้าของระบบนี้ — สร้างเพื่อดูแลทุกมิติของชีวิต</p>'
+        : '';
 
       return (
         '<div class="flip-wrapper" onclick="toggleFlip(this)">' +
@@ -1040,16 +1054,18 @@
             '<div class="flip-front">' +
               '<img class="f-photo" src="' + f.img + '" alt="' + f.name + '">' +
               '<div class="f-overlay">' +
+                (f.isMe ? '<span class="f-me-badge">ฉัน</span>' : '') +
                 '<span class="fname">' + f.name + '</span>' +
                 '<span class="f-sub">' + subText + '</span>' +
               '</div>' +
             '</div>' +
             '<div class="flip-back">' +
               '<div class="back-top">' +
-                '<span class="back-role-tag">ซิโบเล็ต ซิโบติ้ว</span>' +
+                '<span class="back-role-tag">' + roleTag + '</span>' +
                 '<span class="back-flip-hint">← กลับ</span>' +
               '</div>' +
-              '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.85rem">' + f.name + '</span>' +
+              '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.5rem">' + f.name + '</span>' +
+              backExtra +
               tripsHTML +
             '</div>' +
           '</div>' +

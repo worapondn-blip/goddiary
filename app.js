@@ -1345,7 +1345,6 @@
   /* ── Page owner banners ── */
   (function buildPageOwners() {
     var owners = {
-      home:   { name: 'June',  desc: 'June ค่ะ — Chief of Staff ของ Godji ทุก request ที่ Godji พิมพ์มาจะผ่านที่นี่ก่อนเสมอ งานของ June ไม่ใช่ทำเอง แต่คือวิเคราะห์ว่าควรส่งให้ใคร แล้วส่งให้คนที่ใช่ทันทีค่ะ' },
       team:   { name: 'June',  desc: 'June ค่ะ รู้จักทุกคนในทีมดีที่สุด รู้ว่าใครเก่งอะไร รับงานแบบไหน และประสานกันยังไง หน้านี้คือภาพรวมทีมที่ดูแลทุกวันค่ะ' },
       briefs: { name: 'Max',   desc: 'Max ครับ ทุก brief ที่เห็นในหน้านี้ผมเป็นคนวิเคราะห์เองครับ สไตล์ผม — fundamentals-first, long-term เท่านั้น ดู revenue durability, margin trend และต้องระบุ kill condition ให้ได้ชัดก่อนกดซื้อทุกครั้ง ถ้านึกไม่ออกว่าเมื่อไหร่ควรเลิกถือ แสดงว่าเข้าใจหุ้นตัวนั้นไม่พอครับ' },
       trips:  { name: 'Mint',  desc: 'Mint ค่ะ หนูดูแลทุกทริปตั้งแต่ต้นจนจบค่ะ — วาง itinerary รายวัน จัด todo list ติดตาม deadline จองทุกอย่าง deadline คือชีวิตสำหรับหนู ไม่มีอะไรหลุดจากมือค่ะ' },

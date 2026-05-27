@@ -234,6 +234,55 @@
     }
     .hero-btn.primary:hover { background: var(--green-mid); border-color: var(--green-mid); }
 
+    /* ── Home intro ── */
+    .home-intro {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      margin-bottom: 2rem;
+    }
+    .home-intro-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+    }
+    .home-intro-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 0.4rem;
+    }
+    .home-intro-dot { color: var(--muted); font-weight: 400; }
+    .home-intro-title { font-size: 0.85rem; font-weight: 400; color: var(--muted); font-family: inherit; }
+    .home-intro-bio {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 0.75rem;
+    }
+    .home-intro-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .home-intro-tag {
+      font-size: 0.72rem;
+      background: var(--green-tag);
+      color: var(--green-dark);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+    }
+    @media (max-width: 768px) {
+      .home-intro { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .home-intro-photo { width: 64px; height: 64px; }
+    }
+
     /* ── Home entrance animation ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }

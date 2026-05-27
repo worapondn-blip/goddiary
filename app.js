@@ -957,10 +957,10 @@
   /* ── Trips ── */
   var friendsData = [
     { id: 'godji', name: 'Godji', img: 'Avatars/God.png', fb: '', isMe: true, googleUid: '' },
-    { id: 'tac',  name: 'แทค',  img: 'Avatars/Friends/Tac.png',  fb: '', googleUid: '' },
-    { id: 'tong', name: 'ตอง',  img: 'Avatars/Friends/Tong.png', fb: 'https://web.facebook.com/sukunya.meekhun.2025', googleUid: '' },
-    { id: 'peet', name: 'พีท',  img: 'Avatars/Friends/Peet.png', fb: 'https://web.facebook.com/peerawat.uton', googleUid: '' },
-    { id: 'boat', name: 'โบ๊ท', img: 'Avatars/Friends/Boat.png', fb: 'https://web.facebook.com/thawatchai.sap', googleUid: '' }
+    { id: 'tac',  name: 'Tac',  img: 'Avatars/Friends/Tac.png',  fb: '', googleUid: '' },
+    { id: 'tong', name: 'Tong',  img: 'Avatars/Friends/Tong.png', fb: 'https://web.facebook.com/sukunya.meekhun.2025', googleUid: '' },
+    { id: 'peet', name: 'Peet',  img: 'Avatars/Friends/Peet.png', fb: 'https://web.facebook.com/peerawat.uton', googleUid: '' },
+    { id: 'boat', name: 'Boat', img: 'Avatars/Friends/Boat.png', fb: 'https://web.facebook.com/thawatchai.sap', googleUid: '' }
   ];
 
   var tripsData = [
@@ -1503,10 +1503,9 @@
       jumpNavHTML +
       passportHTML +
       '<div class="trip-detail-layout">' +
-        '<div class="trip-detail-main"><div class="days-list">' + daysHTML + '</div></div>' +
+        '<div class="trip-detail-main"><div class="days-list">' + daysHTML + '</div>' + commentsHTML + '</div>' +
         '<div class="trip-detail-aside" id="trip-sec-aside">' + calendarHTML + todosHTML + budgetHTML + notesHTML + '</div>' +
-      '</div>' +
-      commentsHTML
+      '</div>'
     );
   }
 
@@ -1547,18 +1546,65 @@
       var p = snap.exists ? snap.data() : {};
       document.getElementById('profile-edit-name').value = p.name || _currentUser.displayName || '';
       document.getElementById('profile-edit-bio').value  = p.bio  || '';
-      document.getElementById('profile-edit-img').value  = p.img  || _currentUser.photoURL || '';
+      document.getElementById('profile-edit-img').value  = '';
+      var currentImg = p.img && !p.img.includes('googleusercontent.com') ? p.img : '';
+      var preview = document.getElementById('profile-edit-img-preview');
+      var init    = document.getElementById('profile-edit-img-init');
+      if (currentImg) {
+        preview.src = currentImg; preview.style.display = 'block'; init.style.display = 'none';
+      } else {
+        preview.style.display = 'none'; init.style.display = 'flex';
+        init.textContent = (_currentUser.displayName || _currentUser.email || 'G')[0].toUpperCase();
+      }
       openAuthModal('profile-edit-modal');
     });
   }
 
-  function saveProfileEdit(e) {
+  function previewProfileImg(input) {
+    if (!input.files || !input.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('profile-edit-img-preview');
+      var init    = document.getElementById('profile-edit-img-init');
+      preview.src = e.target.result; preview.style.display = 'block'; init.style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function resizeToBase64(file, size, quality) {
+    return new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          var ctx = canvas.getContext('2d');
+          var s = Math.min(img.width, img.height);
+          var ox = (img.width - s) / 2, oy = (img.height - s) / 2;
+          ctx.drawImage(img, ox, oy, s, s, 0, 0, size, size);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function saveProfileEdit(e) {
     e.preventDefault();
     if (!_currentUser || !_isAllowed) return;
-    var name = document.getElementById('profile-edit-name').value.trim();
-    var bio  = document.getElementById('profile-edit-bio').value.trim();
-    var img  = document.getElementById('profile-edit-img').value.trim();
-    _db.saveProfile(_currentUser.uid, { name: name, bio: bio, img: img }).then(function() {
+    var name      = document.getElementById('profile-edit-name').value.trim();
+    var bio       = document.getElementById('profile-edit-bio').value.trim();
+    var fileInput = document.getElementById('profile-edit-img');
+    var file      = fileInput.files && fileInput.files[0];
+    var update    = { name: name, bio: bio };
+    if (file) {
+      update.img = await resizeToBase64(file, 256, 0.82);
+    }
+    _db.saveProfile(_currentUser.uid, update).then(function() {
       closeAuthModal('profile-edit-modal');
       renderPeople();
     });
@@ -1740,7 +1786,7 @@
     profiles.forEach(function(p) {
       var linked = p.linkedFriendId ? merged.find(function(f) { return f.id === p.linkedFriendId; }) : null;
       if (linked) {
-        if (p.img) linked.img = p.img;
+        if (p.img && !p.img.includes('googleusercontent.com')) linked.img = p.img;
         if (p.bio) linked.bio = p.bio;
         linked._uid = p.uid;
       } else {

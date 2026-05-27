@@ -623,8 +623,15 @@
       <input id="profile-edit-name" type="text" required style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;margin-bottom:0.8rem">
       <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">Bio (ไม่กี่คำ)</label>
       <textarea id="profile-edit-bio" rows="2" style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;resize:vertical;box-sizing:border-box;font-family:inherit;margin-bottom:0.8rem"></textarea>
-      <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">URL รูปโปรไฟล์ (ไม่บังคับ)</label>
-      <input id="profile-edit-img" type="url" placeholder="https://..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;margin-bottom:1rem">
+      <label style="display:block;margin-bottom:0.5rem;font-size:0.82rem;color:var(--muted)">รูปโปรไฟล์</label>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <img id="profile-edit-img-preview" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--border);display:none">
+        <div id="profile-edit-img-init" style="width:56px;height:56px;border-radius:50%;background:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;font-weight:700;flex-shrink:0"></div>
+        <label style="cursor:pointer;color:var(--green-mid);font-size:0.85rem;text-decoration:underline">
+          เปลี่ยนรูป
+          <input id="profile-edit-img" type="file" accept="image/*" style="display:none" onchange="previewProfileImg(this)">
+        </label>
+      </div>
       <button type="submit" class="auth-confirm-btn" style="width:100%">บันทึก</button>
     </form>
   </div>

@@ -38,9 +38,6 @@
   <span class="nav-item" data-page="trips" onclick="showPage('trips',this)">
     <span class="nav-dot"></span>Trips
   </span>
-  <span class="nav-item" data-page="travel" onclick="showPage('travel',this)">
-    <span class="nav-dot"></span>Travel
-  </span>
   <span class="nav-item" data-page="projects" onclick="showPage('projects',this)">
     <span class="nav-dot"></span>Projects
   </span>
@@ -231,148 +228,59 @@
       <div class="trips-list-view" id="trips-list">
         <div class="page-head"><h2>Trips.</h2></div>
         <p class="page-sub">ทริปที่ผ่านมาและที่กำลังวางแผน</p>
-        <div class="trips-section-label">เคยไปแล้ว</div>
-        <div class="trips-grid" id="visited-trips-grid"></div>
-        <div class="trips-section-label">กำลังวางแผน</div>
-        <div class="trips-grid" id="planning-trips-grid"></div>
+
+        <div class="trips-main-tabs">
+          <span class="trips-main-tab active" data-tab="list" onclick="switchTripsTab('list')">ทริป</span>
+          <span class="trips-main-tab" data-tab="wishlist" onclick="switchTripsTab('wishlist')">Wishlist</span>
+        </div>
+
+        <div id="trips-panel-list">
+          <div class="trips-section-label">เคยไปแล้ว</div>
+          <div class="trips-grid" id="visited-trips-grid"></div>
+          <div class="trips-section-label">กำลังวางแผน</div>
+          <div class="trips-grid" id="planning-trips-grid"></div>
+        </div>
+
+        <div id="trips-panel-wishlist" style="display:none">
+          <form class="add-form" id="form-wishlist" onsubmit="addWishlist(event)">
+            <h3>เพิ่มที่อยากไป</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label>ชื่อสถานที่</label>
+                <input type="text" name="destination" placeholder="เช่น Kyoto" required>
+              </div>
+              <div class="form-field">
+                <label>ประเทศ</label>
+                <input type="text" name="country" placeholder="เช่น Japan">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Priority</label>
+                <select name="priority">
+                  <option value="high">Top priority</option>
+                  <option value="mid" selected>Medium</option>
+                  <option value="low">Someday</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="form-field">
+                <label>Notes</label>
+                <textarea name="notes" placeholder="อยากไปช่วงไหน ทำอะไร..."></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="form-submit">เพิ่ม</button>
+            </div>
+          </form>
+          <div class="travel-grid" id="wishlist-cards"></div>
+        </div>
       </div>
 
       <div class="trips-detail-view" id="trips-detail">
         <span class="back-btn" onclick="closeTrip()">&#8592; Back</span>
         <div id="trip-detail-body"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Travel -->
-  <div id="page-travel" class="page">
-    <div class="page-inner narrow">
-      <div class="page-head">
-        <h2>Travel.</h2>
-      </div>
-      <p class="page-sub">Wishlist · ที่เคยไปแล้ว · Budget tracker</p>
-
-      <div class="travel-stats">
-        <div class="ts-item">
-          <span class="ts-num" id="stat-wish">0</span>
-          <span class="ts-label">อยากไป</span>
-        </div>
-        <div class="ts-item">
-          <span class="ts-num" id="stat-visit">0</span>
-          <span class="ts-label">เคยไปแล้ว</span>
-        </div>
-        <div class="ts-item">
-          <span class="ts-num" id="stat-budg">0</span>
-          <span class="ts-label">ทริปที่วางงบ</span>
-        </div>
-      </div>
-
-      <div class="travel-tabs">
-        <span class="travel-tab active" data-tab="wishlist" onclick="switchTravelTab('wishlist')">Wishlist</span>
-        <span class="travel-tab" data-tab="visited" onclick="switchTravelTab('visited')">Visited</span>
-        <span class="travel-tab" data-tab="budget" onclick="switchTravelTab('budget')">Budget</span>
-      </div>
-
-      <!-- Wishlist -->
-      <div class="travel-panel" id="travel-wishlist">
-        <form class="add-form" id="form-wishlist" onsubmit="addWishlist(event)">
-          <h3>เพิ่มที่อยากไป</h3>
-          <div class="form-row">
-            <div class="form-field">
-              <label>ชื่อสถานที่</label>
-              <input type="text" name="destination" placeholder="เช่น Kyoto" required>
-            </div>
-            <div class="form-field">
-              <label>ประเทศ</label>
-              <input type="text" name="country" placeholder="เช่น Japan">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label>Priority</label>
-              <select name="priority">
-                <option value="high">Top priority</option>
-                <option value="mid" selected>Medium</option>
-                <option value="low">Someday</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="form-field">
-              <label>Notes</label>
-              <textarea name="notes" placeholder="อยากไปช่วงไหน ทำอะไร..."></textarea>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="form-submit">เพิ่ม</button>
-          </div>
-        </form>
-        <div class="travel-grid" id="wishlist-cards"></div>
-      </div>
-
-      <!-- Visited -->
-      <div class="travel-panel" id="travel-visited" style="display:none">
-        <form class="add-form" id="form-visited" onsubmit="addVisited(event)">
-          <h3>เพิ่มที่เคยไปแล้ว</h3>
-          <div class="form-row">
-            <div class="form-field">
-              <label>ชื่อสถานที่</label>
-              <input type="text" name="destination" placeholder="เช่น Bali" required>
-            </div>
-            <div class="form-field">
-              <label>ประเทศ</label>
-              <input type="text" name="country" placeholder="เช่น Indonesia">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label>วันที่ไป</label>
-              <input type="date" name="visitDate">
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="form-field">
-              <label>Notes</label>
-              <textarea name="notes" placeholder="ความประทับใจ สิ่งที่ชอบ..."></textarea>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="form-submit">เพิ่ม</button>
-          </div>
-        </form>
-        <div class="travel-grid" id="visited-cards"></div>
-      </div>
-
-      <!-- Budget -->
-      <div class="travel-panel" id="travel-budget" style="display:none">
-        <form class="add-form" id="form-budget" onsubmit="addBudget(event)">
-          <h3>เพิ่มงบทริปใหม่</h3>
-          <div class="form-row">
-            <div class="form-field">
-              <label>ชื่อทริป</label>
-              <input type="text" name="destination" placeholder="เช่น Japan Oct 2026" required>
-            </div>
-            <div class="form-field">
-              <label>งบรวม (บาท)</label>
-              <input type="number" name="budget" placeholder="เช่น 50000" min="0">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label>วันเริ่ม</label>
-              <input type="date" name="startDate">
-            </div>
-            <div class="form-field">
-              <label>วันสิ้นสุด</label>
-              <input type="date" name="endDate">
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="form-submit">เพิ่ม</button>
-          </div>
-        </form>
-        <div id="budget-cards"></div>
       </div>
 
     </div>
@@ -547,6 +455,7 @@
           <div class="exp-wallets-scroll" id="exp-wallets-scroll"></div>
           <button class="exp-wallet-mgmt-btn" onclick="openTransferModal()" title="โอนเงินระหว่างกระเป๋า">⇄</button>
           <button class="exp-wallet-mgmt-btn" onclick="openWalletMgmt()" title="จัดการกระเป๋า">⚙</button>
+          <button class="exp-wallet-mgmt-btn" onclick="openCatMgmt()" title="จัดการประเภท">🏷</button>
         </div>
 
         <!-- View tabs -->
@@ -555,29 +464,12 @@
           <span class="exp-vtab" data-view="dash" onclick="switchExpView('dash')">ภาพรวม</span>
         </div>
 
-        <!-- Add form -->
-        <div class="exp-add-form">
-          <div class="exp-add-row1">
-            <input id="exp-input" class="exp-input" type="text" placeholder="รายละเอียด เช่น กาแฟ, ค่าไฟ...">
-            <input id="exp-amount" class="exp-amount-input" type="number" min="0" placeholder="฿" onkeydown="if(event.key==='Enter')addExpense()">
-          </div>
-          <div class="exp-add-row2">
-            <span class="exp-date-label">วันที่</span>
-            <input id="exp-date" class="exp-input exp-date-input" type="date">
-          </div>
-          <div class="exp-wallet-selector" id="exp-wallet-selector"></div>
-          <div class="exp-type-toggle">
-            <span class="exp-ttype active" data-type="expense" onclick="setAddType('expense')">รายจ่าย</span>
-            <span class="exp-ttype" data-type="income" onclick="setAddType('income')">รายรับ</span>
-          </div>
-          <button class="exp-add-btn" onclick="addExpense()">+ บันทึก</button>
-        </div>
-
         <!-- Period filter -->
         <div class="exp-filter-tabs">
           <span class="exp-ftab active" data-period="today" onclick="switchExpPeriod('today')">วันนี้</span>
           <span class="exp-ftab" data-period="week" onclick="switchExpPeriod('week')">สัปดาห์นี้</span>
           <span class="exp-ftab" data-period="month" onclick="switchExpPeriod('month')">เดือนนี้</span>
+          <input type="date" id="exp-date-filter" class="exp-date-picker" onchange="switchExpDateFilter(this.value)">
         </div>
 
         <div class="exp-summary" id="exp-summary"></div>
@@ -590,6 +482,7 @@
 
 </main>
 
+<button class="exp-fab" id="exp-fab" onclick="toggleExpForm()" title="เพิ่มรายการ">+</button>
 <button class="scroll-top-btn" id="scroll-top-btn" title="กลับด้านบน">↑</button>
 
 <!-- ── Embedded briefs ── -->
@@ -698,6 +591,21 @@
   </div>
 </div>
 
+<!-- Person Popup -->
+<div id="person-popup-modal" class="auth-overlay" onclick="closeAuthModal('person-popup-modal',event)">
+  <div class="pp-card" onclick="event.stopPropagation()">
+    <button class="auth-close" onclick="closeAuthModal('person-popup-modal')">&times;</button>
+    <div class="pp-left" id="pp-left"></div>
+    <div class="pp-right">
+      <div class="pp-role-tag" id="pp-role-tag"></div>
+      <div class="pp-name" id="pp-name"></div>
+      <p class="pp-bio" id="pp-bio"></p>
+      <div class="pp-trips" id="pp-trips"></div>
+      <a class="pp-fb-link" id="pp-fb-link" href="" target="_blank" rel="noopener">Facebook →</a>
+    </div>
+  </div>
+</div>
+
 <!-- Sign-in Modal -->
 <div id="signin-modal" class="auth-overlay" onclick="closeAuthModal('signin-modal',event)">
   <div class="auth-card">
@@ -777,6 +685,48 @@
     <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.45rem">เลือกสี</p>
     <div class="wallet-color-row" id="wallet-color-swatches"></div>
     <button class="auth-confirm-btn" onclick="addWallet()" style="width:100%;margin-top:0.9rem">+ เพิ่มกระเป๋า</button>
+  </div>
+</div>
+
+<!-- Expense Add/Edit Modal -->
+<div id="exp-add-modal" class="auth-overlay" onclick="if(event.target===this)toggleExpForm(false)">
+  <div class="auth-card" style="max-width:420px;text-align:left;width:92%">
+    <button class="auth-close" onclick="toggleExpForm(false)">&times;</button>
+    <h2 class="auth-title" id="exp-modal-title" style="text-align:left;font-size:1.05rem;margin-bottom:1rem">เพิ่มรายการ</h2>
+    <div class="exp-add-row1" style="margin-bottom:0.65rem">
+      <input id="exp-input" class="exp-input" type="text" placeholder="รายละเอียด เช่น กาแฟ, ค่าไฟ...">
+      <input id="exp-amount" class="exp-amount-input" type="number" min="0" placeholder="฿" onkeydown="if(event.key==='Enter')addExpense()">
+    </div>
+    <div class="exp-add-row2" style="margin-bottom:0.65rem">
+      <span class="exp-date-label">วันที่</span>
+      <input id="exp-date" class="exp-input exp-date-input" type="date">
+    </div>
+    <div class="exp-wallet-selector" id="exp-wallet-selector" style="margin-bottom:0.5rem"></div>
+    <button class="exp-cat-toggle" id="exp-cat-toggle" onclick="toggleCatSelector()">🏷 เลือกประเภท <span id="exp-cat-selected-label"></span><span class="exp-cat-toggle-arrow">▾</span></button>
+    <div class="exp-cat-panel" id="exp-cat-panel">
+      <div class="exp-cat-selector" id="exp-cat-selector"></div>
+    </div>
+    <div class="exp-type-toggle" style="margin-bottom:0.75rem">
+      <span class="exp-ttype active" data-type="expense" onclick="setAddType('expense')">รายจ่าย</span>
+      <span class="exp-ttype" data-type="income" onclick="setAddType('income')">รายรับ</span>
+    </div>
+    <button class="exp-add-btn" onclick="addExpense()">+ บันทึก</button>
+  </div>
+</div>
+
+<!-- Category Management Modal -->
+<div id="cat-mgmt-modal" class="auth-overlay" onclick="if(event.target===this)closeCatMgmt()">
+  <div class="auth-card" style="max-width:380px;text-align:left">
+    <button class="auth-close" onclick="closeCatMgmt()">&times;</button>
+    <h2 class="auth-title" style="text-align:left;font-size:1.1rem;margin-bottom:1rem">จัดการประเภท</h2>
+    <div id="cat-mgmt-list"></div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+    <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.65rem">เพิ่มประเภทใหม่</p>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.65rem">
+      <input id="cat-new-emoji" type="text" placeholder="😊" style="width:3rem;flex:0 0 3rem;padding:0.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:1rem;text-align:center;box-sizing:border-box;font-family:inherit">
+      <input id="cat-new-name" type="text" placeholder="เช่น ท่องเที่ยว, ของขวัญ..." onkeydown="if(event.key==='Enter')addCat()" style="flex:1;padding:0.5rem 0.8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:0.9rem;box-sizing:border-box;font-family:inherit">
+    </div>
+    <button class="auth-confirm-btn" onclick="addCat()" style="width:100%">+ เพิ่มประเภท</button>
   </div>
 </div>
 

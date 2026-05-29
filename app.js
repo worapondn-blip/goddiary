@@ -9,8 +9,10 @@
   });
   const _fs   = firebase.firestore();
   const _auth = firebase.auth();
-  let _currentUser = null;
-  let _isAllowed   = false;
+  let _currentUser        = null;
+  let _isAllowed          = false;
+  let _currentProfile     = null;
+  let _profileFriendIdMap = {};
 
   function openAuthModal(id) {
     var el = document.getElementById(id);
@@ -70,7 +72,12 @@
       });
 
       if (_isAllowed) {
-        _db.ensureUserProfile(user).then(function() { renderPeople(); });
+        _db.ensureUserProfile(user).then(function() {
+          _db.profileRef(user.uid).get().then(function(snap) {
+            _currentProfile = snap.exists ? snap.data() : null;
+          });
+          renderPeople();
+        });
       } else {
         renderPeople();
       }
@@ -192,7 +199,7 @@
         try { localStorage.setItem(uid ? 'todos_u_' + uid + '_' + k : 'todos_' + k, JSON.stringify(v)); } catch {}
         write('todos', { data: _c.todos });
       },
-      getTravel:    function()      { return _c.travel || { wishlist:[], visited:[], budgets:[] }; },
+      getTravel:    function()      { var t = _c.travel || {}; return { wishlist: t.wishlist || [], visited: t.visited || [], budgets: t.budgets || [], visitedTripIds: t.visitedTripIds || [] }; },
       setTravel:    function(v)     {
         _c.travel = v;
         try { localStorage.setItem('gd_travel_shared', JSON.stringify(v)); } catch {}
@@ -211,8 +218,8 @@
         if (!_currentUser) return Promise.reject('not logged in');
         return _fs.collection('trip_comments').doc(tripId).collection('items').add({
           uid:    _currentUser.uid,
-          name:   _currentUser.displayName || 'Anonymous',
-          avatar: _currentUser.photoURL || '',
+          name:   (_currentProfile && _currentProfile.name) || _currentUser.displayName || 'Anonymous',
+          avatar: (_currentProfile && _currentProfile.img) || _currentUser.photoURL || '',
           text:   text,
           ts:     firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -229,14 +236,18 @@
         write('trip_todos', { data: _c.trip_todos });
       },
       getTripCompanions: function(id) {
-        var ov = (_c.trip_companions || {})[id];
-        if (ov) return ov;
+        var c = _c.trip_companions || {};
+        if (Object.prototype.hasOwnProperty.call(c, id) && c[id].length) return c[id];
         var trip = tripsData.find(function(t) { return t.id === id; });
         return trip ? (trip.companionIds || []) : [];
       },
       setTripCompanions: function(id, ids) {
         if (!_c.trip_companions) _c.trip_companions = {};
-        _c.trip_companions[id] = ids;
+        if (ids.length) {
+          _c.trip_companions[id] = ids;
+        } else {
+          delete _c.trip_companions[id];
+        }
         try { localStorage.setItem(lsKey('gd_trip_companions'), JSON.stringify(_c.trip_companions)); } catch {}
         write('trip_companions', { data: _c.trip_companions });
       },
@@ -821,7 +832,7 @@
     {
       name: 'Elly', role: 'Accountant', sub: 'Expense Tracker', dot: '#7A5C3F', img: 'Avatars/Elly.png',
       tagline: 'ตัวเลขไม่โกหก — Elly ก็เหมือนกัน',
-      personality: 'ซื่อสัตย์กับตัวเลข บอกความจริงเสมอแม้จะเจ็บปวด ไม่ยอมปัดเศษหรือเฉลี่ยให้รู้สึกดีขึ้น ชอบพูดว่า "ตัวเลขไม่โกหกนะคะ"',
+      personality: 'ซื่อสัตย์กับตัวเลข บอกความจริงเสมอแม้จะเจ็บปวด ไม่ยอมปัดเศษหรือเฉลี่ยให้รู้สึกดีขึ้น',
       duties: ['บันทึกค่าใช้จ่ายรายวันทุกรายการ', 'สรุปค่าใช้จ่ายรายหมวดเมื่อถูกถาม', 'แจ้งเตือนเมื่อใช้จ่ายเกิน budget', 'เปรียบเทียบรายจ่ายเดือนนี้กับเดือนที่แล้ว']
     },
     {
@@ -833,25 +844,25 @@
     {
       name: 'Fai', role: 'Market Analyst', sub: 'News & Catalyst Tracker', dot: '#0d7377', img: 'Avatars/Fai.png',
       tagline: 'ถ้ามีข่าวออกมา Fai รู้ก่อนใคร',
-      personality: 'เร็ว ทันสถานการณ์เสมอ พลังงานสูง ถ้ามีอะไรเคลื่อนไหวในตลาดจะรู้ก่อนใคร ชอบพูดว่า "มีอัปเดตแล้วค่ะ"',
+      personality: 'เร็ว ทันสถานการณ์เสมอ พลังงานสูง ถ้ามีอะไรเคลื่อนไหวในตลาดจะรู้ก่อนใคร',
       duties: ['ค้นหาข่าวสด 7 วันล่าสุดของหุ้นที่สนใจ', 'ติดตาม analyst moves และ rating changes', 'หา upcoming catalysts ที่อาจกระทบราคา', 'ทำงานใน /stock และ /brief flow']
     },
     {
       name: 'Kla', role: 'Financial Analyst', sub: 'Annual Report Analyst', dot: '#0d7377', img: 'Avatars/Kla.png',
       tagline: 'ให้เวลาผมอ่านก่อน — ไม่มีบรรทัดไหนที่ข้ามได้',
-      personality: 'ใจเย็น ละเอียดถี่ถ้วน ไม่เร่ง อ่านทุกบรรทัดใน annual report โดยไม่ข้าม มักพูดว่า "ให้เวลาผมอ่านก่อนนะครับ"',
+      personality: 'ใจเย็น ละเอียดถี่ถ้วน ไม่เร่ง อ่านทุกบรรทัดใน annual report โดยไม่ข้าม',
       duties: ['อ่านไฟล์ 10-K และ 20-F จาก SEC EDGAR', 'สรุป company snapshot และ fundamentals', 'วิเคราะห์ revenue trend, margin, และ risk factors', 'ทำงานใน /stock และ /brief flow']
     },
     {
       name: 'Sam', role: 'Earnings Analyst', sub: 'Earnings Call Analyst', dot: '#0d7377', img: 'Avatars/Sam.png',
       tagline: 'น้ำเสียงบอกได้มากกว่าตัวเลข',
-      personality: 'สังเกตเก่ง จับ tone ได้แม่น รู้ว่า management กำลังเน้นอะไรและปิดอะไร มักพูดว่า "น้ำเสียงตอนนั้นน่าสนใจมากครับ"',
+      personality: 'สังเกตเก่ง จับ tone ได้แม่น รู้ว่า management กำลังเน้นอะไรและปิดอะไร',
       duties: ['อ่าน earnings call transcript รายไตรมาส', 'สรุป quarterly numbers และ guidance', 'วิเคราะห์ management tone: confident / cautious / defensive', 'ทำงานใน /stock และ /brief flow']
     },
     {
       name: 'Alex', role: 'Fact Checker', sub: 'Data Verifier', dot: '#1a3d5c', img: 'Avatars/Alex.png',
       tagline: 'ไม่ผ่านถ้าไม่ verify — ทุกตัวเลขต้องมีที่มา',
-      personality: 'เงียบ รอบคอบสูงมาก ไม่ยอมผ่านข้อมูลที่ยังไม่ verify ชอบอ้างแหล่งที่มาก่อนพูดทุกครั้ง มักพูดว่า "ขอเช็คก่อนนะครับ"',
+      personality: 'เงียบ รอบคอบสูงมาก ไม่ยอมผ่านข้อมูลที่ยังไม่ verify ชอบอ้างแหล่งที่มาก่อนพูดทุกครั้ง',
       duties: ['ตรวจสอบตัวเลข revenue, margin, FCF, EPS กับแหล่งออนไลน์', 'flag ข้อมูลที่ไม่ตรงกับ filing จริง', 'อ้างอิงแหล่งที่มาทุกจุดที่ verify', 'ทำงานใน /deep flow ก่อนส่งให้ Max']
     },
     {
@@ -892,7 +903,6 @@
             '<div class="flip-back">' +
               '<div class="back-top">' +
                 '<span class="back-role-tag">' + p.role + '</span>' +
-                '<span class="back-flip-hint">← กลับ</span>' +
               '</div>' +
               '<div class="back-name">' + p.name + '</div>' +
               '<p class="back-personality">' + p.personality + '</p>' +
@@ -1190,12 +1200,16 @@
     var bottom = companions.length
       ? '<div class="trip-card-bottom">' + buildCompanionStack(companions) + '<span class="trip-duration-text">' + trip.duration + '</span></div>'
       : '<div class="trip-meta">' + trip.companions + ' · ' + trip.duration + '</div>';
+    var visitedBtn = trip.status === 'planning'
+      ? '<div class="trip-draft-actions" onclick="event.preventDefault();event.stopPropagation()"><button class="tc-btn" onclick="markTripVisited(\'' + trip.id + '\')">ไปมาแล้ว ✓</button></div>'
+      : '';
     return (
       '<a class="trip-card" href="#trips/' + trip.id + '" onclick="event.preventDefault();openTrip(\'' + trip.id + '\')">' +
         '<span class="trip-status ' + trip.status + '">' + (trip.status === 'visited' ? 'เคยไปแล้ว' : 'กำลังวางแผน') + '</span>' +
         '<div class="trip-name">' + trip.name + '</div>' +
         '<div class="trip-dates">' + trip.dates + '</div>' +
         bottom +
+        visitedBtn +
         '<span class="trip-arrow">→</span>' +
       '</a>'
     );
@@ -1502,9 +1516,9 @@
         var f = allFriends.find(function(x) { return x.id === cid; });
         if (!f) return '';
         var avatarHTML = f.img
-          ? '<img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '">'
-          : '<span class="tcr-avatar comp-avatar-initials">' + f.name.charAt(0).toUpperCase() + '</span>';
-        return '<div class="tcr-item">' + avatarHTML + '<span class="tcr-name">' + f.name + '</span></div>';
+          ? '<img class="tcr-avatar" src="' + f.img + '" alt="' + f.name + '" onclick="showPersonPopup(\'' + cid + '\')">'
+          : '<span class="tcr-avatar comp-avatar-initials" onclick="showPersonPopup(\'' + cid + '\')">' + f.name.charAt(0).toUpperCase() + '</span>';
+        return '<div class="tcr-item"><span onclick="showPersonPopup(\'' + cid + '\')">' + avatarHTML + '</span></div>';
       }).join('');
     }
     companionsRowHTML += '<button class="tcr-edit-btn" onclick="openCompanionsModal(\'' + trip.id + '\')">' + (companions.length ? '✎ แก้ไข' : '+ เพิ่มคน') + '</button></div>';
@@ -1530,9 +1544,13 @@
       '</div>'
     );
 
+    var isUserMarkedVisited = travelDB.load().visitedTripIds.includes(trip.id);
+    var undoBtn = isUserMarkedVisited
+      ? '<button class="tc-btn" style="margin-left:0.6rem;font-size:0.72rem" onclick="unmarkTripVisited(\'' + trip.id + '\')">↩ ยังไม่ได้ไป</button>'
+      : '';
     return (
       '<div class="trip-detail-head">' +
-        '<div class="trip-detail-status"><span class="trip-status ' + trip.status + '">' + (trip.status === 'visited' ? 'เคยไปแล้ว' : 'กำลังวางแผน') + '</span></div>' +
+        '<div class="trip-detail-status"><span class="trip-status ' + trip.status + '">' + (trip.status === 'visited' ? 'เคยไปแล้ว' : 'กำลังวางแผน') + '</span>' + undoBtn + '</div>' +
         '<div class="trip-detail-title">' + trip.name + '</div>' +
         '<div class="trip-detail-meta">' + trip.dates + ' · ' + trip.duration + '</div>' +
         companionsRowHTML +
@@ -1557,20 +1575,46 @@
         return;
       }
       var profiles = await _db.getProfiles();
-      var profileImgMap = {};
-      profiles.forEach(function(p) { if (p.uid) profileImgMap[p.uid] = p.img || ''; });
+      var profileImgMap  = {};
+      var profileNameMap = {};
+      profiles.forEach(function(p) {
+        if (!p.uid) return;
+        var img = (p.img && !p.img.includes('googleusercontent.com')) ? p.img : '';
+        if (!img && p.linkedFriendId) {
+          var linked = friendsData.find(function(f) { return f.id === p.linkedFriendId; });
+          if (linked && linked.img) img = linked.img;
+        }
+        profileImgMap[p.uid]  = img;
+        profileNameMap[p.uid] = p.name || '';
+      });
+      friendsData.forEach(function(f) {
+        if (f.isMe && _currentUser) {
+          if (f.img && !profileImgMap[_currentUser.uid]) profileImgMap[_currentUser.uid] = f.img;
+          _profileFriendIdMap[_currentUser.uid] = f.id;
+        }
+        if (f.googleUid) {
+          if (f.img && !profileImgMap[f.googleUid]) profileImgMap[f.googleUid] = f.img;
+          _profileFriendIdMap[f.googleUid] = f.id;
+        }
+      });
+      profiles.forEach(function(p) {
+        if (p.uid && p.linkedFriendId) _profileFriendIdMap[p.uid] = p.linkedFriendId;
+      });
       el.innerHTML = items.map(function(c) {
+        var displayName = (c.uid && profileNameMap[c.uid]) || c.name || '?';
         var imgSrc = (c.uid && profileImgMap[c.uid]) || c.avatar || '';
+        var fid = (c.uid && _profileFriendIdMap[c.uid]) || '';
+        var popupAttr = fid ? ' onclick="showPersonPopup(\'' + fid + '\')"' : '';
         var avatarHTML = imgSrc
-          ? '<img class="comment-avatar" src="' + imgSrc + '" referrerpolicy="no-referrer">'
-          : '<div class="comment-avatar comment-avatar-init">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
+          ? '<img class="comment-avatar" src="' + imgSrc + '" referrerpolicy="no-referrer"' + popupAttr + '>'
+          : '<div class="comment-avatar comment-avatar-init"' + popupAttr + '>' + displayName.charAt(0).toUpperCase() + '</div>';
         var tsLabel = c.ts ? new Date(c.ts.seconds * 1000).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '';
         var isOwn = _currentUser && _currentUser.uid === c.uid;
         return (
           '<div class="comment-item">' +
             avatarHTML +
             '<div class="comment-body">' +
-              '<div class="comment-meta"><span class="comment-name">' + c.name + '</span><span class="comment-ts">' + tsLabel + '</span>' +
+              '<div class="comment-meta"><span class="comment-name"' + popupAttr + '>' + displayName + '</span><span class="comment-ts">' + tsLabel + '</span>' +
                 (isOwn ? '<button class="comment-delete" onclick="deleteComment(\'' + tripId + '\',\'' + c._id + '\')">ลบ</button>' : '') +
               '</div>' +
               '<div class="comment-text">' + c.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
@@ -1667,7 +1711,9 @@
   function openTrip(id, skipHistory) {
     var trip = tripsData.find(function(t) { return t.id === id; });
     if (!trip) return;
-    document.getElementById('trip-detail-body').innerHTML = buildTripDetail(trip);
+    var tData = travelDB.load();
+    var effectiveStatus = tData.visitedTripIds.includes(id) ? 'visited' : trip.status;
+    document.getElementById('trip-detail-body').innerHTML = buildTripDetail(Object.assign({}, trip, { status: effectiveStatus }));
     document.getElementById('trips-list').style.display = 'none';
     document.getElementById('trips-detail').style.display = 'block';
     document.querySelector('.main').scrollTop = 0;
@@ -1680,6 +1726,49 @@
     document.getElementById('trips-detail').style.display = 'none';
     document.getElementById('trips-list').style.display = 'block';
     history.pushState(null, '', '#trips');
+  }
+
+  async function showPersonPopup(friendId) {
+    var base = friendsData.find(function(fd) { return fd.id === friendId; });
+    if (!base) return;
+    var f = Object.assign({}, base);
+
+    var profiles = await _db.getProfiles();
+    profiles.forEach(function(p) {
+      if (p.linkedFriendId !== friendId) return;
+      if (p.bio) f.bio = p.bio;
+      if (p.img && !p.img.includes('googleusercontent.com')) f.img = p.img;
+    });
+
+    var leftEl = document.getElementById('pp-left');
+    leftEl.innerHTML = f.img
+      ? '<img src="' + f.img + '" alt="' + f.name + '">'
+      : '<div class="pp-left-init">' + f.name.charAt(0).toUpperCase() + '</div>';
+
+    document.getElementById('pp-role-tag').textContent = f.isMe ? 'เจ้าของ' : 'ซิโบเล็ต ซิโบติ้ว';
+    document.getElementById('pp-name').textContent = f.name;
+
+    var bioEl = document.getElementById('pp-bio');
+    bioEl.textContent = f.bio || '';
+    bioEl.style.display = f.bio ? '' : 'none';
+
+    var tripsEl = document.getElementById('pp-trips');
+    var allTrips = tripsData.filter(function(t) {
+      return _db.getTripCompanions(t.id).indexOf(friendId) !== -1;
+    });
+    var visited  = allTrips.filter(function(t) { return t.status === 'visited'; });
+    var planning = allTrips.filter(function(t) { return t.status !== 'visited'; });
+    var tripsHTML = '';
+    if (visited.length)  tripsHTML += '<div class="person-trips-group"><div class="person-trips-label">ไปแล้ว</div><div class="person-trips">' + visited.map(function(t) { return '<span class="person-trip-tag visited">' + t.name + '</span>'; }).join('') + '</div></div>';
+    if (planning.length) tripsHTML += '<div class="person-trips-group"><div class="person-trips-label planning">กำลังวางแผน</div><div class="person-trips">' + planning.map(function(t) { return '<span class="person-trip-tag planning">' + t.name + '</span>'; }).join('') + '</div></div>';
+    tripsEl.innerHTML = tripsHTML;
+    tripsEl.style.display = tripsHTML ? '' : 'none';
+
+    var fbLink = document.getElementById('pp-fb-link');
+    if (f.fb) { fbLink.href = f.fb; fbLink.classList.add('visible'); }
+    else { fbLink.href = ''; fbLink.classList.remove('visible'); }
+
+    openAuthModal('person-popup-modal');
   }
 
   function openCompanionsModal(tripId) {
@@ -1739,14 +1828,18 @@
     if (!vGrid || !pGrid) return;
     vGrid.innerHTML = '';
     pGrid.innerHTML = '';
+    var tData = travelDB.load();
     tripsData.forEach(function(trip) {
-      var html = buildTripCard(trip);
-      if (trip.status === 'visited') vGrid.innerHTML += html;
+      var effectiveStatus = tData.visitedTripIds.includes(trip.id) ? 'visited' : trip.status;
+      var html = buildTripCard(Object.assign({}, trip, { status: effectiveStatus }));
+      if (effectiveStatus === 'visited') vGrid.innerHTML += html;
       else pGrid.innerHTML += html;
     });
+    tData.wishlist.forEach(function(item) {
+      if (item.status === 'planning') pGrid.innerHTML += buildDraftTripCard(item);
+      else if (item.status === 'visited') vGrid.innerHTML += buildDraftTripCard(item);
+    });
   }
-  buildTripCards();
-
   function buildPersonCard(f, isSelf) {
     var allTrips = tripsData.filter(function(t) {
       return _db.getTripCompanions(t.id).indexOf(f.id) !== -1;
@@ -1803,7 +1896,6 @@
           '<div class="flip-back">' +
             '<div class="back-top">' +
               '<span class="back-role-tag">' + roleTag + '</span>' +
-              '<span class="back-flip-hint">← กลับ</span>' +
             '</div>' +
             '<span style="font-family:Caveat,cursive;font-size:1.6rem;font-weight:600;color:var(--green-dark);display:block;margin-bottom:0.25rem">' + f.name + '</span>' +
             bioHTML +
@@ -1853,6 +1945,15 @@
     save: function(data) { _db.setTravel(data); }
   };
 
+  function switchTripsTab(tab) {
+    document.querySelectorAll('.trips-main-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    document.getElementById('trips-panel-list').style.display     = tab === 'list'     ? '' : 'none';
+    document.getElementById('trips-panel-wishlist').style.display = tab === 'wishlist' ? '' : 'none';
+    if (tab === 'wishlist') renderWishlist();
+  }
+
   function switchTravelTab(tab) {
     document.querySelectorAll('.travel-tab').forEach(function(t) {
       t.classList.toggle('active', t.dataset.tab === tab);
@@ -1879,12 +1980,13 @@
     var data = travelDB.load();
     var el = document.getElementById('wishlist-cards');
     if (!el) return;
-    if (!data.wishlist.length) {
-      el.innerHTML = '<div class="empty-state"><span class="empty-icon">🗺️</span>ยังไม่มีที่อยากไป — เพิ่มได้เลยค่ะ</div>';
+    var items = data.wishlist.filter(function(x) { return !x.status || x.status === 'wishlist'; });
+    if (!items.length) {
+      el.innerHTML = '<div class="empty-state">ยังไม่มีที่อยากไป — เพิ่มได้เลยค่ะ</div>';
       return;
     }
     var order = { high: 0, mid: 1, low: 2 };
-    var sorted = data.wishlist.slice().sort(function(a, b) { return (order[a.priority]||2) - (order[b.priority]||2); });
+    var sorted = items.slice().sort(function(a, b) { return (order[a.priority]||2) - (order[b.priority]||2); });
     var labels = { high: 'Top priority', mid: 'Medium', low: 'Someday' };
     el.innerHTML = sorted.map(function(item) {
       return (
@@ -1897,7 +1999,7 @@
             '<span class="tc-date">' + item.addedDate + '</span>' +
           '</div>' +
           '<div class="tc-actions">' +
-            '<button class="tc-btn" onclick="markVisited(\'' + item.id + '\')">✓ เคยไปแล้ว</button>' +
+            '<button class="tc-btn" onclick="promoteToPlanning(\'' + item.id + '\')">เริ่มวางแผน →</button>' +
             '<button class="tc-btn danger" onclick="deleteWishlist(\'' + item.id + '\')">ลบ</button>' +
           '</div>' +
         '</div>'
@@ -1925,12 +2027,329 @@
     updateTravelStats();
   }
 
+  function promoteToPlanning(id) {
+    var data = travelDB.load();
+    var item = data.wishlist.find(function(x) { return x.id === id; });
+    if (!item) return;
+    item.status = 'planning';
+    travelDB.save(data);
+    renderWishlist();
+    buildTripCards();
+  }
+
+  function promoteToVisited(id) {
+    var data = travelDB.load();
+    var item = data.wishlist.find(function(x) { return x.id === id; });
+    if (!item) return;
+    item.status = 'visited';
+    item.visitDate = new Date().toISOString().slice(0, 10);
+    travelDB.save(data);
+    buildTripCards();
+  }
+
+  function buildDraftTripCard(item) {
+    var isPlanning = item.status === 'planning';
+    return (
+      '<div class="trip-card trip-card-draft" data-draft-id="' + item.id + '" onclick="openDraftEdit(\'' + item.id + '\')">' +
+        '<span class="trip-status ' + item.status + '">' + (isPlanning ? 'กำลังวางแผน' : 'เคยไปแล้ว') + '</span>' +
+        '<div class="trip-name">' + tesc(item.destination) + '</div>' +
+        '<div class="trip-dates">' + tesc(item.country || '') + '</div>' +
+        (item.notes ? '<div class="trip-meta" style="font-size:0.75rem;margin-top:0.3rem">' + tesc(item.notes) + '</div>' : '') +
+        '<div class="trip-draft-actions" onclick="event.stopPropagation()">' +
+          (isPlanning ? '<button class="tc-btn" onclick="promoteToVisited(\'' + item.id + '\')">ไปมาแล้ว ✓</button>' : '') +
+          '<button class="tc-btn" onclick="openDraftEdit(\'' + item.id + '\')">แก้ไข</button>' +
+          '<button class="tc-btn danger" onclick="deleteWishlist(\'' + item.id + '\')">ลบ</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
   function deleteWishlist(id) {
     var data = travelDB.load();
     data.wishlist = data.wishlist.filter(function(x) { return x.id !== id; });
     travelDB.save(data);
     renderWishlist();
     updateTravelStats();
+  }
+
+  function markTripVisited(tripId) {
+    var data = travelDB.load();
+    if (!data.visitedTripIds.includes(tripId)) data.visitedTripIds.push(tripId);
+    travelDB.save(data);
+    buildTripCards();
+  }
+
+  function unmarkTripVisited(tripId) {
+    var data = travelDB.load();
+    data.visitedTripIds = data.visitedTripIds.filter(function(id) { return id !== tripId; });
+    travelDB.save(data);
+    buildTripCards();
+    openTrip(tripId, true);
+  }
+
+  var _draftEdit = null;
+
+  function openDraftEdit(id) {
+    var data = travelDB.load();
+    var item = data.wishlist.find(function(x) { return x.id === id; });
+    if (!item) return;
+    _draftEdit = {
+      id: id,
+      dest: item.destination || '',
+      country: item.country || '',
+      priority: item.priority || 'medium',
+      startDate: item.startDate || '',
+      notes: item.notes || '',
+      todos: (item.todos || []).map(function(t) {
+        return { id: t.id || tuid(), text: t.text || '', deadline: t.deadline || '', done: !!t.done };
+      }),
+      budget: (item.budget || []).map(function(b) {
+        return { label: b.label || '', amount: b.amount || '' };
+      }),
+      days: (item.days || []).map(function(d) {
+        return {
+          date: d.date || '', place: d.place || '',
+          items: (d.items || []).map(function(it) {
+            return { time: it.time || '', text: it.text || '', url: it.url || '', note: it.note || '' };
+          })
+        };
+      })
+    };
+    _renderDraftEditForm();
+    document.getElementById('trips-list').style.display = 'none';
+    document.getElementById('trips-detail').style.display = 'block';
+    document.querySelector('.main').scrollTop = 0;
+    var dest = document.getElementById('de-dest');
+    if (dest) dest.focus();
+  }
+
+  function _syncDraftFormToState() {
+    if (!_draftEdit) return;
+    _draftEdit.dest      = (document.getElementById('de-dest')      || {}).value || '';
+    _draftEdit.country   = (document.getElementById('de-ctry')      || {}).value || '';
+    _draftEdit.priority  = (document.getElementById('de-prio')      || {}).value || 'medium';
+    _draftEdit.startDate = (document.getElementById('de-startdate') || {}).value || '';
+    _draftEdit.notes     = (document.getElementById('de-note')      || {}).value || '';
+    _draftEdit.todos = _draftEdit.todos.map(function(t, i) {
+      return {
+        id: t.id,
+        text:     (document.getElementById('dtodo-text-' + i) || {}).value || '',
+        deadline: (document.getElementById('dtodo-dl-'   + i) || {}).value || '',
+        done: t.done
+      };
+    });
+    _draftEdit.budget = _draftEdit.budget.map(function(b, i) {
+      return {
+        label:  (document.getElementById('dbgt-label-' + i) || {}).value || '',
+        amount: (document.getElementById('dbgt-amt-'   + i) || {}).value || ''
+      };
+    });
+    _draftEdit.days = _draftEdit.days.map(function(day, di) {
+      return {
+        date:  (document.getElementById('dday-date-'  + di) || {}).value || '',
+        place: (document.getElementById('dday-place-' + di) || {}).value || '',
+        items: day.items.map(function(it, ii) {
+          return {
+            time: (document.getElementById('ditem-time-' + di + '-' + ii) || {}).value || '',
+            text: (document.getElementById('ditem-text-' + di + '-' + ii) || {}).value || '',
+            url:  (document.getElementById('ditem-url-'  + di + '-' + ii) || {}).value || '',
+            note: ''
+          };
+        })
+      };
+    });
+  }
+
+  function _renderDraftEditForm(scrollY) {
+    document.getElementById('trip-detail-body').innerHTML = _buildDraftEditHTML();
+    if (scrollY !== undefined) document.querySelector('.main').scrollTop = scrollY;
+  }
+
+  function _buildDraftEditHTML() {
+    var d = _draftEdit;
+    var priorityOpts = ['low','medium','high'].map(function(p) {
+      return '<option value="' + p + '"' + (d.priority === p ? ' selected' : '') + '>' + p + '</option>';
+    }).join('');
+
+    var todosHTML = d.todos.length
+      ? d.todos.map(function(t, i) {
+          return '<div class="de-input-row">' +
+            '<input class="de-input" id="dtodo-text-' + i + '" value="' + tesc(t.text) + '" placeholder="งาน">' +
+            '<input class="de-input de-input-sm" id="dtodo-dl-' + i + '" value="' + tesc(t.deadline) + '" placeholder="deadline เช่น 25 พ.ค.">' +
+            '<button class="tc-btn danger" onclick="draftRemoveTodo(' + i + ')">ลบ</button>' +
+          '</div>';
+        }).join('')
+      : '<p class="de-empty">ยังไม่มี todo</p>';
+
+    var budgetHTML = d.budget.length
+      ? d.budget.map(function(b, i) {
+          return '<div class="de-input-row">' +
+            '<input class="de-input" id="dbgt-label-' + i + '" value="' + tesc(b.label) + '" placeholder="รายการ">' +
+            '<input class="de-input de-input-sm" id="dbgt-amt-' + i + '" value="' + tesc(b.amount) + '" placeholder="จำนวน ฿">' +
+            '<button class="tc-btn danger" onclick="draftRemoveBudgetRow(' + i + ')">ลบ</button>' +
+          '</div>';
+        }).join('')
+      : '<p class="de-empty">ยังไม่มีรายการ</p>';
+
+    var daysHTML = d.days.length
+      ? d.days.map(function(day, di) {
+          var itemsHTML = day.items.map(function(it, ii) {
+            return '<div class="de-input-row de-item-row">' +
+              '<input class="de-input de-input-time" id="ditem-time-' + di + '-' + ii + '" value="' + tesc(it.time) + '" placeholder="เวลา">' +
+              '<input class="de-input de-input-activity" id="ditem-text-' + di + '-' + ii + '" value="' + tesc(it.text) + '" placeholder="กิจกรรม">' +
+              '<input class="de-input de-input-url" id="ditem-url-' + di + '-' + ii + '" value="' + tesc(it.url) + '" placeholder="URL">' +
+              '<button class="tc-btn danger" onclick="draftRemoveItem(' + di + ',' + ii + ')">ลบ</button>' +
+            '</div>';
+          }).join('');
+          return '<div class="de-day-block">' +
+            '<div class="de-day-head">' +
+              '<span class="de-day-label">Day ' + (di + 1) + '</span>' +
+              '<input class="de-input de-input-sm" id="dday-date-' + di + '" value="' + tesc(day.date) + '" placeholder="วันที่ เช่น 7 มิ.ย.">' +
+              '<input class="de-input de-input-place" id="dday-place-' + di + '" value="' + tesc(day.place) + '" placeholder="สถานที่หลัก">' +
+              '<button class="tc-btn danger" onclick="draftRemoveDay(' + di + ')">ลบวัน</button>' +
+            '</div>' +
+            (day.items.length ? '<div class="de-items">' + itemsHTML + '</div>' : '') +
+            '<button class="tc-btn de-add-item-btn" onclick="draftAddItem(' + di + ')">+ กิจกรรม</button>' +
+          '</div>';
+        }).join('')
+      : '<p class="de-empty">ยังไม่มีวันที่วางแผน</p>';
+
+    return (
+      '<div class="de-form">' +
+        '<div class="de-section">' +
+          '<div class="de-section-title">ข้อมูลทั่วไป</div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>ชื่อสถานที่ *</label><input id="de-dest" value="' + tesc(d.dest) + '" placeholder="ชื่อสถานที่"></div>' +
+            '<div class="form-field"><label>ประเทศ</label><input id="de-ctry" value="' + tesc(d.country) + '" placeholder="ประเทศ"></div>' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Priority</label><select id="de-prio">' + priorityOpts + '</select></div>' +
+            '<div class="form-field"><label>วันที่เริ่มเดินทาง</label><input type="date" id="de-startdate" value="' + tesc(d.startDate) + '"></div>' +
+          '</div>' +
+          '<div class="form-row single"><div class="form-field"><label>Notes</label><textarea id="de-note" rows="2">' + tesc(d.notes) + '</textarea></div></div>' +
+        '</div>' +
+
+        '<div class="de-section">' +
+          '<div class="de-section-title">To-do ก่อนไป</div>' +
+          '<div id="de-todos">' + todosHTML + '</div>' +
+          '<button class="tc-btn" onclick="draftAddTodo()">+ เพิ่ม Todo</button>' +
+        '</div>' +
+
+        '<div class="de-section">' +
+          '<div class="de-section-title">Budget (ต่อคน)</div>' +
+          '<div id="de-budget">' + budgetHTML + '</div>' +
+          '<button class="tc-btn" onclick="draftAddBudgetRow()">+ เพิ่มรายการ</button>' +
+        '</div>' +
+
+        '<div class="de-section">' +
+          '<div class="de-section-title">แผนการเดินทาง วันต่อวัน</div>' +
+          '<div id="de-days">' + daysHTML + '</div>' +
+          '<button class="tc-btn" onclick="draftAddDay()">+ เพิ่มวัน</button>' +
+        '</div>' +
+
+        '<div class="de-actions">' +
+          '<button class="form-submit" onclick="saveDraftEdit()">บันทึก</button>' +
+          '<button class="tc-btn" onclick="closeDraftEdit()">ยกเลิก</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function draftAddTodo() {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.todos.push({ id: tuid(), text: '', deadline: '', done: false });
+    _renderDraftEditForm(sy);
+    var el = document.getElementById('dtodo-text-' + (_draftEdit.todos.length - 1));
+    if (el) el.focus();
+  }
+
+  function draftRemoveTodo(i) {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.todos.splice(i, 1);
+    _renderDraftEditForm(sy);
+  }
+
+  function draftAddBudgetRow() {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.budget.push({ label: '', amount: '' });
+    _renderDraftEditForm(sy);
+    var el = document.getElementById('dbgt-label-' + (_draftEdit.budget.length - 1));
+    if (el) el.focus();
+  }
+
+  function draftRemoveBudgetRow(i) {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.budget.splice(i, 1);
+    _renderDraftEditForm(sy);
+  }
+
+  function draftAddDay() {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.days.push({ date: '', place: '', items: [] });
+    _renderDraftEditForm(sy);
+    var el = document.getElementById('dday-date-' + (_draftEdit.days.length - 1));
+    if (el) el.focus();
+  }
+
+  function draftRemoveDay(di) {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.days.splice(di, 1);
+    _renderDraftEditForm(sy);
+  }
+
+  function draftAddItem(di) {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.days[di].items.push({ time: '', text: '', url: '', note: '' });
+    _renderDraftEditForm(sy);
+    var ii = _draftEdit.days[di].items.length - 1;
+    var el = document.getElementById('ditem-time-' + di + '-' + ii);
+    if (el) el.focus();
+  }
+
+  function draftRemoveItem(di, ii) {
+    var sy = document.querySelector('.main').scrollTop;
+    _syncDraftFormToState();
+    _draftEdit.days[di].items.splice(ii, 1);
+    _renderDraftEditForm(sy);
+  }
+
+  function saveDraftEdit() {
+    _syncDraftFormToState();
+    if (!_draftEdit || !_draftEdit.dest.trim()) return;
+    var data = travelDB.load();
+    var item = data.wishlist.find(function(x) { return x.id === _draftEdit.id; });
+    if (!item) return;
+    item.destination = _draftEdit.dest.trim();
+    item.country  = _draftEdit.country;
+    item.priority = _draftEdit.priority;
+    item.startDate = _draftEdit.startDate;
+    item.notes    = _draftEdit.notes;
+    item.todos  = _draftEdit.todos.filter(function(t) { return t.text.trim(); });
+    item.budget = _draftEdit.budget.filter(function(b) { return b.label.trim() || b.amount.trim(); });
+    item.days   = _draftEdit.days.map(function(d, i) {
+      return {
+        label: 'Day ' + (i + 1),
+        date: d.date, place: d.place,
+        items: d.items.filter(function(it) { return it.text.trim(); })
+      };
+    }).filter(function(d) { return d.date || d.place || d.items.length; });
+    travelDB.save(data);
+    _draftEdit = null;
+    closeTrip();
+    buildTripCards();
+    renderWishlist();
+  }
+
+  function closeDraftEdit() {
+    _draftEdit = null;
+    closeTrip();
   }
 
   function markVisited(id) {
@@ -2158,8 +2577,8 @@
     return Math.round(proj.tasks.filter(t => t.status === 'done').length / proj.tasks.length * 100);
   }
 
-  const STATUS_LABEL = { todo: 'Todo', inprogress: 'In Progress', done: 'Done' };
-  const STATUS_CYCLE = { todo: 'inprogress', inprogress: 'done', done: 'todo' };
+  var STATUS_LABEL = { todo: 'Todo', inprogress: 'In Progress', done: 'Done' };
+  var STATUS_CYCLE = { todo: 'inprogress', inprogress: 'done', done: 'todo' };
 
   function renderProjects() {
     const projs = getProjects();
@@ -2385,6 +2804,7 @@
     if (!localStorage.getItem('backlog_seeded_v1')) seedBacklog();
     renderCal();
     renderTodo();
+    buildTripCards();
 
     // โหลด Firestore ตามหลัง แล้ว re-render ถ้ามีข้อมูลใหม่
     _db.loadRemote().then(function() {
@@ -3005,6 +3425,9 @@
     document.getElementById('fin-wealth').style.display   = tab==='wealth'  ?'':'none';
     document.getElementById('fin-health').style.display   = tab==='health'  ?'':'none';
     document.getElementById('fin-expenses').style.display = tab==='expenses'?'':'none';
+    var fab = document.getElementById('exp-fab');
+    if (fab) fab.classList.toggle('visible', tab==='expenses');
+    if (tab !== 'expenses') toggleExpForm(false);
     if (tab==='health')   renderHealthPanel();
     if (tab==='expenses') renderExpenses();
   }
@@ -3014,6 +3437,8 @@
   var _selectedWallet  = null;  // id หรือ null = ทั้งหมด
   var _addWalletId     = null;
   var _addType         = 'expense';
+  var _addCatId        = null;
+  var _catData         = null;
   var _newWalletColor  = '#C06030';
   var WALLET_COLORS    = ['#C06030','#9060C0','#3A70B0','#308060','#C04060','#806840','#2C8080','#A05020'];
 
@@ -3046,10 +3471,159 @@
     return _walletData.find(function(w){ return w.id === id; }) || { id:0, name:'อื่นๆ', color:'#A67C52' };
   }
 
+  /* ── Categories ── */
+  function catDefaultData() {
+    return [
+      { id:1,  name:'อาหาร',          emoji:'🍽️' },
+      { id:2,  name:'คาเฟ่',           emoji:'☕' },
+      { id:3,  name:'ช้อปปิ้ง',        emoji:'🛍️' },
+      { id:4,  name:'เดินทาง',         emoji:'🚌' },
+      { id:5,  name:'บันเทิง',         emoji:'🎮' },
+      { id:6,  name:'สุขภาพ',          emoji:'💊' },
+      { id:7,  name:'ค่าสาธารณูปโภค',  emoji:'💡' },
+      { id:8,  name:'อื่นๆ',           emoji:'📦' },
+    ];
+  }
+
+  function catLoad() {
+    if (_catData) return;
+    try { _catData = JSON.parse(localStorage.getItem('gd_categories') || 'null') || catDefaultData(); }
+    catch(e) { _catData = catDefaultData(); }
+    if (!Array.isArray(_catData) || !_catData.length) _catData = catDefaultData();
+  }
+
+  function catSave() {
+    try { localStorage.setItem('gd_categories', JSON.stringify(_catData)); } catch(e) {}
+    if (_currentUser && _isAllowed) {
+      _fs.collection('users').doc(_currentUser.uid).collection('data').doc('categories')
+        .set({ items: _catData }).catch(function(e) { console.warn('cat save:', e); });
+    }
+  }
+
+  function catById(id) {
+    catLoad();
+    return _catData.find(function(c){ return c.id === id; }) || null;
+  }
+
+  function selectAddCat(id) {
+    _addCatId = (_addCatId === id) ? null : id;
+    renderCatSelector();
+    updateCatToggleLabel();
+  }
+
+  function toggleCatSelector() {
+    var panel = document.getElementById('exp-cat-panel');
+    var btn   = document.getElementById('exp-cat-toggle');
+    if (!panel) return;
+    var open = panel.classList.toggle('open');
+    if (btn) btn.classList.toggle('open', open);
+  }
+
+  function updateCatToggleLabel() {
+    var lbl = document.getElementById('exp-cat-selected-label');
+    if (!lbl) return;
+    if (_addCatId) {
+      var c = catById(_addCatId);
+      lbl.textContent = c ? '· ' + c.emoji + ' ' + c.name : '';
+    } else {
+      lbl.textContent = '';
+    }
+  }
+
+  function renderCatSelector() {
+    var el = document.getElementById('exp-cat-selector');
+    if (!el) return;
+    catLoad();
+    el.innerHTML = _catData.map(function(c){
+      var sel = _addCatId === c.id;
+      return '<span class="exp-cs-pill'+(sel?' active':'')+'" onclick="selectAddCat('+c.id+')">'+c.emoji+' '+finEsc(c.name)+'</span>';
+    }).join('');
+  }
+
+  function openCatMgmt() {
+    catLoad();
+    renderCatMgmtList();
+    var nEl = document.getElementById('cat-new-name');
+    var eEl = document.getElementById('cat-new-emoji');
+    if (nEl) nEl.value = '';
+    if (eEl) eEl.value = '';
+    openAuthModal('cat-mgmt-modal');
+  }
+
+  function closeCatMgmt() {
+    closeAuthModal('cat-mgmt-modal');
+    renderExpenses();
+  }
+
+  function renderCatMgmtList() {
+    var el = document.getElementById('cat-mgmt-list');
+    if (!el) return;
+    el.innerHTML = _catData.map(function(c){
+      return '<div class="wallet-mgmt-item" id="cat-item-'+c.id+'">'+
+        '<span style="font-size:1.1rem;width:22px;text-align:center;flex-shrink:0">'+c.emoji+'</span>'+
+        '<span class="wallet-mgmt-name">'+finEsc(c.name)+'</span>'+
+        '<button class="wallet-mgmt-ren" onclick="startRenameCat('+c.id+')" title="แก้ชื่อ">✏</button>'+
+        '<button class="wallet-mgmt-del" onclick="deleteCat('+c.id+')">×</button></div>';
+    }).join('');
+  }
+
+  function startRenameCat(id) {
+    var c = _catData.find(function(c){ return c.id === id; });
+    if (!c) return;
+    var item = document.getElementById('cat-item-'+id);
+    if (!item) return;
+    item.innerHTML =
+      '<input class="wallet-rename-input" style="flex:0 0 2.5rem;width:2.5rem;text-align:center;padding:0.2rem" id="cat-ren-emoji-'+id+'" value="'+finEsc(c.emoji)+'">'+
+      '<input class="wallet-rename-input" id="cat-ren-name-'+id+'" value="'+finEsc(c.name)+'" onkeydown="if(event.key===\'Enter\')confirmRenameCat('+id+');else if(event.key===\'Escape\')renderCatMgmtList()">'+
+      '<button class="wallet-excl-btn active" onclick="confirmRenameCat('+id+')" title="บันทึก">✓</button>'+
+      '<button class="wallet-mgmt-del" onclick="renderCatMgmtList()">✕</button>';
+    var inp = document.getElementById('cat-ren-name-'+id);
+    if (inp) { inp.focus(); inp.select(); }
+  }
+
+  function confirmRenameCat(id) {
+    var nameEl  = document.getElementById('cat-ren-name-'+id);
+    var emojiEl = document.getElementById('cat-ren-emoji-'+id);
+    var name  = nameEl  ? (nameEl.value  || '').trim() : '';
+    var emoji = emojiEl ? (emojiEl.value || '').trim() : '';
+    if (!name) return;
+    catLoad();
+    var c = _catData.find(function(c){ return c.id === id; });
+    if (c) { c.name = name; if (emoji) c.emoji = emoji; }
+    catSave();
+    renderCatMgmtList();
+  }
+
+  function addCat() {
+    var nEl = document.getElementById('cat-new-name');
+    var eEl = document.getElementById('cat-new-emoji');
+    var name  = (nEl ? nEl.value || '' : '').trim();
+    var emoji = (eEl ? eEl.value || '' : '').trim() || '📌';
+    if (!name) return;
+    catLoad();
+    _catData.push({ id:Date.now(), name:name, emoji:emoji });
+    catSave();
+    if (nEl) nEl.value = '';
+    if (eEl) eEl.value = '';
+    renderCatMgmtList();
+  }
+
+  function deleteCat(id) {
+    catLoad();
+    if (_catData.length <= 1) return;
+    _catData = _catData.filter(function(c){ return c.id !== id; });
+    catSave();
+    if (_addCatId === id) _addCatId = null;
+    renderCatMgmtList();
+  }
+
   /* ── Expenses ── */
-  var _expData   = null;
-  var _expPeriod = 'today';
-  var _expView   = 'list';
+  var _expData       = null;
+  var _expPeriod     = 'today';
+  var _editExpId     = null;
+  var _expView       = 'list';
+  var _expDonut      = null;
+  var _expDateFilter = null;
 
   function expLoad() {
     if (_expData) return;
@@ -3070,6 +3644,7 @@
     expLoad();
     var now   = new Date();
     var today = now.toISOString().slice(0,10);
+    if (_expDateFilter) return _expData.filter(function(e){ return e.date === _expDateFilter; });
     if (_expPeriod === 'today') return _expData.filter(function(e){ return e.date === today; });
     if (_expPeriod === 'week') {
       var weekAgo = new Date(now - 7*24*3600*1000).toISOString().slice(0,10);
@@ -3102,13 +3677,54 @@
     walletLoad();
     if (!_addWalletId && _walletData.length) _addWalletId = _walletData[0].id;
     expLoad();
-    var rec = { id:Date.now(), text:text||(_addType==='income'?'รายรับ':'รายจ่าย'), amount:amount, walletId:_addWalletId, date:dateStr, ts:Date.now() };
-    if (_addType === 'income') rec.type = 'income';
-    _expData.unshift(rec);
+    if (_editExpId) {
+      var idx = _expData.findIndex(function(e){ return e.id === _editExpId; });
+      if (idx !== -1) {
+        var old = _expData[idx];
+        _expData[idx] = { id:old.id, text:text||old.text, amount:amount||old.amount, walletId:_addWalletId, date:dateStr, ts:old.ts };
+        if (_addCatId) _expData[idx].categoryId = _addCatId;
+        if (_addType === 'income') _expData[idx].type = 'income';
+      }
+      _editExpId = null;
+    } else {
+      var rec = { id:Date.now(), text:text||(_addType==='income'?'รายรับ':'รายจ่าย'), amount:amount, walletId:_addWalletId, date:dateStr, ts:Date.now() };
+      if (_addCatId) rec.categoryId = _addCatId;
+      if (_addType === 'income') rec.type = 'income';
+      _expData.unshift(rec);
+    }
     expSave();
     if (textEl) textEl.value = '';
     if (amtEl)  amtEl.value  = '';
+    _addCatId = null;
+    var panel  = document.getElementById('exp-cat-panel');
+    var catBtn = document.getElementById('exp-cat-toggle');
+    if (panel)  panel.classList.remove('open');
+    if (catBtn) catBtn.classList.remove('open');
+    toggleExpForm(false);
     renderExpenses();
+  }
+
+  function editExpense(id) {
+    expLoad(); walletLoad(); catLoad();
+    var e = _expData.find(function(e){ return e.id === id; });
+    if (!e || e.type === 'transfer') return;
+    _editExpId   = id;
+    _addWalletId = e.walletId || (_walletData.length ? _walletData[0].id : null);
+    _addCatId    = e.categoryId || null;
+    _addType     = e.type === 'income' ? 'income' : 'expense';
+    var textEl = document.getElementById('exp-input');
+    var amtEl  = document.getElementById('exp-amount');
+    var dateEl = document.getElementById('exp-date');
+    if (textEl) textEl.value = e.text || '';
+    if (amtEl)  amtEl.value  = e.amount || '';
+    if (dateEl) dateEl.value = e.date || '';
+    setAddType(_addType);
+    toggleExpForm(true);
+    updateCatToggleLabel();
+    var saveBtn = document.querySelector('.exp-add-btn');
+    if (saveBtn) saveBtn.textContent = 'บันทึกการแก้ไข';
+    var titleEl = document.getElementById('exp-modal-title');
+    if (titleEl) titleEl.textContent = 'แก้ไขรายการ';
   }
 
   function delExpense(id) {
@@ -3120,25 +3736,52 @@
 
   function renderExpenses() {
     walletLoad();
+    catLoad();
     var dateEl = document.getElementById('exp-date');
     if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
     renderWalletRow();
     renderWalletSelector();
+    renderCatSelector();
     if (_expView === 'dash') renderExpDashboard();
     else renderExpList();
+  }
+
+  function toggleExpForm(forceOpen) {
+    var modal = document.getElementById('exp-add-modal');
+    var fab   = document.getElementById('exp-fab');
+    if (!modal) return;
+    var isOpen = modal.classList.contains('open');
+    var shouldOpen = forceOpen !== undefined ? !!forceOpen : !isOpen;
+    if (shouldOpen) {
+      openAuthModal('exp-add-modal');
+      if (fab) fab.classList.add('open');
+      var dateEl = document.getElementById('exp-date');
+      if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
+      renderWalletSelector();
+      renderCatSelector();
+      setTimeout(function(){ var inp = document.getElementById('exp-input'); if (inp) inp.focus(); }, 80);
+    } else {
+      closeAuthModal('exp-add-modal');
+      if (fab) fab.classList.remove('open');
+      _editExpId = null;
+      var saveBtn = document.querySelector('.exp-add-btn');
+      if (saveBtn) saveBtn.textContent = '+ บันทึก';
+      var titleEl = document.getElementById('exp-modal-title');
+      if (titleEl) titleEl.textContent = 'เพิ่มรายการ';
+    }
   }
 
   function switchExpView(view) {
     _expView = view;
     document.querySelectorAll('.exp-vtab').forEach(function(el){ el.classList.toggle('active', el.dataset.view===view); });
     var filterTabs = document.querySelector('.exp-filter-tabs');
-    var addForm    = document.querySelector('.exp-add-form');
+    var fab        = document.getElementById('exp-fab');
     var summary    = document.getElementById('exp-summary');
     var list       = document.getElementById('exp-list');
     var dash       = document.getElementById('exp-dashboard');
     var show = view === 'list';
     if (filterTabs) filterTabs.style.display = show ? '' : 'none';
-    if (addForm)    addForm.style.display    = show ? '' : 'none';
+    if (fab) fab.classList.toggle('visible', show);
     if (summary)    summary.style.display    = show ? '' : 'none';
     if (list)       list.style.display       = show ? '' : 'none';
     if (dash)       dash.style.display       = show ? 'none' : '';
@@ -3238,9 +3881,30 @@
     var groups = {};
     items.forEach(function(e){ if (!groups[e.date]) groups[e.date]=[]; groups[e.date].push(e); });
     var dates = Object.keys(groups).sort().reverse();
+    var moNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    var dayNames = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
     lEl.innerHTML = dates.map(function(d){
-      return '<div class="exp-date-label">'+(d===today?'วันนี้':thDate(d))+'</div>'+
-        groups[d].map(function(e){
+      var dayItems = groups[d];
+      var dayInc = dayItems.filter(function(e){ return e.type==='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+      var dayExp = dayItems.filter(function(e){ return e.type!=='income'&&e.type!=='transfer'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+      var dayNet = dayInc - dayExp;
+      var dp = d.split('-');
+      var dayNum = parseInt(dp[2]);
+      var dateObj = new Date(d+'T00:00:00');
+      var weekdayLabel = d === today ? 'วันนี้' : dayNames[dateObj.getDay()];
+      var monthLabel = moNames[parseInt(dp[1])-1]+' '+(parseInt(dp[0])+543);
+      var netColor = dayNet >= 0 ? '#3D7A52' : '#C04040';
+      var netStr = dayNet ? (dayNet>0?'+':'-')+'฿'+Math.abs(dayNet).toLocaleString() : '—';
+      return '<div class="exp-day-group">'+
+        '<div class="exp-day-header">'+
+          '<span class="exp-day-num">'+dayNum+'</span>'+
+          '<div class="exp-day-info">'+
+            '<span class="exp-day-weekday">'+weekdayLabel+'</span>'+
+            '<span class="exp-day-month">'+monthLabel+'</span>'+
+          '</div>'+
+          '<span class="exp-day-net" style="color:'+netColor+'">'+netStr+'</span>'+
+        '</div>'+
+        dayItems.map(function(e){
           if (e.type === 'transfer') {
             var wFrom = walletById(e.fromWalletId);
             var wTo   = walletById(e.toWalletId);
@@ -3248,19 +3912,26 @@
             var dispAmt = isFrom ? '-฿'+(e.amount||0).toLocaleString() : '+฿'+(e.amount||0).toLocaleString();
             var dispColor = isFrom ? '#C04040' : '#3D7A52';
             return '<div class="exp-item transfer">'+
-              '<span class="exp-item-dot" style="background:#999"></span>'+
-              '<div class="exp-item-info"><span class="exp-item-text">⇄ '+finEsc(wFrom.name)+' → '+finEsc(wTo.name)+'</span><span class="exp-item-cat">โอนเงิน</span></div>'+
+              '<span class="exp-item-icon">⇄</span>'+
+              '<div class="exp-item-info"><span class="exp-item-text">'+finEsc(wFrom.name)+' → '+finEsc(wTo.name)+'</span><span class="exp-item-cat">โอนเงิน</span></div>'+
               '<span class="exp-item-amt" style="color:'+dispColor+'">'+(_selectedWallet ? dispAmt : '฿'+(e.amount||0).toLocaleString())+'</span>'+
               '<button class="fin-item-del" onclick="delExpense('+e.id+')">×</button></div>';
           }
           var w = walletById(e.walletId);
+          var cat = e.categoryId ? catById(e.categoryId) : null;
           var isIncome = e.type === 'income';
+          var iconHtml = cat
+            ? '<span class="exp-item-icon">'+cat.emoji+'</span>'
+            : '<span class="exp-item-dot" style="background:'+w.color+';margin:0 0.15rem"></span>';
+          var catLabel = cat ? finEsc(cat.name)+' · '+finEsc(w.name) : finEsc(w.name);
           return '<div class="exp-item'+(isIncome?' income':'')+'">' +
-            '<span class="exp-item-dot" style="background:'+w.color+'"></span>'+
-            '<div class="exp-item-info"><span class="exp-item-text">'+finEsc(e.text||'รายจ่าย')+'</span><span class="exp-item-cat">'+finEsc(w.name)+'</span></div>'+
+            iconHtml+
+            '<div class="exp-item-info"><span class="exp-item-text">'+finEsc(e.text||'รายจ่าย')+'</span><span class="exp-item-cat">'+catLabel+'</span></div>'+
             '<span class="exp-item-amt" style="color:'+(isIncome?'#3D7A52':'inherit')+'">'+(isIncome?'+':'')+(e.amount?'฿'+e.amount.toLocaleString():'—')+'</span>'+
+            '<button class="exp-item-edit" onclick="editExpense('+e.id+')">✏</button>'+
             '<button class="fin-item-del" onclick="delExpense('+e.id+')">×</button></div>';
-        }).join('');
+        }).join('')+
+      '</div>';
     }).join('');
   }
 
@@ -3269,6 +3940,7 @@
     walletLoad();
     var el = document.getElementById('exp-dashboard');
     if (!el) return;
+    if (_expDonut) { _expDonut.destroy(); _expDonut = null; }
     var today = new Date();
     var moNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
     var html = '';
@@ -3308,7 +3980,7 @@
     }).join('');
     html += '</div></div>';
 
-    /* ── 2. Wallet breakdown (this month expenses) ── */
+    /* ── 2. Donut + Wallet breakdown (this month expenses) ── */
     var thisMonth = today.toISOString().slice(0,7);
     var thisExp = _expData.filter(function(e){
       return e.date.slice(0,7) === thisMonth && e.type !== 'transfer' && e.type !== 'income';
@@ -3320,23 +3992,32 @@
       walletTotals[e.walletId] = (walletTotals[e.walletId]||0) + (e.amount||0);
     });
     var totalThisExp = Object.keys(walletTotals).reduce(function(s,k){ return s+walletTotals[k]; }, 0);
+    var wKeys = Object.keys(walletTotals).sort(function(a,b){ return walletTotals[b]-walletTotals[a]; });
+    var donutLabels = wKeys.map(function(wid){ return walletById(parseInt(wid)).name; });
+    var donutValues = wKeys.map(function(wid){ return walletTotals[wid]; });
+    var donutColors = wKeys.map(function(wid){ return walletById(parseInt(wid)).color; });
 
     html += '<div class="dash-section">';
     html += '<div class="dash-section-title">รายจ่ายเดือนนี้ แยกกระเป๋า</div>';
     if (!totalThisExp) {
       html += '<p class="fin-empty" style="margin:0.5rem 0">ยังไม่มีรายการเดือนนี้</p>';
     } else {
-      var wKeys = Object.keys(walletTotals).sort(function(a,b){ return walletTotals[b]-walletTotals[a]; });
-      html += wKeys.map(function(wid) {
+      html += '<div class="exp-donut-row">';
+      html += '<div class="exp-donut-wrap"><canvas id="exp-donut-canvas" width="160" height="160"></canvas>'+
+        '<div class="exp-donut-center"><div class="exp-donut-center-lbl">รวม</div>'+
+        '<div class="exp-donut-center-val">฿'+totalThisExp.toLocaleString()+'</div></div></div>';
+      html += '<div class="exp-donut-bars">' + wKeys.map(function(wid) {
         var w   = walletById(parseInt(wid));
         var amt = walletTotals[wid];
         var pct = Math.round((amt/totalThisExp)*100);
         return '<div class="dash-bar-row">'+
+          '<span class="exp-donut-leg-dot" style="background:'+w.color+'"></span>'+
           '<div class="dash-bar-label">'+finEsc(w.name)+'</div>'+
           '<div class="dash-bar-track"><div class="dash-bar-fill" style="width:'+pct+'%;background:'+w.color+'"></div></div>'+
           '<span class="dash-bar-val">฿'+amt.toLocaleString()+'<span class="dash-bar-pct"> '+pct+'%</span></span>'+
         '</div>';
-      }).join('');
+      }).join('') + '</div>';
+      html += '</div>';
     }
     html += '</div>';
 
@@ -3367,11 +4048,48 @@
     html += '</div>';
 
     el.innerHTML = html;
+
+    /* init donut after DOM update */
+    var donutCanvas = document.getElementById('exp-donut-canvas');
+    if (donutCanvas && typeof Chart !== 'undefined' && donutLabels && donutLabels.length) {
+      _expDonut = new Chart(donutCanvas.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: donutLabels,
+          datasets: [{ data: donutValues, backgroundColor: donutColors, borderWidth: 2, borderColor: 'transparent' }]
+        },
+        options: {
+          responsive: false,
+          cutout: '68%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  var total = ctx.dataset.data.reduce(function(a,b){return a+b;},0);
+                  var pct = total > 0 ? Math.round((ctx.parsed/total)*100) : 0;
+                  return ' ฿'+ctx.parsed.toLocaleString()+' ('+pct+'%)';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
   }
 
   function switchExpPeriod(period) {
     _expPeriod = period;
+    _expDateFilter = null;
+    var picker = document.getElementById('exp-date-filter');
+    if (picker) picker.value = period === 'today' ? new Date().toISOString().slice(0,10) : '';
     document.querySelectorAll('.exp-ftab').forEach(function(el){ el.classList.toggle('active', el.dataset.period===period); });
+    renderExpenses();
+  }
+
+  function switchExpDateFilter(val) {
+    _expDateFilter = val || null;
+    document.querySelectorAll('.exp-ftab').forEach(function(el){ el.classList.remove('active'); });
     renderExpenses();
   }
 
@@ -3395,12 +4113,38 @@
     var el = document.getElementById('wallet-mgmt-list');
     if (!el) return;
     el.innerHTML = _walletData.map(function(w){
-      return '<div class="wallet-mgmt-item">'+
+      return '<div class="wallet-mgmt-item" id="wallet-item-'+w.id+'">'+
         '<span class="wallet-mgmt-dot" style="background:'+w.color+'"></span>'+
         '<span class="wallet-mgmt-name">'+finEsc(w.name)+'</span>'+
         '<button class="wallet-excl-btn'+(w.excluded?' active':'')+'" onclick="toggleWalletExclude('+w.id+')" title="แยกออกจากผลรวม">∑</button>'+
+        '<button class="wallet-mgmt-ren" onclick="startRenameWallet('+w.id+')" title="แก้ชื่อ">✏</button>'+
         '<button class="wallet-mgmt-del" onclick="deleteWallet('+w.id+')">×</button></div>';
     }).join('');
+  }
+
+  function startRenameWallet(id) {
+    var w = _walletData.find(function(w){ return w.id === id; });
+    if (!w) return;
+    var item = document.getElementById('wallet-item-'+id);
+    if (!item) return;
+    item.innerHTML =
+      '<span class="wallet-mgmt-dot" style="background:'+w.color+'"></span>'+
+      '<input class="wallet-rename-input" id="wallet-rename-'+id+'" value="'+finEsc(w.name)+'" onkeydown="if(event.key===\'Enter\')confirmRenameWallet('+id+');else if(event.key===\'Escape\')renderWalletMgmtList()">'+
+      '<button class="wallet-excl-btn active" onclick="confirmRenameWallet('+id+')" title="บันทึก">✓</button>'+
+      '<button class="wallet-mgmt-del" onclick="renderWalletMgmtList()">✕</button>';
+    var inp = document.getElementById('wallet-rename-'+id);
+    if (inp) { inp.focus(); inp.select(); }
+  }
+
+  function confirmRenameWallet(id) {
+    var inp = document.getElementById('wallet-rename-'+id);
+    var name = inp ? (inp.value || '').trim() : '';
+    if (!name) return;
+    walletLoad();
+    var w = _walletData.find(function(w){ return w.id === id; });
+    if (w) w.name = name;
+    walletSave();
+    renderWalletMgmtList();
   }
 
   function toggleWalletExclude(id) {

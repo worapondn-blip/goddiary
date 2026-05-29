@@ -302,9 +302,9 @@
         desc: 'เงินเฟ้อกินค่าเงิน ออมทรัพย์อย่างเดียวไม่พอ',
         tags: ['concept', 'motivation'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>เงินเฟ้อ (Inflation)</strong> คืออัตราที่ราคาสินค้าเพิ่มขึ้นทุกปี ประเทศไทยเฉลี่ย ~2–3%/ปี — แปลว่าเงิน 100 บาทวันนี้ ปีหน้ามีมูลค่าซื้อของได้แค่ ~97–98 บาท</p><ul><li>ดอกเบี้ยออมทรัพย์ไทยปัจจุบัน ~0.5–1.5%/ปี</li><li>เงินเฟ้อ 3% − ดอกเบี้ย 1% = มูลค่าจริงลดลง 2%/ปีโดยไม่ทำอะไร</li><li>ลงทุนอย่างถูกต้อง = เอาชนะเงินเฟ้อ + สร้างความมั่งคั่งระยะยาว</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — เงิน 10,000 บาทใน 10 ปี', body: '<p>ฝากออมทรัพย์ 1%/ปี → <strong>11,046 บาท</strong><br>ลงทุน S&P 500 เฉลี่ย 10%/ปี → <strong>25,937 บาท</strong></p><p>ส่วนต่าง: <strong>+14,891 บาท</strong> — จากการไม่ทำอะไรเพิ่มเลย แค่เปลี่ยนที่วางเงิน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ไม่ลงทุน ≠ ปลอดภัย</strong> — เงินที่นอนในบัญชีกำลังถูกเงินเฟ้อกัดกินทุกวัน การลงทุนคือการทำให้เงินทำงานแทนคุณ</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>ลองจินตนาการว่าคุณมีเงิน 100 บาท วันนี้ซื้อข้าวกล่องได้ 1 กล่อง แต่ 10 ปีข้างหน้าข้าวกล่องเดิมราคา 130 บาท — เงิน 100 บาทของคุณ "หดตัว" ลงโดยที่คุณไม่ได้ใช้เลย</p><p>นี่คือ <strong>เงินเฟ้อ (Inflation)</strong> — อัตราที่ราคาสินค้าและบริการเพิ่มขึ้นทุกปี ประเทศไทยเฉลี่ย ~2–3%/ปี</p><ul><li>ดอกเบี้ยออมทรัพย์ไทยปัจจุบัน ~0.5–1.5%/ปี ซึ่ง <em>ต่ำกว่า</em>เงินเฟ้อ</li><li>ผลต่าง: เงินเฟ้อ 3% − ดอกเบี้ย 1% = มูลค่าจริงลดลง ~2%/ปีโดยไม่ทำอะไรเลย</li><li>ใน 20 ปี เงิน 100,000 บาทที่ฝากออมทรัพย์จะมีกำลังซื้อจริงเหลือเพียง ~66,000 บาท — หายไป 1 ใน 3 โดยไม่ได้แตะต้อง</li></ul><p>การลงทุนคือการทำให้เงินทำงานแทนเรา — เพื่อ <strong>เอาชนะเงินเฟ้อ</strong> และสร้างความมั่งคั่งในระยะยาว</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — เงิน 10,000 บาทใน 10 ปี', body: '<p>สมมติคุณมีเงิน 10,000 บาท จะทำอะไรกับมัน?</p><p><strong>ทางเลือก A — ฝากออมทรัพย์ 1%/ปี</strong><br>หลัง 10 ปี: <strong>11,046 บาท</strong> (+1,046 บาท)<br>แต่เงินเฟ้อ 3%/ปี ทำให้กำลังซื้อจริงลดลง — เงิน 11,046 บาทในปีที่ 10 ซื้อของได้เท่ากับ ~8,200 บาทวันนี้ เท่ากับ "ขาดทุน" ในแง่กำลังซื้อ</p><p><strong>ทางเลือก B — ลงทุน S&P 500 เฉลี่ย 10%/ปี</strong><br>หลัง 10 ปี: <strong>25,937 บาท</strong> (+15,937 บาท)<br>กำลังซื้อจริงหลังหักเงินเฟ้อ: ~19,200 บาท — ยังกำไรมากอยู่</p><p>ส่วนต่าง: <strong>+14,891 บาท</strong> จากการเปลี่ยนที่วางเงินอย่างเดียว ไม่ได้ทำงานเพิ่ม ไม่ได้ออมเพิ่ม แค่ "ให้เงินทำงานแทน" ยิ่งเริ่มเร็ว ช่องว่างนี้ยิ่งกว้าง</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียวจากบทนี้:</strong> ไม่ลงทุน ≠ ปลอดภัย</p><p>เงินที่นอนในบัญชีออมทรัพย์กำลังถูกเงินเฟ้อกัดกินอยู่ทุกวัน เหมือนน้ำแข็งที่ละลายช้าๆ ดูไม่ออกในระยะสั้น แต่ผ่านไป 20 ปี หายไปมาก</p><p>สิ่งที่ต้องคิดต่อ: ① เงินออมของคุณตอนนี้กำลัง "ทำงาน" หรือ "นอนนิ่ง" อยู่? ② ถ้าเงินเฟ้อ 3%/ปี ดอกเบี้ยที่ได้ต้องสูงกว่า 3% ถึงจะ "ไม่ขาดทุน" จริงๆ</p>' }
         ],
         quiz: [
           { q: 'เงินเฟ้อ (Inflation) คืออะไร?', options: ['ดอกเบี้ยเงินกู้ที่เพิ่มขึ้น', 'อัตราที่ราคาสินค้าและบริการเพิ่มขึ้นตามเวลา', 'ภาษีเงินได้ประจำปี', 'อัตราแลกเปลี่ยน'], correct: 1 },
@@ -316,13 +316,13 @@
         desc: 'เป้าหมายชัด มีกองทุนฉุกเฉินก่อน แล้วค่อยลงทุน',
         tags: ['planning'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>ก่อนลงทุน ต้องตอบ 2 คำถามให้ได้:<br>① <strong>เป้าหมายคืออะไร?</strong> — เงินเท่าไหร่ ภายในกี่ปี?<br>② <strong>กองทุนฉุกเฉินพร้อมหรือยัง?</strong> — ค่าใช้จ่าย 3–6 เดือนในบัญชีที่แตะได้ทันที</p><p>ลำดับ: <strong>กองทุนฉุกเฉิน → จ่ายหนี้ดอกเบี้ยสูง → ลงทุนระยะยาว</strong></p><ul><li>เป้าหมายระยะสั้น (&lt;3 ปี) → ไม่ควรลงหุ้น</li><li>เป้าหมายระยะยาว (3+ ปี) → ตลาดหุ้น historical เฉลี่ย 10%/ปี</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — วางแผนเป้าหมาย', body: '<p>🎯 <strong>เงินล้านก่อน 30</strong> = 6 ปี → เหมาะกับหุ้น<br>🎯 <strong>ชำระหนี้ดอกเบี้ยสูง</strong> = 2–3 ปี → ผสม<br>🎯 <strong>ทริปต่างประเทศ</strong> = &lt;1 ปี → เงินสด/ออมทรัพย์</p><p>แบ่งเงินออมตามเป้าหมาย ไม่ใช่ลงทุนทั้งหมดในหุ้น</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>เป้าหมายชัด → กลยุทธ์ถูก</strong> ลงทุนผิดประเภทกับระยะเวลา = เสี่ยงสูงโดยไม่จำเป็น</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>คนส่วนใหญ่ลงทุนโดยไม่มีเป้าหมาย — ซื้อหุ้นเพราะเพื่อนบอก แล้วตกใจขายตอนราคาร่วง นั่นไม่ใช่การลงทุน แต่คือการพนัน</p><p>ก่อนลงทุน ต้องตอบ 2 คำถามให้ได้ก่อน:</p><p>① <strong>เป้าหมายคืออะไร?</strong> — เงินเท่าไหร่ ภายในกี่ปี? ยิ่งชัด ยิ่งดี เช่น "1,000,000 บาท ภายใน 6 ปี" ดีกว่า "อยากรวย"</p><p>② <strong>กองทุนฉุกเฉินพร้อมหรือยัง?</strong> — เงินสด 3–6 เดือนของค่าใช้จ่าย เก็บในบัญชีที่เข้าถึงได้ทันที ถ้าตกงานหรือฉุกเฉิน จะได้ไม่ต้องขายหุ้นตอนราคาต่ำ</p><p><strong>ลำดับที่ถูกต้อง:</strong> กองทุนฉุกเฉิน → จ่ายหนี้ดอกเบี้ยสูง (เช่น บัตรเครดิต) → ลงทุนระยะยาว</p><ul><li>เป้าหมาย <strong>ระยะสั้น (&lt;3 ปี)</strong> → ไม่ควรลงหุ้น เพราะตลาดผันผวนมาก อาจต้องขายตอนขาดทุน</li><li>เป้าหมาย <strong>ระยะยาว (3+ ปี)</strong> → ตลาดหุ้น historical เฉลี่ย ~10%/ปี เวลาช่วยเฉลี่ยความผันผวนได้</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — แยกเงินตามเป้าหมาย', body: '<p>สมมติออมได้ 10,000 บาท/เดือน ควรแบ่งอย่างไร?</p><p>🛡 <strong>กองทุนฉุกเฉิน</strong> (ค่าใช้จ่าย 3 เดือน = ~45,000 บาท) → ฝากออมทรัพย์/ฝากประจำ เข้าถึงได้ทันที <em>ต้องมีก่อน ถือเป็น "ประกัน" ไม่ใช่การลงทุน</em></p><p>✈ <strong>ทริปต่างประเทศ</strong> ปีหน้า (~30,000 บาท) → ฝากประจำ/กองทุนตลาดเงิน ไม่เอาไปลงหุ้น</p><p>🎯 <strong>เงินล้านก่อน 30</strong> (6 ปี) → ลงหุ้น/ETF ระยะยาว เวลามีมากพอรับความผันผวนได้</p><p>สรุป: ไม่มีการลงทุน "แบบเดียว" สำหรับทุกเป้าหมาย เงินแต่ละก้อนควรมีที่อยู่ที่ตรงกับ timeline</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>เป้าหมายชัด → กลยุทธ์ถูก</strong> ลงทุนผิดประเภทกับ timeline = เสี่ยงสูงโดยไม่จำเป็น</p><p>ก่อนลงทุนในบทต่อๆ ไป ให้ตั้งคำถามนี้กับตัวเองก่อนทุกครั้ง: "เงินก้อนนี้ต้องใช้เมื่อไหร่?" — ถ้าตอบได้ กลยุทธ์ที่เหมาะสมจะตามมาเอง</p>' }
         ],
         quiz: [
           { q: 'กองทุนฉุกเฉิน (Emergency Fund) ควรมีเท่าไหร่?', options: ['1 เดือนของรายได้', 'ค่าใช้จ่าย 3–6 เดือน', 'เงินออม 1 ปีเต็ม', 'ไม่จำเป็น ถ้ามีประกัน'], correct: 1 },
-          { q: 'เป้าหมายระยะสั้น (1–2 ปี) ควรใช้ instrument ไหน?', options: ['ลงทุนในหุ้นเต็มที่', 'กองทุนรวมหุ้น 100%', 'เงินสดหรือตราสารหนี้ระยะสั้น', 'Crypto'], correct: 2 },
+          { q: 'เป้าหมายระยะสั้น (1–2 ปี) ควรเลือกลงทุนในสิ่งใด?', options: ['ลงทุนในหุ้นเต็มที่', 'กองทุนรวมหุ้น 100%', 'เงินสดหรือฝากประจำ / ตราสารหนี้ระยะสั้น', 'คริปโต (Crypto) หรือสินทรัพย์เสี่ยงสูง'], correct: 2 },
           { q: 'ลำดับที่ถูกต้องก่อนลงทุนหุ้นคือ?', options: ['ลงทุนหุ้นก่อน แล้วค่อยสร้างกองทุนฉุกเฉิน', 'กองทุนฉุกเฉิน → หนี้ดอกเบี้ยสูง → ลงทุนระยะยาว', 'จ่ายหนี้ทั้งหมดก่อน ค่อยลงทุน', 'ทำพร้อมกันได้เลย'], correct: 1 }
         ]
       },
@@ -330,9 +330,9 @@
         desc: 'ความเสี่ยงรับได้ (risk profile) สำคัญกว่าการเลือกหุ้น',
         tags: ['concept'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>กฎเหล็กการลงทุน: <strong>ผลตอบแทนสูงขึ้น = ความเสี่ยงสูงขึ้นเสมอ</strong></p><ul><li><strong>Risk Profile</strong> = ระดับความเสี่ยงที่รับได้โดยไม่ตัดสินใจผิดพลาด</li><li>ปัจจัย: อายุ, เวลาลงทุน, สภาพการเงิน, นิสัยส่วนตัว</li><li>คนอายุน้อย = รับความเสี่ยงได้สูงกว่า เพราะมีเวลา recover</li></ul><p>📉 เงินฝาก 1–2%/ปี &nbsp; 📊 พันธบัตร 3–5%/ปี &nbsp; 📈 หุ้น ~10%/ปี (ผันผวนสูง)</p>' },
-          { type: 'example', heading: 'ตัวอย่าง — S&P 500 ปี 2008 vs 2024', body: '<p>S&P 500 ปี 2008: <strong>−38%</strong> (วิกฤต Subprime)<br>S&P 500 ปี 2009: <strong>+26%</strong> (ฟื้นตัว)<br>S&P 500 ปี 2024: <strong>+25%</strong></p><p>คนที่ขาย panic ปี 2008 ขาดทุนจริง คนที่ถือรอดได้กำไรทบต้น ความเสี่ยงที่ควบคุมไม่ได้คือ <em>ตัวเอง</em> ไม่ใช่ตลาด</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>รู้ risk profile ตัวเองก่อนลงทุน</strong> ถ้ารับการลดลง 30% ไม่ได้โดยไม่ panic ขาย → อย่าลงหุ้น 100%</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>มีกฎเหล็กข้อหนึ่งที่ไม่มีข้อยกเว้นในโลกการลงทุน: <strong>ผลตอบแทนสูงขึ้น = ความเสี่ยงสูงขึ้นเสมอ</strong></p><p>ถ้ามีใครบอกว่า "ได้ผลตอบแทนสูงแต่ไม่มีความเสี่ยง" — นั่นคือสัญญาณโกง</p><p><strong>Risk Profile (ระดับความเสี่ยงที่รับได้)</strong> คือระดับความผันผวนที่คุณรับได้โดยไม่ตัดสินใจผิดพลาด เช่น ขายหุ้นตอนตลาดร่วง ปัจจัยที่กำหนด:</p><ul><li><strong>อายุ</strong> — คนอายุน้อยมีเวลา recover หากตลาดร่วง จึงรับความเสี่ยงได้สูงกว่า</li><li><strong>ระยะเวลาลงทุน</strong> — ยิ่งนาน ยิ่งรับความผันผวนระยะสั้นได้</li><li><strong>สภาพการเงิน</strong> — มีหนี้สูง กองทุนฉุกเฉินไม่ครบ → ควรลดความเสี่ยง</li><li><strong>นิสัยส่วนตัว</strong> — บางคนเห็นพอร์ตลง 20% แล้วนอนไม่หลับ → ไม่ควรลงหุ้น 100%</li></ul><p>ตัวเลือกตามระดับความเสี่ยง: 📉 เงินฝาก ~1%/ปี (ต่ำสุด) → 📊 พันธบัตร ~3–5%/ปี → 📈 หุ้น ~10%/ปี (ผันผวนสูง)</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — บทเรียนจากวิกฤต 2008', body: '<p>S&P 500 ปี 2008: <strong>−38%</strong> ใน 1 ปี (วิกฤตสินเชื่อที่อยู่อาศัย Subprime)</p><p>สมมติลงทุน 100,000 บาทต้นปี 2008 → ปลายปีเหลือ 62,000 บาท เจ็บปวดมาก</p><p>คนที่ <strong>ขายตอน panic</strong>: ขาดทุน 38,000 บาทจริงๆ และพลาดการฟื้นตัว<br>คนที่ <strong>ถือต่อ</strong>: ปี 2009 +26%, ปี 2010 +15%, ... ปี 2024 พอร์ตโตมากกว่า 5 เท่า</p><p>ข้อสรุปสำคัญ: ความเสี่ยงที่อันตรายที่สุดไม่ใช่ตลาดร่วง — แต่คือ <em>ตัวเองตัดสินใจผิดตอนตลาดร่วง</em></p><p>คำถามที่ต้องถามตัวเองก่อนลงหุ้น: "ถ้าพอร์ตลง 30% ภายใน 3 เดือน ฉันจะยังถือต่อได้ไหม?"</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>รู้ risk profile ตัวเองก่อนเลือกสินทรัพย์</strong> — ไม่มีคำตอบผิดหรือถูก แต่ถ้าลงทุนไม่ตรงกับ risk profile ของตัวเอง มักจบด้วยการขายตอนขาดทุน</p><p>ทดสอบง่ายๆ: ถ้าเห็นพอร์ตลด 20% คุณรู้สึกอย่างไร?<br>→ "ปกติ โอกาสซื้อเพิ่ม" = risk appetite สูง<br>→ "กังวล แต่ถือได้" = กลาง<br>→ "อยากขายทันที" = risk appetite ต่ำ ควรลดสัดส่วนหุ้น</p>' }
         ],
         quiz: [
           { q: 'Risk Profile คืออะไร?', options: ['อัตราผลตอบแทนที่คาดหวัง', 'ระดับความเสี่ยงที่นักลงทุนรับได้โดยไม่ตัดสินใจผิดพลาด', 'จำนวนหุ้นในพอร์ต', 'P/E Ratio ของพอร์ต'], correct: 1 },
@@ -344,14 +344,14 @@
         desc: 'หุ้น พันธบัตร กองทุน อสังหาฯ — เลือกอะไรเหมาะกับใคร',
         tags: ['overview'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>4 สินทรัพย์หลัก:</p><ul><li><strong>หุ้น (Stocks)</strong> — เป็นเจ้าของบริษัท ผลตอบแทนสูง ความเสี่ยงสูง เหมาะระยะยาว</li><li><strong>พันธบัตร (Bonds)</strong> — กู้ยืมให้รัฐ/บริษัท ดอกเบี้ยสม่ำเสมอ ความเสี่ยงต่ำ</li><li><strong>กองทุนรวม / ETF</strong> — รวมเงินหลายคน กระจายความเสี่ยงอัตโนมัติ เริ่มต้นง่าย</li><li><strong>อสังหาริมทรัพย์</strong> — ทรัพย์สินจริง ค่าเช่า + มูลค่าเพิ่ม ต้องใช้เงินก้อนใหญ่</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 10 ปี', body: '<p>เงินต้น 100,000 บาท × 10 ปี:<br>💵 ออมทรัพย์ 1%: <strong>110,462 บาท</strong><br>📜 พันธบัตร 4%: <strong>148,024 บาท</strong><br>📊 ETF S&P 500 10%: <strong>259,374 บาท</strong></p><p>นักลงทุนระยะยาวเลือกหุ้น US เป็น core เพราะ time horizon 6+ ปี และ savings rate สูงพอรับความผันผวน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ไม่มีสินทรัพย์ใด "ดีที่สุด" เสมอ</strong> — เลือกตาม risk profile, time horizon, และเงินที่มี กระจาย asset class ช่วยลดความผันผวนรวม</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>โลกการลงทุนมีสินทรัพย์หลักอยู่ 4 ประเภท แต่ละประเภทมีลักษณะต่างกัน:</p><ul><li><strong>หุ้น (Stocks)</strong> — ซื้อ = เป็นเจ้าของส่วนหนึ่งของบริษัท กำไรมาจากราคาหุ้นขึ้นและเงินปันผล ผลตอบแทนสูงที่สุดในระยะยาว แต่ผันผวนมากที่สุดด้วย เหมาะกับ 3+ ปี</li><li><strong>พันธบัตร (Bonds)</strong> — คุณ "ให้กู้" รัฐบาลหรือบริษัท แลกกับดอกเบี้ยสม่ำเสมอ ความเสี่ยงต่ำกว่าหุ้นมาก แต่ผลตอบแทนก็ต่ำกว่า เหมาะกับคนต้องการรายได้สม่ำเสมอหรือ timeline สั้น</li><li><strong>กองทุนรวม / ETF</strong> — รวมเงินจากนักลงทุนหลายคนมาซื้อหุ้น/พันธบัตรหลายตัวพร้อมกัน กระจายความเสี่ยงอัตโนมัติ เริ่มต้นง่าย เหมาะกับมือใหม่</li><li><strong>อสังหาริมทรัพย์</strong> — ที่ดิน คอนโด บ้าน ได้ทั้งค่าเช่าและมูลค่าที่เพิ่มขึ้น แต่ต้องใช้เงินก้อนใหญ่มากและสภาพคล่องต่ำ (ขายทันทีไม่ได้)</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 10 ปี', body: '<p>เงินต้น 100,000 บาท × 10 ปี (ไม่ออมเพิ่ม):</p><p>💵 <strong>ออมทรัพย์ 1%/ปี</strong> → 110,462 บาท (เพิ่ม 10% ใน 10 ปี แต่เงินเฟ้อกินหายไปเกือบหมด)<br>📜 <strong>พันธบัตร 4%/ปี</strong> → 148,024 บาท (เพิ่ม 48% เอาชนะเงินเฟ้อได้นิดหน่อย)<br>📊 <strong>ETF S&P 500 10%/ปี</strong> → 259,374 บาท (เพิ่ม 159% — เกือบ 3 เท่า)</p><p>ทำไมนักลงทุนระยะยาวจึงเลือกหุ้น/ETF เป็น core? เพราะ:</p><ul><li>มีเวลา 3+ ปีพอรับความผันผวนระยะสั้นได้</li><li>ผลตอบแทนสุทธิหลังเงินเฟ้อของหุ้นดีกว่าสินทรัพย์อื่นมาก</li><li>ETF S&P 500 กระจายความเสี่ยงใน 500 บริษัทโดยอัตโนมัติ</li></ul>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ไม่มีสินทรัพย์ใด "ดีที่สุด" เสมอ</strong> — คำตอบขึ้นอยู่กับ 3 สิ่ง: เป้าหมาย, ระยะเวลา, และความเสี่ยงที่รับได้</p><p>สูตรง่ายๆ สำหรับมือใหม่: เงินฉุกเฉิน → ออมทรัพย์/ฝากประจำ | เป้าหมายระยะสั้น → พันธบัตร/กองทุนตลาดเงิน | เป้าหมายระยะยาว → หุ้น/ETF</p>' }
         ],
         quiz: [
-          { q: 'สินทรัพย์ใดเหมาะกับนักลงทุนที่ต้องการรายได้สม่ำเสมอและความเสี่ยงต่ำ?', options: ['Growth stocks', 'Crypto', 'พันธบัตรรัฐบาล', 'Startup equity'], correct: 2 },
+          { q: 'สินทรัพย์ใดเหมาะกับนักลงทุนที่ต้องการรายได้สม่ำเสมอและความเสี่ยงต่ำ?', options: ['หุ้นเติบโตสูง (Growth stocks)', 'คริปโต (Crypto)', 'พันธบัตรรัฐบาล', 'หุ้นบริษัทเริ่มต้น (Startup)'], correct: 2 },
           { q: 'ETF คืออะไร?', options: ['หุ้นของบริษัทเดียว', 'กองทุนที่รวมหลาย asset ซื้อขายได้บนตลาดหุ้น', 'พันธบัตรรัฐบาล', 'บัญชีออมทรัพย์พิเศษ'], correct: 1 },
-          { q: 'นักลงทุนที่มี time horizon 6+ ปีและ savings rate สูง ควรเลือก asset ไหนเป็น core?', options: ['หุ้น US ไม่มีภาษี', 'หุ้น US / Global ETF เพราะ time horizon นานพอรับความผันผวน', 'หุ้น US ราคาถูกกว่าไทย', 'หุ้นไทยไม่มีโบรกเกอร์'], correct: 1 }
+          { q: 'นักลงทุนที่มีระยะเวลา 6+ ปีและออมได้สม่ำเสมอ ควรเลือกลงทุนอะไรเป็นหลัก?', options: ['หุ้น US เพราะไม่มีภาษี', 'หุ้น US / กองทุนโลก (Global ETF) เพราะมีเวลานานพอรับความผันผวนได้', 'หุ้น US เพราะราคาถูกกว่าไทย', 'หุ้นไทยเพราะเข้าใจง่ายกว่า'], correct: 1 }
         ]
       }
     ]},
@@ -361,9 +361,9 @@
         desc: 'หุ้นคือความเป็นเจ้าของ ไม่ใช่แค่ตัวเลข',
         tags: ['concept', 'เริ่มต้น'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>เมื่อบริษัทต้องการระดมทุน สามารถออก <strong>หุ้น (Stock / Share)</strong> ขายให้สาธารณะ ผู้ที่ซื้อหุ้นคือ <strong>เจ้าของบริษัทส่วนหนึ่ง</strong> — มีสิทธิ์รับผลกำไร (dividend) และมูลค่าหุ้นเพิ่มขึ้นหากบริษัทเติบโต</p><ul><li>ราคาหุ้นขึ้นลงตามอุปสงค์อุปทานในตลาด</li><li>ตลาดหุ้น US ใหญ่ที่สุดในโลก — NYSE + NASDAQ รวม market cap ~$50+ trillion</li><li>หุ้น ≠ การพนัน ถ้าเราซื้อเพราะเข้าใจธุรกิจ</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่างจริง — GOOGL', body: '<p><span class="ticker-tag">GOOGL</span> (Alphabet) มีหุ้นหมุนเวียน ~12 พันล้านหน่วย ซื้อ 1 หุ้น = เป็นเจ้าของประมาณ <strong>1 ใน 12 พันล้าน</strong> ของ Alphabet ซึ่งครอบครอง Google Search, YouTube, Google Cloud และ Waymo</p><p>มูลค่าบริษัท (Market Cap) ~$4.3 trillion USD — ใหญ่กว่า GDP ของหลายประเทศรวมกัน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>หุ้น = ความเป็นเจ้าของธุรกิจ</strong> ไม่ใช่แค่ตัวเลขที่ขึ้นลง การซื้อหุ้นควรถามว่า "อยากเป็นเจ้าของธุรกิจนี้ไหม?" ไม่ใช่ "ราคาจะขึ้นพรุ่งนี้ไหม?"</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>เมื่อบริษัทต้องการเงินทุนขยายกิจการ มี 2 ทางเลือกหลัก: กู้เงินจากธนาคาร หรือ <strong>ออกหุ้น (IPO — Initial Public Offering)</strong> ขายให้สาธารณะ</p><p>ผู้ที่ซื้อหุ้น = <strong>ผู้ถือหุ้น (Shareholder)</strong> = เจ้าของบริษัทส่วนหนึ่ง มีสิทธิ์ 2 ทาง:</p><ul><li><strong>Capital Gain (กำไรจากราคา)</strong> — ถ้าบริษัทเติบโต มูลค่าสูงขึ้น ราคาหุ้นขึ้น คุณขายทำกำไรได้</li><li><strong>Dividend (เงินปันผล)</strong> — บริษัทบางแห่งแบ่งกำไรให้ผู้ถือหุ้นเป็นงวดๆ เหมือน "ดอกเบี้ย" จากการเป็นเจ้าของ</li></ul><p>ราคาหุ้นขึ้นลงทุกวันตามอุปสงค์-อุปทาน แต่ในระยะยาว ราคาสะท้อนผลประกอบการจริงของบริษัท</p><p><strong>ตลาดหุ้น US:</strong> NYSE + NASDAQ รวม market cap ~$50+ trillion เป็นตลาดใหญ่ที่สุดในโลก เปิด 21:30–04:00 น. เวลาไทย</p><p><strong>หุ้น ≠ การพนัน</strong> ถ้าซื้อเพราะเข้าใจธุรกิจ แต่กลายเป็นการพนันถ้าซื้อเพราะ "รู้สึก" ว่าจะขึ้นโดยไม่มีเหตุผลรองรับ</p>' },
+          { type: 'example', heading: 'ตัวอย่างจริง — ความเป็นเจ้าของ', body: '<p>สมมติ Apple มีหุ้นหมุนเวียน 15,000 ล้านหุ้น และคุณซื้อมา 100 หุ้น:</p><ul><li>คุณเป็นเจ้าของ Apple ส่วน <strong>100 ÷ 15,000,000,000 = 0.0000007%</strong></li><li>ฟังดูน้อย แต่ถ้า Apple ทำกำไร $100B คุณมีสิทธิ์ในส่วน $700 (ถ้าแบ่งทั้งหมดเป็น dividend)</li></ul><p><span class="ticker-tag">GOOGL</span> ตัวอย่างจริง:<br>หุ้นหมุนเวียน ~12 พันล้านหุ้น | ราคาหุ้น ~$180 | Market Cap = 12B × $180 = <strong>~$2.1 trillion</strong></p><p>Alphabet ครอบครอง Google Search (90% market share search), YouTube (2 พันล้านผู้ใช้/เดือน), Google Cloud — ถ้าคุณซื้อหุ้น GOOGL คุณเป็นเจ้าของส่วนหนึ่งของ ecosystem นี้ทั้งหมด</p><p><em>จุดสำคัญ:</em> ราคา $180/หุ้น ไม่ได้แปลว่า "ถูก" หรือ "แพง" — ต้องดู Market Cap และ fundamentals ไม่ใช่ราคาเดี่ยว</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: หุ้น = ความเป็นเจ้าของธุรกิจ ไม่ใช่แค่ตัวเลขที่ขึ้นลง</strong></p><p>ก่อนซื้อหุ้นตัวไหน ถามตัวเองว่า: "ฉันอยากเป็นเจ้าของธุรกิจนี้ไหม? เข้าใจว่าบริษัทนี้หาเงินจากอะไร?" — ถ้าตอบได้ คุณกำลังลงทุน ถ้าตอบไม่ได้แต่ซื้อเพราะราคาจะขึ้น คุณกำลังเสี่ยง</p><p>ความแตกต่างนี้สำคัญมาก เพราะมันกำหนด reaction เมื่อราคาลง — เจ้าของธุรกิจที่เข้าใจจะมองว่าเป็นโอกาสซื้อเพิ่ม (ถ้า thesis ยังไม่เปลี่ยน) ส่วนคนที่ไม่เข้าใจมักจะ panic ขายตอนขาดทุน</p><p>คำถามทดสอบตัวเองก่อนซื้อ:<br>① บริษัทนี้ทำเงินจากอะไร?<br>② ลูกค้าคือใคร? ทำไมถึงซื้อซ้ำ?<br>③ คู่แข่งหลักคือใคร? ทำไมบริษัทนี้ถึงชนะ?</p>' }
         ],
         quiz: [
           { q: 'การซื้อหุ้น 1 หน่วยหมายความว่าอะไร?', options: ['ซื้อหนี้ของบริษัท', 'เป็นเจ้าของส่วนหนึ่งของบริษัท', 'กู้เงินให้บริษัท', 'รับประกันผลตอบแทน'], correct: 1 },
@@ -373,12 +373,12 @@
       },
       {
         id: '1-2', title: 'วิธีอ่านราคาหุ้นเบื้องต้น', icon: 'chart-bar',
-        desc: 'อ่าน price, market cap, 52W range ให้เป็น',
+        desc: 'ราคา, มูลค่าบริษัท (market cap), และช่วงราคาตลอดปี — อ่านให้เป็นก่อนวิเคราะห์หุ้นใดก็ตาม',
         tags: ['หุ้น', 'basics'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>เมื่อดูหุ้น ตัวเลขสำคัญที่ต้องอ่านเป็น:</p><ul><li><strong>Price</strong> — ราคาล่าสุด ณ ตลาดเปิด</li><li><strong>Market Cap</strong> = Price × Shares Outstanding = มูลค่าบริษัทรวม</li><li><strong>52W High / Low</strong> — ราคาสูงสุด/ต่ำสุดใน 1 ปี บอก range ความผันผวน</li><li><strong>Volume</strong> — จำนวนหุ้นที่เทรดวันนี้ บอกสภาพคล่อง</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่างจริง — NVDA vs VOO', body: '<p><span class="ticker-tag">NVDA</span> ราคา ~$206/หุ้น, 52W range $86–$220, market cap ~$5 trillion<br><span class="ticker-tag">VOO</span> (S&P 500 ETF) ราคา ~$623/หุ้น — แพงกว่า NVDA แต่ market cap เปรียบกันไม่ได้เพราะเป็น ETF</p><p><em>บทเรียน:</em> ราคาเดี่ยวไม่บอกว่าถูกหรือแพง VOO ราคาสูงกว่า NVDA แต่ไม่ได้แปลว่า "แพงกว่า" ในแง่มูลค่า</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดูราคาควบคู่กับ <strong>Market Cap</strong> เสมอ ราคาต่อหุ้นอย่างเดียวไม่มีความหมาย — Apple $230/หุ้น vs Berkshire $700,000/หุ้น ไม่ได้บอกว่า Apple ถูกกว่า</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>เวลาเปิด broker app ดูหุ้สักตัว จะเห็นตัวเลขหลายอย่าง ต้องอ่านออกก่อนจึงจะวิเคราะห์ได้:</p><p><strong>① Price (ราคาล่าสุด)</strong><br>ราคา ณ ตอนนั้นที่มีคนซื้อ-ขายล่าสุด เปลี่ยนทุกวินาทีตอนตลาดเปิด ราคาเดี่ยวไม่บอกว่าถูกหรือแพง</p><p><strong>② Market Cap (มูลค่าบริษัทรวม)</strong><br>= Price × Total Shares Outstanding<br>ถ้าจะซื้อบริษัทนี้ทั้งหมดวันนี้ ต้องจ่ายเงินเท่านี้ — ตัวเลขนี้บอกขนาดบริษัทจริงๆ ไม่ใช่ราคาต่อหุ้น</p><p><strong>③ 52-Week High / Low</strong><br>ราคาสูงสุดและต่ำสุดใน 12 เดือนที่ผ่านมา บอก range ความผันผวน และ context ว่าตอนนี้ราคาอยู่ที่ไหนในช่วงนั้น ถ้าใกล้ 52W Low ไม่ได้แปลว่า "ถูก" เสมอ</p><p><strong>④ Volume (ปริมาณซื้อขาย)</strong><br>จำนวนหุ้นที่ซื้อ-ขายในวันนั้น Volume สูง = สภาพคล่องดี ซื้อ-ขายง่าย ราคาไม่กระโดด | Volume ต่ำ = อาจซื้อ-ขายยาก</p><p><strong>⑤ Change % (เปลี่ยนแปลงวันนี้)</strong><br>ราคาขึ้น/ลงเท่าไรเทียบกับวาน — ใช้ดู sentiment ระยะสั้น แต่อย่าตัดสินใจซื้อขายตามตัวเลขนี้อย่างเดียว</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — เปรียบเทียบ 2 หุ้นจริง', body: '<p>เปรียบเทียบตัวเลขที่เห็นใน broker (ข้อมูลโดยประมาณ):</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">Metric</th><th style="padding:4px 8px">NVDA</th><th style="padding:4px 8px">VOO</th></tr><tr><td style="padding:4px 8px">Price</td><td style="padding:4px 8px">~$118</td><td style="padding:4px 8px">~$545</td></tr><tr><td style="padding:4px 8px">52W Range</td><td style="padding:4px 8px">$86–$153</td><td style="padding:4px 8px">$467–$558</td></tr><tr><td style="padding:4px 8px">Market Cap</td><td style="padding:4px 8px">~$2.9 trillion</td><td style="padding:4px 8px">ETF (N/A)</td></tr><tr><td style="padding:4px 8px">ประเภท</td><td style="padding:4px 8px">หุ้นเดี่ยว</td><td style="padding:4px 8px">ETF รวม 500 บริษัท</td></tr></table><p style="margin-top:10px"><em>บทเรียน:</em> VOO ราคาต่อหุ้นสูงกว่า NVDA แต่ไม่ได้แปลว่า "แพงกว่า" VOO เป็น ETF ที่รวม 500 บริษัท เอาราคาต่อหุ้นมาเทียบกับหุ้นเดี่ยวไม่ได้โดยตรง</p><p>อีกตัวอย่าง: Berkshire Hathaway (BRK.A) ราคา ~$700,000/หุ้น แต่ Apple ราคา ~$210/หุ้น — Apple ไม่ได้ "ถูก" กว่า เพราะต้องดู Market Cap และ fundamentals ไม่ใช่ราคาต่อหุ้น</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: ราคาต่อหุ้นคือตัวเลขที่ไม่มีความหมายในตัวเอง</strong></p><p>หุ้น $5 อาจแพงมากถ้าบริษัทมีปัญหา / หุ้น $700,000 อาจถูกมากถ้า fundamentals แข็งแกร่ง</p><p>เวลาเปิดหน้าหุ้นครั้งแรก ดูลำดับนี้:<br>① <strong>Market Cap</strong> → บริษัทใหญ่แค่ไหน?<br>② <strong>52W Range</strong> → ตอนนี้ราคาอยู่ที่ไหน? ใกล้จุดสูง? จุดต่ำ?<br>③ <strong>Volume</strong> → สภาพคล่องพอซื้อ-ขายง่ายไหม?<br>④ ค่อยไปดู fundamentals (EPS, Revenue, FCF) ในบทต่อๆ ไป</p><p>สิ่งที่ <em>ไม่ควรทำ</em>: ดูแค่ว่า "ราคาถูก" หรือ "ราคาแพง" โดยไม่ดู Market Cap และ fundamentals ประกอบ</p>' }
         ],
         quiz: [
           { q: 'Market Cap คำนวณอย่างไร?', options: ['Revenue × Profit margin', 'Price × Shares Outstanding', 'Debt ÷ Equity', 'EPS × P/E Ratio'], correct: 1 },
@@ -389,12 +389,12 @@
       },
       {
         id: '1-3', title: 'Buy & Hold คืออะไร?', icon: 'hourglass',
-        desc: 'ถือยาว compound ทำงานให้คุณเอง',
+        desc: 'ซื้อหุ้นดีแล้วถือยาว — ให้ดอกเบี้ยทบต้น (compound) ทำงานแทนคุณโดยไม่ต้องซื้อขายบ่อย',
         tags: ['strategy', 'หุ้น'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Buy & Hold</strong> = ซื้อหุ้นในบริษัทที่เชื่อมั่น แล้วถือระยะยาว 3+ ปี ไม่สนใจความผันผวนระยะสั้น</p><ul><li><strong>vs Trading</strong> — trader ซื้อ-ขายถี่ หวังกำไรระยะสั้น ต้องเสียค่า commission + ภาษี + เวลา</li><li>ผลตอบแทน S&P 500 เฉลี่ย ~10%/ปี แต่ถ้าพลาดวัน best 20 วันใน 20 ปี เหลือแค่ ~2%</li><li>Compound growth: $100k × (1.10)^10 = $259k โดยไม่ต้องทำอะไร</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — Buy & Hold ระยะยาว', body: '<p><span class="ticker-tag">AMZN</span> ถ้าซื้อ $100 ในปี 2012 → ปัจจุบัน ~$2,000+ (x20 ใน 12 ปี)</p><p>นักลงทุนที่มีงานประจำมักเลือก Buy & Hold เพราะไม่มีเวลา trade ทุกวัน และ fundamentals ของหุ้นที่เลือกยังแข็งแกร่ง</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>"Time in the market beats timing the market"</strong> — อยู่ในตลาดนานกว่าสำคัญกว่าพยายามจับจังหวะ เลือกบริษัทดี ถือนาน ไม่แตะถ้าไม่มี kill condition</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>คนส่วนใหญ่ที่ขาดทุนจากหุ้นไม่ได้ขาดทุนเพราะเลือกหุ้นผิด แต่เพราะ <strong>ขายผิดเวลา</strong></p><p><strong>Buy &amp; Hold</strong> = เลือกหุ้นหรือ ETF ในบริษัทที่เชื่อมั่น แล้วถือระยะยาว 3+ ปี ไม่สนใจความผันผวนรายวัน/รายเดือน</p><p><strong>ทำไม Buy &amp; Hold ชนะ Trading ในระยะยาว:</strong></p><ul><li><strong>Compound growth</strong> — กำไรปีที่แล้วกลายเป็นต้นทุนปีนี้ ยิ่งถือนานยิ่งทวีคูณ</li><li><strong>ไม่พลาด "best days"</strong> — ผลตอบแทน S&P 500 ส่วนใหญ่กระจุกอยู่ใน 20–30 วันต่อปี ถ้า trade บ่อยมักพลาดวันที่ดีที่สุด → ถ้าพลาด 20 best days ใน 20 ปี ผลตอบแทนลดจาก ~10%/ปี เหลือแค่ ~2%</li><li><strong>ประหยัดค่า commission + ภาษี</strong> — Trading บ่อยเสียค่า commission ทุกครั้ง + ภาษีกำไรระยะสั้น</li><li><strong>Emotion ไม่เข้ามาแทรก</strong> — ตัดสินใจซื้อครั้งเดียว ไม่ต้องนั่ง watch หน้าจอทุกวัน</li></ul><p><strong>Rule of 72 — คำนวณเร็ว:</strong> 72 ÷ ผลตอบแทน% = ปีที่เงินจะ double<br>72 ÷ 10% = <strong>7.2 ปี</strong> เงินกลายเป็น 2 เท่า | 72 ÷ 7% = 10.3 ปี | 72 ÷ 12% = 6 ปี</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — Compound ในทางปฏิบัติ', body: '<p>เริ่มต้น 100,000 บาท ลงทุน S&P 500 ETF ผลตอบแทนเฉลี่ย 10%/ปี:</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">ปีที่</th><th style="padding:4px 8px">มูลค่า</th><th style="padding:4px 8px">กำไรปีนั้น</th></tr><tr><td style="padding:4px 8px">1</td><td style="padding:4px 8px">110,000 บาท</td><td style="padding:4px 8px">+10,000</td></tr><tr><td style="padding:4px 8px">5</td><td style="padding:4px 8px">161,051 บาท</td><td style="padding:4px 8px">+14,641</td></tr><tr><td style="padding:4px 8px">10</td><td style="padding:4px 8px">259,374 บาท</td><td style="padding:4px 8px">+23,579</td></tr><tr><td style="padding:4px 8px">20</td><td style="padding:4px 8px">672,750 บาท</td><td style="padding:4px 8px">+61,159</td></tr></table><p style="margin-top:10px">กำไรปีที่ 20 มากกว่าปีที่ 1 ถึง <strong>6 เท่า</strong> โดยไม่ได้ออมเพิ่มเลย เพราะ compound ทำงาน</p><p><span class="ticker-tag">AMZN</span> Buy &amp; Hold: ซื้อ $100 ปี 2012 → ปัจจุบัน ~$2,000+ (x20 ใน 12 ปี) ใครที่ขายตอน Covid crash (มี.ค. 2020) แล้วรอซื้อกลับ มักพลาด rally 70%+ ใน 12 เดือนหลัง bottom</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: "อยู่ในตลาดนานสำคัญกว่าการจับจังหวะตลาด"</strong></p><p>สิ่งที่ต้องทำเมื่อเริ่มต้น Buy &amp; Hold:<br>① เลือกหุ้นหรือ ETF ที่เข้าใจ ตอบได้ว่าบริษัทหาเงินจากอะไร<br>② กำหนด kill condition ไว้ล่วงหน้า — "จะขายเมื่อ..."<br>③ ถือต่อแม้ตลาดผันผวน ตราบใดที่ thesis ยังไม่เปลี่ยน</p><p>สิ่งที่ <em>ไม่ควรทำ:</em> ดูพอร์ตทุกวัน / ขายตอน panic / ซื้อเพิ่มตอน euphoria โดยไม่มีแผน</p><p>ทดสอบตัวเอง: ถ้าพอร์ตลง 20% พรุ่งนี้ คุณจะทำอะไร? ถ้าคำตอบคือ "ขาย" นั่นแปลว่าสัดส่วนหุ้นสูงกว่า risk profile ของคุณ — ควรปรับก่อนตลาดผันผวนจริงๆ</p>' }
         ],
         quiz: [
           { q: 'Buy & Hold หมายถึงอะไร?', options: ['ซื้อแล้วขายวันเดียวกัน', 'ซื้อแล้วถือระยะยาว 3+ ปี', 'ซื้อทุกวันจันทร์ขายทุกวันศุกร์', 'ซื้อตอนราคาต่ำขายตอนสูงทุกเดือน'], correct: 1 },
@@ -406,12 +406,12 @@
     { moduleId: 2, levelLabel: 'ระดับ 2', levelColor: 'amber', moduleTitle: 'อ่านงบการเงิน', lessons: [
       {
         id: '2-1', title: 'Revenue & Gross Profit', icon: 'coins',
-        desc: 'Revenue & Gross Margin — วัด pricing power',
+        desc: 'รายได้ (Revenue) และกำไรขั้นต้น — วัดว่าบริษัทมีอำนาจในการตั้งราคาและควบคุมต้นทุนได้แค่ไหน',
         tags: ['งบการเงิน', 'GOOGL'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Revenue (รายได้)</strong> = เงินที่บริษัทได้รับจากขายสินค้า/บริการทั้งหมด<br><strong>Gross Profit</strong> = Revenue − Cost of Goods Sold (COGS)<br><strong>Gross Margin %</strong> = Gross Profit ÷ Revenue × 100</p><p>Gross Margin สูง = บริษัทมี pricing power และ cost structure ดี — เครื่องหมายของ moat</p>' },
-          { type: 'example', heading: 'ตัวอย่าง — GOOGL FY2024', body: '<p><span class="ticker-tag">GOOGL</span> FY2024: Revenue ~$350B, Gross Profit ~$203B<br>→ Gross Margin ~<strong>58%</strong> — ทุก $100 ที่ขายได้ เหลือ $58 หลังจ่าย COGS</p><p>เปรียบเทียบ: ร้านสะดวกซื้อทั่วไป gross margin ~25%, Software companies มักอยู่ที่ 60–80%</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดู <strong>Gross Margin trend</strong> ว่าเพิ่มขึ้นหรือลดลง — ถ้าลดทั้งที่ revenue โต อาจหมายถึงราคาสู้คู่แข่งไม่ได้หรือต้นทุนพุ่ง</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>งบการเงินมี 3 ส่วนหลัก: Income Statement, Cash Flow Statement, และ Balance Sheet บทนี้โฟกัสที่ <strong>บรรทัดบนสุดของ Income Statement</strong></p><p><strong>Revenue (รายได้)</strong><br>เงินทั้งหมดที่บริษัทได้รับจากขายสินค้า/บริการ ก่อนหักค่าใช้จ่ายใดทั้งนั้น เรียกอีกชื่อว่า "Top Line"</p><p><strong>Cost of Goods Sold (COGS / ต้นทุนสินค้าโดยตรง)</strong><br>ต้นทุนโดยตรงในการผลิต เช่น วัตถุดิบ, ค่าแรงสายการผลิต (ไม่รวมค่าเช่าออฟฟิศ หรือค่าการตลาด)</p><p><strong>Gross Profit</strong> = Revenue − COGS<br><strong>Gross Margin %</strong> = (Gross Profit ÷ Revenue) × 100</p><p>Gross Margin บอกว่าบริษัทมี <strong>Pricing Power</strong> และ <strong>Cost Control</strong> ดีแค่ไหน:</p><ul><li>ร้านสะดวกซื้อ: ~20–25% — ต้องซื้อของมาขาย margin ถูกบีบ</li><li>ผลิตรถยนต์: ~15–20% — วัตถุดิบแพง</li><li>Software / Cloud (Microsoft, GOOGL): ~60–80% — code สร้างครั้งเดียว ขายได้ไม่จำกัด</li></ul><p>Gross Margin สูง + เพิ่มขึ้นทุกปี = สัญญาณแข็งแกร่งมาก | ลดลงทุกปี = pricing power กำลังหาย</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — GOOGL Income Statement', body: '<p>อ่าน Income Statement ของ <span class="ticker-tag">GOOGL</span> FY2024:</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">รายการ</th><th style="padding:4px 8px">จำนวน</th><th style="padding:4px 8px">หมายเหตุ</th></tr><tr><td style="padding:4px 8px">Revenue</td><td style="padding:4px 8px">~$350B</td><td style="padding:4px 8px">Search + YouTube + Cloud</td></tr><tr><td style="padding:4px 8px">COGS</td><td style="padding:4px 8px">~$147B</td><td style="padding:4px 8px">data center, traffic acquisition</td></tr><tr style="font-weight:bold"><td style="padding:4px 8px">Gross Profit</td><td style="padding:4px 8px">~$203B</td><td style="padding:4px 8px">Margin = 58%</td></tr></table><p style="margin-top:10px">แปลว่า ทุก $100 ที่ Google ได้ เหลือ $58 หลังจ่ายต้นทุนโดยตรง — ส่วนที่เหลือนี้จึงไปจ่าย R&amp;D, การตลาด, และกำไรสุทธิ</p><p><strong>Trend สำคัญกว่าตัวเลขปีเดียว:</strong> GOOGL Gross Margin ปี 2022 = 56%, 2023 = 57%, 2024 = 58% → <strong>ค่อยๆ ดีขึ้นทุกปี</strong> สัญญาณดีมาก แสดงว่า Cloud business (margin สูงกว่า ads) กำลังโตเร็วกว่า</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: ดู Gross Margin trend ไม่ใช่แค่ตัวเลขปีเดียว</strong></p><p>3 pattern ที่ต้องแยกให้ออก:<br>✅ Gross Margin สูง + เพิ่มขึ้นทุกปี = บริษัทแข็งแกร่งขึ้น pricing power ดี<br>⚠️ Gross Margin สูง + ลดลงทุกปี = warning sign ต้องหาเหตุผลให้ได้ก่อนถือต่อ<br>🔍 Gross Margin ต่ำ + stable = OK ถ้า business model นั้นปกติต้องต่ำ (เช่น retail)</p><p>นอกจาก Gross Margin ยังมี Operating Margin และ Net Margin ที่จะเรียนต่อ — แต่ Gross Margin คือ "คุณภาพพื้นฐาน" ของธุรกิจ ก่อนที่ค่าใช้จ่ายอื่นจะลดทอน</p>' }
         ],
         quiz: [
           { q: 'Gross Profit คืออะไร?', options: ['กำไรสุทธิหลังภาษี', 'Revenue − Cost of Goods Sold', 'Revenue − ค่าใช้จ่ายทั้งหมด', 'เงินสดในมือ'], correct: 1 },
@@ -425,9 +425,9 @@
         desc: 'กำไรสุทธิต่อหุ้น ตัวเลขที่ตลาดจับตา',
         tags: ['งบการเงิน', 'NVDA'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Net Income</strong> = กำไรสุทธิ = Revenue − COGS − Operating Expenses − Interest − Tax<br><strong>EPS (Earnings Per Share)</strong> = Net Income ÷ Shares Outstanding</p><p>EPS บอกว่าบริษัทสร้างกำไรต่อหุ้น 1 หน่วยได้เท่าไร — ตัวเลขที่ตลาดจับตามากที่สุด</p>' },
-          { type: 'example', heading: 'ตัวอย่าง — NVDA EPS Growth', body: '<p><span class="ticker-tag">NVDA</span> EPS growth:<br>FY2023: EPS ~$1.74<br>FY2024: EPS ~$11.93 (+586% YoY!)<br>FY2025: EPS ~$2.99 (GAAP)</p><p>การที่ EPS พุ่งแรงทำให้ราคาหุ้น NVDA วิ่งแรงตาม — ตลาดซื้ออนาคต ไม่ใช่แค่ปัจจุบัน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ดู <strong>EPS growth trend</strong> ว่าเติบโตสม่ำเสมอไหม ถ้า EPS ติดลบหรือหดตัว ต้องถามว่าเพราะอะไร — ลงทุน one-time หรือธุรกิจกำลังมีปัญหา</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>จาก Gross Profit เราหักค่าใช้จ่ายอีก 2 ชั้น เพื่อให้ได้กำไรสุทธิที่แท้จริง:</p><p><strong>Operating Expenses (OpEx)</strong> = ค่าใช้จ่ายในการดำเนินธุรกิจ เช่น เงินเดือน, การตลาด, R&amp;D, ค่าเช่า</p><p><strong>Operating Income</strong> = Gross Profit − OpEx (กำไรก่อนดอกเบี้ยและภาษี)</p><p><strong>Net Income</strong> = Operating Income − ดอกเบี้ย − ภาษี = กำไรสุทธิขั้นสุดท้าย เรียกว่า "Bottom Line"</p><p><strong>EPS (Earnings Per Share)</strong> = Net Income ÷ Shares Outstanding<br>ตัวเลขที่ Wall Street โฟกัสมากที่สุด เพราะนักวิเคราะห์คาดการณ์ EPS ไว้ล่วงหน้า และราคาหุ้นมักขยับตาม "beat/miss" เทียบกับ estimate</p><p><strong>GAAP vs Non-GAAP EPS:</strong><br>GAAP = มาตรฐานบัญชีสหรัฐ รวมทุกรายการ<br>Non-GAAP = ตัดรายการพิเศษออก (stock compensation, one-time charges)<br>บริษัทมักรายงาน Non-GAAP สูงกว่า GAAP — ต้องดูว่า "ตัดอะไรออก" และสมเหตุสมผลไหม</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — NVDA EPS Growth Story', body: '<p><span class="ticker-tag">NVDA</span> EPS (GAAP, FY = มกราคมปีถัดไป):</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">ปีงบการเงิน</th><th style="padding:4px 8px">Revenue</th><th style="padding:4px 8px">Net Income</th><th style="padding:4px 8px">EPS (GAAP)</th></tr><tr><td style="padding:4px 8px">FY2022</td><td style="padding:4px 8px">$26.9B</td><td style="padding:4px 8px">$4.4B</td><td style="padding:4px 8px">$1.74</td></tr><tr><td style="padding:4px 8px">FY2024</td><td style="padding:4px 8px">$60.9B</td><td style="padding:4px 8px">$29.8B</td><td style="padding:4px 8px">$11.93 🚀</td></tr><tr><td style="padding:4px 8px">FY2025</td><td style="padding:4px 8px">$130.5B</td><td style="padding:4px 8px">$72.9B</td><td style="padding:4px 8px">$2.94*</td></tr></table><p style="margin-top:8px">*NVDA ทำ 10-for-1 stock split ปี 2024 ทำให้ EPS ตัวเลขลดลง แต่ underlying growth ยังแรงมาก</p><p><strong>สังเกต Operating Leverage:</strong> Revenue FY2024 โต 2.3x จาก FY2022 แต่ Net Income โต 6.8x — แสดงว่าต้นทุน fixed ไม่ได้โตตาม รายได้เพิ่มไหลลงมาเป็นกำไรมากขึ้นเรื่อยๆ นี่คือสัญญาณธุรกิจที่มี leverage ดีมาก</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: EPS growth trend สำคัญกว่า EPS ตัวเลขปีเดียว</strong></p><p>3 คำถามก่อนดู EPS:<br>① Revenue โตด้วยหรือเปล่า? ถ้า EPS โตแต่ Revenue ไม่โต อาจมาจาก buyback หรือ cost cut ไม่ใช่ growth จริง<br>② GAAP กับ Non-GAAP ต่างกันมากไหม? ถ้าต่างมาก ต้องรู้ว่า "ตัดอะไรออก"<br>③ EPS ติดลบ → ถามว่า path to profitability ชัดเจนแค่ไหน มีหลักฐานอะไร</p><p>EPS "beat" ทุก quarter ไม่ได้แปลว่าดีเสมอ เพราะ estimate อาจตั้งต่ำเกินไป ดู <strong>absolute growth</strong> ควบคู่เสมอ</p>' }
         ],
         quiz: [
           { q: 'EPS ย่อมาจากอะไร?', options: ['Equity Per Share', 'Earnings Per Share', 'Exchange Price Score', 'Estimated Profit Score'], correct: 1 },
@@ -441,9 +441,9 @@
         desc: 'เงินสดจริง ไม่ใช่กำไรบนกระดาษ',
         tags: ['งบการเงิน', 'AMZN'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Free Cash Flow (FCF)</strong> = Operating Cash Flow − Capital Expenditure (CapEx)</p><p>FCF คือเงินสดจริงที่บริษัทสร้างได้ หลังจ่ายค่าลงทุนในโรงงาน/อุปกรณ์แล้ว<br>บริษัทมีกำไรบนบัญชีได้โดยไม่มีเงินสด — FCF จึงสำคัญกว่า Net Income บางครั้ง</p><ul><li>FCF สูง = บริษัทสร้างเงินจริง buyback/ปันผล/ลงทุนต่อได้โดยไม่พึ่งหนี้</li><li>FCF Yield = FCF ÷ Market Cap — เปรียบเหมือน "ดอกเบี้ย" ที่บริษัทให้คุณ</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — AMZN FCF Turnaround', body: '<p><span class="ticker-tag">AMZN</span>:<br>FY2021: FCF = <strong>−$19B</strong> (ลงทุน fulfillment centers + AWS infrastructure มหาศาล)<br>FY2024: FCF = <strong>+$38B</strong> (AWS profitable, logistics ปันผลได้แล้ว)</p><p>FCF turnaround ครั้งนี้ไม่ใช่เรื่องบังเอิญ — เป็นผลจาก scale ที่ถึงจุดคุ้มทุน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>บริษัทที่ FCF เติบโตสม่ำเสมอ = engine ที่แข็งแกร่ง <strong>อย่าซื้อบริษัท FCF ติดลบเรื้อรัง</strong> ถ้าไม่รู้ว่าเมื่อไหร่จะ turn profitable</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>เปรียบ Net Income กับ FCF เหมือน เงินเดือนที่บอกในสัญญา vs เงินที่เข้าบัญชีจริง — บางครั้งไม่เท่ากัน</p><p><strong>Free Cash Flow (FCF)</strong> = Operating Cash Flow − Capital Expenditure (CapEx)</p><ul><li><strong>Operating Cash Flow</strong> — เงินสดจากการดำเนินธุรกิจปกติ ก่อนหักการลงทุน</li><li><strong>Capital Expenditure (CapEx)</strong> — เงินที่ใช้ซื้อ/บำรุงสินทรัพย์ถาวร เช่น โรงงาน, server, อุปกรณ์</li><li><strong>FCF</strong> — เงินสดที่เหลือจริงๆ หลังจ่ายทุกอย่างที่จำเป็นในการ run ธุรกิจ</li></ul><p><strong>ทำไม FCF สำคัญ?</strong></p><ul><li>Net Income ปรับแต่งทางบัญชีได้ แต่ FCF คือเงินสดที่จ่ายหรือรับจริงๆ ยากจะบิดเบือน</li><li>FCF คือเงินที่บริษัทใช้ทำ <strong>buyback, จ่ายปันผล, ชำระหนี้, หรือลงทุนต่อ</strong></li><li>บริษัทที่ Net Income เป็นบวกแต่ FCF ติดลบ = อาจต้องกู้เงินเพื่อยังชีพ</li></ul><p><strong>FCF Yield</strong> = FCF ÷ Market Cap × 100%<br>เหมือน "yield" ที่บริษัทสร้างให้คุณ เปรียบได้กับ rental yield ของบ้าน FCF Yield > 4% ถือว่า reasonable สำหรับ growth company</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — AMZN FCF Turnaround', body: '<p><span class="ticker-tag">AMZN</span> FCF Journey:</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">ปี</th><th style="padding:4px 8px">Op. Cash Flow</th><th style="padding:4px 8px">CapEx</th><th style="padding:4px 8px">FCF</th></tr><tr><td style="padding:4px 8px">2021</td><td style="padding:4px 8px">$46B</td><td style="padding:4px 8px">$61B</td><td style="padding:4px 8px">−$14.8B</td></tr><tr><td style="padding:4px 8px">2022</td><td style="padding:4px 8px">$47B</td><td style="padding:4px 8px">$64B</td><td style="padding:4px 8px">−$16.8B</td></tr><tr><td style="padding:4px 8px">2023</td><td style="padding:4px 8px">$85B</td><td style="padding:4px 8px">$53B</td><td style="padding:4px 8px">+$32.2B ✓</td></tr><tr><td style="padding:4px 8px">2024</td><td style="padding:4px 8px">$116B</td><td style="padding:4px 8px">$78B</td><td style="padding:4px 8px">+$38.1B ✓</td></tr></table><p style="margin-top:10px"><strong>บทเรียนสำคัญ:</strong> FCF ติดลบ 2021–2022 ไม่ใช่สัญญาณอันตราย เพราะ Amazon ลงทุน "ahead of growth" (สร้าง fulfillment center + AWS ก่อน demand) — ปัญหาคือต้องรู้ว่า "ทำไม" FCF ติดลบ</p><p>ถ้า FCF ลบเพราะลงทุนแล้วมี path ชัด → ถือต่อได้ | ถ้าลบเพราะ core business อ่อนแอ = red flag</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: FCF คือ "เลือดที่ไหลเวียน" ของบริษัท</strong></p><p>ขั้นตอนดู FCF:<br>① FCF เป็นบวกหรือไม่? ถ้าติดลบ → ทำไม? ลงทุน expand หรือ core business อ่อนแอ?<br>② Trend FCF 3–5 ปีเป็นอย่างไร? เพิ่มขึ้น? ลดลง?<br>③ FCF Yield เทียบ Market Cap สมเหตุสมผลไหม?</p><p>Warning: FCF ติดลบเรื้อรัง (3+ ปี) โดยไม่มี path ชัดเจน = ต้องมีคำตอบที่ดีก่อนถือต่อ</p>' }
         ],
         quiz: [
           { q: 'Free Cash Flow คำนวณอย่างไร?', options: ['Net Income − Tax', 'Operating Cash Flow − CapEx', 'Revenue − COGS', 'Gross Profit − Debt'], correct: 1 },
@@ -454,12 +454,12 @@
       },
       {
         id: '2-4', title: 'Balance Sheet เบื้องต้น', icon: 'notebook',
-        desc: 'Net Cash บอกความแข็งแกร่งทางการเงิน',
+        desc: 'งบดุล (Balance Sheet) คืออะไร — ดูเงินสดสุทธิ (Net Cash) เพื่อวัดว่าบริษัทมีหนี้มากกว่าเงินสดหรือเปล่า',
         tags: ['งบการเงิน', 'GOOGL'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Balance Sheet</strong> แสดงฐานะการเงิน ณ จุดเวลาหนึ่ง:<br>Assets (สินทรัพย์) = Liabilities (หนี้สิน) + Equity (ส่วนของผู้ถือหุ้น)</p><ul><li><strong>Cash & Equivalents</strong> — เงินสดในมือ ความปลอดภัยในยามวิกฤต</li><li><strong>Total Debt</strong> — หนี้ระยะสั้น + ระยะยาว</li><li><strong>Net Cash</strong> = Cash − Total Debt (บวก = แข็งแกร่ง, ลบ = เสี่ยง)</li><li><strong>Debt/Equity Ratio</strong> — ยิ่งต่ำยิ่งปลอดภัย</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — GOOGL vs ASML', body: '<p><span class="ticker-tag">GOOGL</span>: Cash ~$110B, Total Debt ~$10B → <strong>Net Cash +$100B</strong> — ปลอดภัยมาก ทำ buyback ได้ไม่จำกัด</p><p><span class="ticker-tag">ASML</span>: Debt สูงกว่า แต่ธุรกิจ monopoly EUV lithography ทำให้ tolerate ได้ — context สำคัญกว่าตัวเลขเดี่ยว</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>บริษัท <strong>Net Cash เป็นบวก</strong> มี cushion รับมือวิกฤตได้ดีกว่า บริษัทที่มีหนี้สูงเสี่ยงมากหาก interest rate ขึ้น หรือ revenue หดตัว</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>ถ้า Income Statement เปรียบเหมือน "รายงานผลงานรายปี" — Balance Sheet เปรียบเหมือน <strong>"ภาพถ่ายฐานะการเงิน ณ วันนั้น"</strong></p><p><strong>สูตรพื้นฐาน:</strong> Assets = Liabilities + Shareholders\' Equity</p><p><strong>3 หมวดหลัก:</strong></p><p>① <strong>Assets (สินทรัพย์)</strong><br>Current Assets: เงินสด, ลูกหนี้การค้า, สินค้าคงคลัง (เข้าถึงได้ใน 1 ปี)<br>Non-Current Assets: โรงงาน, อุปกรณ์, สิทธิบัตร, goodwill</p><p>② <strong>Liabilities (หนี้สิน)</strong><br>Current Liabilities: หนี้ระยะสั้น (ต้องชำระใน 1 ปี), เจ้าหนี้การค้า<br>Long-term Debt: หนี้ระยะยาว bonds, เงินกู้ธนาคาร</p><p>③ <strong>Shareholders\' Equity</strong> = Assets − Liabilities</p><p><strong>ตัวชี้วัดที่ต้องดู:</strong></p><ul><li><strong>Net Cash</strong> = Cash &amp; Equivalents − Total Debt (บวก = ดี, ลบ = ต้องระวัง)</li><li><strong>Current Ratio</strong> = Current Assets ÷ Current Liabilities — ถ้า &gt; 1 = ชำระหนี้ระยะสั้นได้</li><li><strong>Debt/Equity (D/E) Ratio</strong> — ยิ่งต่ำยิ่งปลอดภัย แต่บางธุรกิจ (banking, utilities) D/E สูงเป็นเรื่องปกติ</li></ul>' },
+          { type: 'example', heading: 'ตัวอย่าง — GOOGL Balance Sheet', body: '<table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">รายการ</th><th style="padding:4px 8px">GOOGL</th><th style="padding:4px 8px">บริษัทหนี้สูง (สมมติ)</th></tr><tr><td style="padding:4px 8px">Cash &amp; Equivalents</td><td style="padding:4px 8px">~$110B</td><td style="padding:4px 8px">$5B</td></tr><tr><td style="padding:4px 8px">Total Debt</td><td style="padding:4px 8px">~$10B</td><td style="padding:4px 8px">$80B</td></tr><tr style="font-weight:bold"><td style="padding:4px 8px">Net Cash</td><td style="padding:4px 8px">+$100B ✓</td><td style="padding:4px 8px">−$75B ⚠️</td></tr><tr><td style="padding:4px 8px">ยามวิกฤต</td><td style="padding:4px 8px">รับมือได้ดี</td><td style="padding:4px 8px">อาจ refinance debt ยาก</td></tr></table><p style="margin-top:10px"><strong>Net Cash +$100B ทำให้ GOOGL ทำอะไรได้:</strong></p><ul><li>Buyback หุ้น ~$70B/ปี → Shares ลดลง → EPS เพิ่มขึ้นแม้ Net Income ไม่เปลี่ยน</li><li>ลงทุน AI R&amp;D โดยไม่ต้องกู้เงิน</li><li>มีเวลา 10+ ปีก็ยังไม่เจ็บตัวถ้า revenue หยุดโตชั่วคราว</li></ul><p><strong>Context สำคัญ:</strong> D/E สูงไม่เสมอ = ไม่ดี ธนาคาร, อสังหาฯ REIT, utilities มักมี D/E สูงเป็นปกติ — เปรียบกับ peer อุตสาหกรรมเดียวกันเสมอ</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: Net Cash เป็นบวก = บริษัทมี "เบาะกันกระแทก"</strong></p><p>เวลาดู Balance Sheet ตรวจ 3 อย่างนี้ก่อน:<br>① Net Cash เป็นบวกหรือลบ?<br>② Current Ratio &gt; 1 หรือไม่? (ชำระหนี้ระยะสั้นได้ไหม)<br>③ Debt เพิ่มขึ้นทุกปีทั้งที่ Revenue ไม่โต? → warning sign</p><p>Balance Sheet ไม่ได้บอกว่าบริษัท "ดีหรือแย่" แต่บอกว่า <strong>"มีความทนทานแค่ไหนต่อวิกฤต"</strong> บริษัท Net Cash สูงรับมือ recession ได้ดีกว่ามาก</p>' }
         ],
         quiz: [
           { q: 'Net Cash คำนวณอย่างไร?', options: ['Revenue − Debt', 'Cash & Equivalents − Total Debt', 'Assets − Liabilities', 'Net Income − CapEx'], correct: 1 },
@@ -471,12 +471,12 @@
     { moduleId: 3, levelLabel: 'ระดับ 3', levelColor: 'amber', moduleTitle: 'วิเคราะห์หุ้น', lessons: [
       {
         id: '3-1', title: 'P/E Ratio คืออะไร?', icon: 'magnifying-glass',
-        desc: 'ตลาดยอมจ่ายกี่เท่าของกำไร? PEG ratio',
+        desc: 'P/E Ratio คืออัตราส่วนราคาต่อกำไร — บอกว่าตลาดยอมจ่ายแพงแค่ไหนสำหรับกำไร 1 บาท และควรเทียบกับการเติบโตอย่างไร',
         tags: ['valuation', 'NVDA'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>P/E Ratio</strong> = Price ÷ EPS = ตลาดยอมจ่ายกี่เท่าของกำไรต่อปี</p><ul><li><strong>Forward P/E</strong> — ใช้ EPS คาดการณ์ปีหน้า (relevant กว่า trailing)</li><li><strong>PEG Ratio</strong> = P/E ÷ Growth Rate — P/E สูงอาจ OK ถ้า growth สูงกว่า</li><li>P/E สูง ≠ แพงเสมอไป ต้องดูการเติบโตและ quality ของกำไรด้วย</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — NVDA vs VOO', body: '<p><span class="ticker-tag">NVDA</span> P/E ~50x: แพงกว่าตลาด แต่ EPS เติบโต 500%+ ในปีที่แล้ว<br><span class="ticker-tag">VOO</span> (S&P 500 avg) P/E ~22x: baseline ของตลาด</p><p>ถ้า NVDA โต 30%/ปี, P/E 50x → PEG = 50/30 = 1.67 — ยังอยู่ในเกณฑ์ reasonable สำหรับ AI infrastructure leader</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>P/E เป็นจุดเริ่มต้น ไม่ใช่จุดสิ้นสุด ใช้ <strong>PEG + FCF + Moat</strong> ร่วมกัน ก่อนตัดสินว่าแพงหรือถูก</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>หลังดู fundamentals แล้ว คำถามต่อไปคือ <strong>"ราคาที่จ่ายวันนี้สมเหตุสมผลไหม?"</strong> — นั่นคือ Valuation</p><p><strong>P/E Ratio (Price-to-Earnings)</strong> = Price ÷ EPS<br>บอกว่าตลาดยอมจ่าย "กี่เท่า" ของกำไรปัจจุบันเพื่อถือหุ้นนี้</p><p><em>คิดง่ายๆ:</em> P/E 20x = ถ้ากำไรคงที่ตลอดไป ต้องรอ 20 ปีจึงจะคืนทุน (เหมือน rental yield ของบ้าน)</p><p><strong>2 แบบของ P/E:</strong></p><ul><li><strong>Trailing P/E</strong> — ใช้ EPS จริงจาก 12 เดือนที่ผ่านมา — backward looking</li><li><strong>Forward P/E</strong> — ใช้ EPS คาดการณ์ปีหน้า — forward looking, relevant กว่าสำหรับ growth stocks</li></ul><p><strong>ข้อจำกัดของ P/E:</strong></p><ul><li>P/E สูง ≠ แพงเสมอ ถ้า growth rate สูงพอ</li><li>P/E ต่ำ ≠ ถูกเสมอ อาจเป็น value trap (บริษัทกำลังมีปัญหาจริงๆ)</li><li>บริษัทที่ EPS ติดลบ ไม่มี P/E ใช้ได้</li></ul><p><strong>PEG Ratio</strong> = P/E ÷ EPS Growth Rate (%)<br>"P/E ที่ปรับด้วย growth" — PEG &lt; 1 = undervalued relative to growth | PEG &gt; 2 = คาดหวังสูงมาก</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — PEG ในทางปฏิบัติ', body: '<p>เปรียบ 2 หุ้น ตัวไหนน่าสนใจกว่า?</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">Metric</th><th style="padding:4px 8px">NVDA</th><th style="padding:4px 8px">S&P 500 avg</th></tr><tr><td style="padding:4px 8px">Forward P/E</td><td style="padding:4px 8px">~35x</td><td style="padding:4px 8px">~22x</td></tr><tr><td style="padding:4px 8px">EPS Growth (est.)</td><td style="padding:4px 8px">~50%/ปี</td><td style="padding:4px 8px">~10%/ปี</td></tr><tr style="font-weight:bold"><td style="padding:4px 8px">PEG Ratio</td><td style="padding:4px 8px">35 ÷ 50 = 0.7</td><td style="padding:4px 8px">22 ÷ 10 = 2.2</td></tr><tr><td style="padding:4px 8px">ข้อสรุป</td><td style="padding:4px 8px">P/E สูงแต่ PEG ต่ำกว่า 1</td><td style="padding:4px 8px">P/E ต่ำกว่าแต่ PEG สูงกว่า</td></tr></table><p style="margin-top:10px"><em>ตัวอย่างนี้เพื่อการศึกษา ไม่ใช่คำแนะนำซื้อขาย</em></p><p><strong>Value Trap คืออะไร?</strong> หุ้นที่ P/E = 5x ดูถูกมาก แต่เพราะ EPS กำลัง decline ทุกปี ตลาดรู้แล้วว่าบริษัทมีปัญหา — "ถูก" แต่ไม่คุ้ม ต้องแยก "P/E ต่ำเพราะ growth ต่ำ" ออกจาก "P/E ต่ำแต่ growth สูง"</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: P/E อ่านคนเดียวไม่ได้ ต้องอ่านคู่กับ growth rate เสมอ</strong></p><p>Framework ง่ายๆ:<br>① ดู P/E เทียบกับ historical average ของหุ้นตัวนั้น<br>② คำนวณ PEG = P/E ÷ EPS growth rate<br>③ PEG &lt; 1 → น่าสนใจ | PEG 1–2 → fair value | PEG &gt; 2 → คาดหวังสูง ต้องมีเหตุผลพิเศษ</p><p>P/E คือ "ประตูแรก" ที่ filter ได้เร็ว — แต่ก่อนตัดสินใจซื้อต้องผ่าน FCF, moat, และ red flags ด้วย</p>' }
         ],
         quiz: [
           { q: 'P/E Ratio คำนวณอย่างไร?', options: ['EPS ÷ Price', 'Price ÷ EPS', 'Revenue ÷ Net Income', 'Market Cap ÷ Revenue'], correct: 1 },
@@ -491,25 +491,25 @@
         desc: '7 Powers ที่ปกป้องธุรกิจจากคู่แข่ง',
         tags: ['moat', 'strategy'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p><strong>Economic Moat</strong> = ความได้เปรียบทางการแข่งขันที่ทนทาน — ปกป้อง margin และ revenue จากคู่แข่ง</p><p>Hamilton Helmer\'s <strong>7 Powers</strong>:<br>① Scale Economies &nbsp;② Network Effects &nbsp;③ Counter-Positioning &nbsp;④ Switching Costs<br>⑤ Branding &nbsp;⑥ Cornered Resource &nbsp;⑦ Process Power</p><p>บริษัทที่มีหลาย Power พร้อมกัน = moat หนาที่สุด</p>' },
-          { type: 'example', heading: 'ตัวอย่าง — 7 Powers ในหุ้นจริง', body: '<p><span class="ticker-tag">GOOGL</span>: Network Effects (Search, YouTube, Maps ยิ่งมีคนใช้ยิ่งดี) + Scale Economies<br><span class="ticker-tag">NVDA</span>: Switching Costs (CUDA ecosystem — เปลี่ยน GPU ต้อง rewrite code ทั้งหมด) + Cornered Resource<br><span class="ticker-tag">ASML</span>: Counter-Positioning (monopoly EUV lithography ที่ไม่มีใครทำได้)</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>ก่อนซื้อหุ้น ถามว่า <strong>"บริษัทนี้มี moat อะไร?"</strong> ถ้าตอบไม่ได้ อย่าซื้อ — ยิ่ง moat แข็งแกร่ง ยิ่ง hold ได้นาน</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>ทำไมบริษัทบางแห่งรักษากำไรสูงได้ 20–30 ปี แม้มีคู่แข่งเข้ามาตลอด? คำตอบคือ <strong>Economic Moat (คูเมืองเศรษฐกิจ)</strong></p><p>Warren Buffett: "ธุรกิจที่ดีคือธุรกิจที่มีคูเมืองล้อมรอบ ยิ่งกว้างยิ่งลึกยิ่งดี คู่แข่งข้ามเข้ามาได้ยาก"</p><p><strong>7 Powers</strong> จาก Hamilton Helmer:</p><p>① <strong>Scale Economies (ประหยัดต่อขนาด)</strong><br>บริษัทใหญ่ขึ้น → ต้นทุนต่อหน่วยลดลง → คู่แข่งรายเล็กสู้ราคาไม่ได้<br><em>ตัวอย่าง:</em> Amazon logistics ยิ่งส่งพัสดุมาก ต้นทุนต่อชิ้นยิ่งถูก</p><p>② <strong>Network Effects (เครือข่าย)</strong><br>ยิ่งมีคนใช้มาก product ยิ่ง valuable → reinforcing loop ที่คู่แข่งสร้างได้ยาก<br><em>ตัวอย่าง:</em> Google Search ยิ่งมีคน search มาก algorithm ยิ่งดีขึ้น</p><p>③ <strong>Counter-Positioning</strong><br>Business model ใหม่ที่คู่แข่งเดิมเลียนแบบไม่ได้โดยไม่ทำลายธุรกิจตัวเอง<br><em>ตัวอย่าง:</em> Netflix vs Blockbuster</p><p>④ <strong>Switching Costs (ต้นทุนการเปลี่ยน)</strong><br>ลูกค้าเปลี่ยนไปคู่แข่งต้องเสียเงิน เวลา หรือ effort สูงมาก<br><em>ตัวอย่าง:</em> CUDA ecosystem ของ NVDA นักวิจัย AI เขียน code บน CUDA มา 15 ปี</p><p>⑤ <strong>Branding</strong> — ตั้งราคาสูงกว่าคู่แข่งได้ โดยลูกค้าไม่หนี (Apple)</p><p>⑥ <strong>Cornered Resource</strong> — เข้าถึงทรัพยากรที่คู่แข่งเข้าไม่ถึง (ASML — monopoly EUV lithography)</p><p>⑦ <strong>Process Power</strong> — กระบวนการภายในที่พัฒนามาหลายปีจนเลียนแบบยาก (Toyota Production System, TSMC process yield)</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — Moat ของแต่ละหุ้น', body: '<table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="padding:4px 8px">หุ้น</th><th style="padding:4px 8px">Power หลัก</th><th style="padding:4px 8px">อธิบาย</th></tr><tr><td style="padding:4px 8px">GOOGL</td><td style="padding:4px 8px">Network + Scale</td><td style="padding:4px 8px">Search ยิ่งมีคนใช้ algorithm ยิ่งดี; data center scale ทำให้ต้นทุนต่ำ</td></tr><tr><td style="padding:4px 8px">NVDA</td><td style="padding:4px 8px">Switching Cost</td><td style="padding:4px 8px">CUDA ecosystem: นักวิจัย AI เขียน code บน CUDA มา 15 ปี เปลี่ยน GPU ต้อง rewrite ทั้งหมด</td></tr><tr><td style="padding:4px 8px">AMZN</td><td style="padding:4px 8px">Scale + Network</td><td style="padding:4px 8px">AWS ยิ่งมี customer มาก ยิ่งลงทุน infrastructure ได้มาก → ราคาถูกลง → ดึง customer เพิ่ม</td></tr></table><p style="margin-top:10px"><strong>ทดสอบ moat ง่ายๆ:</strong> ถ้า Jeff Bezos มีเงิน $10B ไปตั้งบริษัทแข่ง NVDA ด้าน AI GPU — ทำได้ไหม? ยากมาก เพราะ CUDA ecosystem built over 15 years ไม่ใช่แค่เงินที่ซื้อได้</p><p><strong>Moat ที่อ่อนแอ → สัญญาณเตือน:</strong> margin หดทุกปี, ลูกค้าหนีไปคู่แข่ง, ต้องลดราคาตลอดเวลา → moat อาจไม่มีอยู่จริง</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: ถามว่า "ถ้าคู่แข่งมีเงิน $10B จะลอก business นี้ได้ไหม?"</strong></p><p>ตอบว่า "ได้ง่าย" → moat อ่อน ไม่ควร hold ระยะยาวโดยไม่ track ใกล้ชิด<br>ตอบว่า "ยากมาก เพราะ..." → อธิบายเหตุผลได้ นั่นคือ moat จริง</p><p>Moat ไม่ใช่สิ่งที่คงทนตลอดไป — ต้อง monitor ทุก quarter:<br>สัญญาณ moat กำลังหด: Gross Margin ลดลงทุกปี / market share หาย / ต้องลดราคาสู้คู่แข่ง</p><p>ถ้าตอบคำถามว่า "moat คืออะไร" ไม่ได้ → research ยังไม่พอ อย่าเพิ่งซื้อ</p>' }
         ],
         quiz: [
           { q: 'Economic Moat คืออะไร?', options: ['คูน้ำล้อมรอบโรงงาน', 'ความได้เปรียบทางการแข่งขันที่ทนทาน', 'อัตรากำไรขั้นต้น', 'จำนวนสิทธิบัตรของบริษัท'], correct: 1 },
           { q: 'NVDA ใช้ moat ประเภทไหนหลัก?', options: ['Network Effects', 'Switching Costs (CUDA ecosystem)', 'Branding', 'Scale Economies เท่านั้น'], correct: 1 },
           { q: 'Network Effect คืออะไร?', options: ['เครือข่าย internet ของบริษัท', 'ยิ่งมีคนใช้ product มาก ยิ่ง valuable มากขึ้น', 'จำนวน server ที่บริษัทมี', 'ความเร็ว internet'], correct: 1 },
-          { q: 'ถ้าตอบไม่ได้ว่าบริษัทมี moat อะไร ควรทำอย่างไร?', options: ['ซื้อเลยเพราะ P/E ต่ำ', 'ไม่ซื้อจนกว่าจะเข้าใจ moat', 'ดูแค่ revenue growth', 'ถามนักวิเคราะห์อย่างเดียว'], correct: 1 }
+          { q: 'ถ้าตอบไม่ได้ว่าบริษัทมีความได้เปรียบทางการแข่งขัน (moat) อะไร ควรทำอย่างไร?', options: ['ซื้อเลยเพราะ P/E ต่ำ', 'ยังไม่ซื้อจนกว่าจะเข้าใจ moat ก่อน', 'ดูแค่การเติบโตของรายได้', 'ถามนักวิเคราะห์อย่างเดียว'], correct: 1 }
         ]
       },
       {
         id: '3-3', title: 'Red Flags ที่ควรระวัง', icon: 'warning',
-        desc: 'สัญญาณอันตรายที่ต้อง reconsider',
+        desc: 'สัญญาณอันตรายในตัวหุ้นที่ต้องทบทวนใหม่ว่ายังควรถืออยู่หรือไม่',
         tags: ['risk', 'checklist'],
         sections: [
-          { type: 'concept', heading: 'แนวคิด', body: '<p>สัญญาณอันตรายที่ควร reconsider position:</p><ul><li><strong>Gross Margin หดตัวต่อเนื่อง</strong> — pricing power หายไป</li><li><strong>Revenue growth ชะลอ + Debt พุ่ง</strong> — กู้เงินมาพยุงยอดขาย</li><li><strong>FCF ติดลบเรื้อรัง</strong> โดยไม่มี path to profitability ชัดเจน</li><li><strong>Insider selling มหาศาล</strong> — คนในรู้อะไรที่เราไม่รู้</li><li><strong>Accounting changes บ่อย</strong> — อาจซ่อน loss</li></ul>' },
-          { type: 'example', heading: 'ตัวอย่าง — SOFI', body: '<p><span class="ticker-tag">SOFI</span> เป็น risk position <em>น้อยมาก</em> เพราะ:<br>— ยังขาดทุน GAAP (แม้ adjusted profitable)<br>— Gross margin ต่ำกว่า fintech peer อื่น<br>— Revenue growth ดี แต่ยังไม่ชัดว่า moat จะสร้างได้จริงไหม<br>→ Risk position ไม่ใช่ core holding</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>Red flag ไม่ได้แปลว่า "ขายทันที" แต่ต้องอธิบายได้ว่าทำไมถึงยังถือ — ถ้าอธิบายไม่ได้ ลด position ก่อน</p>' }
+          { type: 'concept', heading: 'แนวคิด', body: '<p>หุ้นที่ดีที่สุดในวันที่ซื้ออาจไม่ใช่หุ้นที่ดีในวันที่ถือ — ต้อง <strong>monitor red flags</strong> เพื่อรู้ว่าเมื่อไหร่ควรตั้งคำถามกับ thesis</p><p><strong>Red Flags หลักที่ต้อง watch:</strong></p><p><strong>① Gross Margin หดตัวต่อเนื่อง (3+ ปี)</strong><br>Pricing power กำลังหายไป หรือต้นทุนพุ่งควบคุมไม่ได้ ถาม: เพราะการแข่งขัน? เพราะ input cost? แต่ละคำตอบบ่งบอก severity ต่างกัน</p><p><strong>② Revenue Growth ชะลอ + Debt พุ่ง</strong><br>บริษัทกู้เงินมาซื้อ growth แทน organic demand — ไม่ sustainable ในระยะยาว</p><p><strong>③ FCF ติดลบเรื้อรัง โดยไม่มี path ชัดเจน</strong><br>ต่างจาก Amazon ที่ FCF ลบเพราะ invest ahead of growth — ถ้าติดลบเพราะ core business อ่อนแอ = อันตราย</p><p><strong>④ Insider Selling ผิดปกติ</strong><br>ผู้บริหาร exercise options บ้างเป็นเรื่องปกติ แต่ถ้าขายมหาศาลในเวลาสั้น หลัง guidance ดูดี = น่าตั้งคำถาม</p><p><strong>⑤ Accounting Changes หรือ Restatements</strong><br>เปลี่ยนวิธีรับรู้รายได้บ่อยๆ หรือต้อง restate งบการเงิน = red flag ขนาดใหญ่มาก</p><p><strong>⑥ Management Guidance ลด หลาย Q ติดกัน</strong><br>ผู้บริหาร "ลด expectation" บ่อยๆ = อาจไม่มี visibility ในธุรกิจตัวเองจริงๆ</p>' },
+          { type: 'example', heading: 'ตัวอย่าง — วิเคราะห์ SOFI', body: '<p>ทำไม <span class="ticker-tag">SOFI</span> จึงเป็น risk position (เล็กมาก) ไม่ใช่ core holding?</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">Red Flag Check</th><th style="padding:4px 8px">Status</th><th style="padding:4px 8px">หมายเหตุ</th></tr><tr><td style="padding:4px 8px">GAAP Profitability</td><td style="padding:4px 8px">⚠️ ไม่สม่ำเสมอ</td><td style="padding:4px 8px">Non-GAAP กำไร แต่ GAAP ยังขาดทุน</td></tr><tr><td style="padding:4px 8px">Revenue Growth</td><td style="padding:4px 8px">✅ โตดี</td><td style="padding:4px 8px">YoY +20–25% ต่อเนื่อง</td></tr><tr><td style="padding:4px 8px">Moat</td><td style="padding:4px 8px">⚠️ ยังไม่ชัด</td><td style="padding:4px 8px">Fintech มีคู่แข่งเยอะ switching cost ต่ำ</td></tr><tr><td style="padding:4px 8px">Gross Margin</td><td style="padding:4px 8px">⚠️ ต่ำกว่า peer</td><td style="padding:4px 8px">เปรียบกับ fintech ขนาดใกล้เคียง</td></tr></table><p style="margin-top:10px"><strong>บทเรียน:</strong> SOFI มีจุดแข็ง (growth, bank charter) แต่มี red flag หลายจุด → position เล็ก ไม่ใช่ core, ต้อง monitor ใกล้ชิดขึ้น</p><p>Red flag ไม่ได้แปลว่า "ขายทันที" แต่ต้องอธิบายได้ว่า "ทำไมถึงยังถือ" — ถ้าอธิบายไม่ได้ ลด size ก่อนแล้วค่อย monitor ต่อ</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: ต้อง "justify" ทุก red flag — ถ้าทำไม่ได้ ให้ลด position ก่อน</strong></p><p>Checklist ตรวจทุก quarter ก่อน holding review:<br>① Gross margin ยังอยู่ระดับเดิมหรือดีขึ้น?<br>② Revenue growth ยังมาจาก organic หรือกู้เงินมา?<br>③ FCF trend เป็นบวก?<br>④ มี insider selling ผิดปกติไหม?<br>⑤ Moat ยังอยู่ไหม หรือเริ่มหด?</p><p>ถ้าตอบ "ไม่รู้" ในข้อไหน → นั่นคืองานที่ต้องทำก่อน holding review ครั้งหน้า</p>' }
         ],
         quiz: [
           { q: 'Gross Margin หดตัวต่อเนื่องบ่งบอกอะไร?', options: ['บริษัทกำลังโตเร็ว', 'pricing power อาจหายไปหรือต้นทุนพุ่ง', 'สัญญาณซื้อเพิ่ม', 'P/E กำลังลด'], correct: 1 },
@@ -523,12 +523,12 @@
     { moduleId: 4, levelLabel: 'ระดับ 4', levelColor: 'purple', moduleTitle: 'พอร์ต Case Study', lessons: [
       {
         id: '4-1', title: 'ทำไมถึงเลือก GOOGL, NVDA, AMZN?', icon: 'briefcase',
-        desc: 'Thesis + kill condition สำหรับ 3 หุ้นหลัก',
+        desc: 'เหตุผลที่เลือกแต่ละหุ้น (thesis) และเงื่อนไขที่จะขาย (kill condition) — ตัวอย่างจริงจาก 3 core positions',
         tags: ['portfolio', 'case study'],
         sections: [
-          { type: 'concept', heading: 'Thesis Construction', body: '<p>การเลือกหุ้น core position ต้องตอบได้ 3 ข้อ:<br>① <strong>Moat</strong> — บริษัทมีความได้เปรียบที่ยั่งยืนอะไร?<br>② <strong>Revenue Durability</strong> — รายได้จะยังมาเรื่อยๆ แม้ macro เปลี่ยนหรือไม่?<br>③ <strong>Kill Condition</strong> — เมื่อไหร่ถึงจะขาย?</p>' },
-          { type: 'example', heading: 'Thesis — 3 Core Positions', body: '<p><span class="ticker-tag">GOOGL</span>: Moat = Search monopoly + YouTube + Cloud. Kill condition = AI ทำให้ Search revenue ลดลง 20%+ YoY ต่อเนื่อง 2 quarters</p><p><span class="ticker-tag">NVDA</span>: Moat = CUDA ecosystem + H100/B100 supply monopoly. Kill condition = AMD/Intel ดึง enterprise customers ได้ &gt;20%</p><p><span class="ticker-tag">AMZN</span>: Moat = AWS (80% operating income) + logistics flywheel. Kill condition = AWS market share ลดลง QoQ ต่อเนื่อง หรือ FCF กลับไปติดลบ</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p><strong>ต้อง name kill condition ก่อนซื้อทุกครั้ง</strong> ถ้านึกไม่ออกว่าเมื่อไหร่ควรขาย แปลว่ายังไม่เข้าใจหุ้นพอ</p>' }
+          { type: 'concept', heading: 'Thesis Construction', body: '<p>การเลือกหุ้น core position ที่จะถือระยะยาว 3+ ปี ต้องผ่านกรอบวิเคราะห์ 4 ขั้น:</p><p><strong>① Moat Assessment</strong><br>บริษัทมีความได้เปรียบจาก 7 Powers หรือไม่? อธิบายได้ใน 1 ประโยคไหม? ถ้าอธิบายไม่ได้ = research ยังไม่พอ</p><p><strong>② Revenue Durability</strong><br>รายได้จะยังมาแม้ macro เปลี่ยน? ลูกค้า diversified? แหล่งรายได้กระจาย?<br>ถาม: "ถ้า recession ปีหน้า รายได้บริษัทนี้จะลดแค่ไหน? ยังมีพอจ่ายค่าใช้จ่ายได้ไหม?"</p><p><strong>③ Financial Health</strong><br>Gross Margin trend, FCF growth, Net Cash position — ตามที่เรียนใน Module 2</p><p><strong>④ Kill Condition (เงื่อนไขขาย)</strong><br>ต้องกำหนดก่อนซื้อทุกครั้ง — "จะขายเมื่อ..." เป็น specific, measurable, pre-committed<br>Kill condition ป้องกัน confirmation bias และ emotional decision ตอนตลาดผันผวน</p><p><strong>Position Sizing:</strong><br>Core position (thesis แน่น, moat ชัด) → 15–30% ของพอร์ต<br>Opportunistic (growth potential สูง แต่ uncertainty มากกว่า) → 5–15%<br>Risk position (asymmetric upside แต่ FCF/moat ยังไม่ชัด) → 1–5%</p>' },
+          { type: 'example', heading: 'Thesis — 3 Core Positions', body: '<p><span class="ticker-tag">GOOGL</span> — Alphabet</p><ul><li><strong>Moat:</strong> Network Effects (Search 90% share + YouTube) + Scale Economies (data center)</li><li><strong>Revenue Durability:</strong> Advertising cyclical แต่ Cloud + AI growing fast และ diversified</li><li><strong>Financials:</strong> Gross Margin 58%, FCF $70B+/ปี, Net Cash $100B+</li><li><strong>Kill Condition:</strong> Search revenue decline 20%+ YoY ต่อเนื่อง 2 quarters เพราะ AI disruption จริงๆ (ไม่ใช่ macro slowdown)</li></ul><p><span class="ticker-tag">NVDA</span> — Nvidia</p><ul><li><strong>Moat:</strong> Switching Costs (CUDA ecosystem 15 ปี) + ใกล้ชิด TSMC process node ล่าสุด</li><li><strong>Revenue Durability:</strong> AI infrastructure spend — capex ของ hyperscalers (Google, Microsoft, Amazon, Meta) ยังโตต่อ</li><li><strong>Kill Condition:</strong> AMD/Intel ดึง enterprise AI workload ได้ &gt;20% market share ใน 2 ปี; หรือ AI capex hyperscalers หยุดกะทันหัน</li></ul><p><span class="ticker-tag">AMZN</span> — Amazon</p><ul><li><strong>Moat:</strong> Scale Economies (logistics flywheel) + Network Effects (AWS, marketplace)</li><li><strong>Revenue Durability:</strong> AWS = 80%+ operating income, cloud secular trend ยาว</li><li><strong>Kill Condition:</strong> AWS market share ลดลง QoQ ต่อเนื่อง; FCF กลับไปติดลบเรื้อรัง</li></ul>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: ต้องตอบ 4 คำถามนี้ได้ก่อนซื้อทุกครั้ง</strong></p><p>① Moat คืออะไร? อธิบายได้ใน 1 ประโยค?<br>② Revenue ยังมาถ้า recession?<br>③ FCF เป็นบวกและ trend ดีขึ้น?<br>④ Kill condition คืออะไร — specific มากพอไหม?</p><p>ถ้าตอบข้อใดข้อหนึ่งไม่ได้ → research ยังไม่พอ อย่าเพิ่งซื้อ<br>ถ้าตอบได้ครบ 4 ข้อ → กำหนด position size ตาม conviction level</p><p>Kill condition ที่ดีต้องเป็น <strong>specific event ที่วัดได้</strong> ไม่ใช่ "ถ้าราคาลง 30%" — เพราะราคาลงไม่ได้แปลว่า thesis พัง</p>' }
         ],
         quiz: [
           { q: 'Kill Condition คืออะไร?', options: ['ราคาหุ้นลงเกิน 10%', 'เงื่อนไขที่กำหนดไว้ล่วงหน้าว่าจะขายเมื่อ thesis พัง', 'เมื่อ P/E สูงกว่าตลาด', 'เมื่อ CEO ออก'], correct: 1 },
@@ -541,9 +541,9 @@
         desc: 'เส้นทาง compound สู่เงินล้านก่อน 30',
         tags: ['planning', 'compound'],
         sections: [
-          { type: 'concept', heading: 'Compound Growth Calculator', body: '<p>สูตร: <strong>FV = PV × (1+r)^n + PMT × [(1+r)^n − 1] / r</strong><br>PV = มูลค่าปัจจุบัน, r = return ต่อปี, n = จำนวนปี, PMT = ออมต่อปี</p><p>ตัวอย่าง scenario:<br>PV = ~100,000 บาท<br>PMT = 10,000 บาท/เดือน = 120,000 บาท/ปี<br>r = 10%/ปี (S&P 500 historical avg)<br>เป้า = 1,000,000 บาท</p>' },
-          { type: 'example', heading: 'Projection — เส้นทางสู่ 1 ล้าน', body: '<p>ที่ r=10%:<br>ปีที่ 5: <strong>~660,000 บาท</strong><br>ปีที่ 6: <strong>~847,000 บาท</strong><br>ปีที่ 7: <strong>~1,052,000 บาท ✓</strong></p><p>ถ้า portfolio outperform (r=15%):<br>ปีที่ 5: <strong>~820,000 บาท</strong><br>ปีที่ 6: <strong>~1,063,000 บาท ✓</strong></p><p>เป้าหมาย <strong>1 ล้านภายใน 7 ปี</strong> → ทำได้ถ้าวินัยออม 10k/เดือน</p>' },
-          { type: 'takeaway', heading: 'Key Takeaway', body: '<p>เงินล้านไม่ได้เกิดจาก "หุ้นปัง" วันเดียว แต่จาก <strong>ออมสม่ำเสมอ + ถือนาน + อย่าขายตอนตลาดร่วง</strong> — compound ทำงานให้เองในระยะยาว</p>' }
+          { type: 'concept', heading: 'ดอกเบี้ยทบต้นในทางปฏิบัติ', body: '<p>เงินล้านฟังดูยิ่งใหญ่ แต่เมื่อใส่ตัวเลขจริงๆ จะเห็นว่าเป็นเรื่องของ <strong>วินัย + เวลา</strong> ไม่ใช่ความเสี่ยงสูง</p><p><strong>ดอกเบี้ยทบต้น (Compound Growth)</strong><br>สูตร: FV = PV × (1+r)ⁿ + PMT × [(1+r)ⁿ − 1] ÷ r</p><ul><li>FV = มูลค่าอนาคต (ที่อยากได้)</li><li>PV = เงินต้นที่มีตอนนี้</li><li>PMT = เงินที่ออมเพิ่มแต่ละปี</li><li>r = ผลตอบแทนต่อปี</li><li>n = จำนวนปี</li></ul><p>สูตรนี้ฟังดูซับซ้อน แต่แก่นคือ: <strong>เวลายิ่งนาน compound ยิ่งทรงพลัง</strong></p><p><strong>3 lever ที่ปรับได้:</strong></p><ul><li><strong>เพิ่มเงินออมรายเดือน (PMT)</strong> — ออม 15k/เดือน แทน 10k = ถึงเป้าเร็วขึ้น ~1–1.5 ปี</li><li><strong>เพิ่มผลตอบแทน (r)</strong> — portfolio beat market +2–5%/ปี เวลาสั้นลงชัดเจน แต่รับความเสี่ยงเพิ่ม</li><li><strong>เพิ่มเวลา (n)</strong> — เริ่มเร็วขึ้น 1 ปีเทียบเท่าออมเพิ่มเป็นหมื่นบาท (ขึ้นอยู่กับตำแหน่งบน curve)</li></ul>' },
+          { type: 'example', heading: 'Projection — เส้นทางสู่ 1 ล้าน', body: '<p>Scenario: PV = 100,000 บาท, ออมเพิ่ม 10,000 บาท/เดือน (120,000 บาท/ปี), เป้า = 1,000,000 บาท</p><table style="width:100%;border-collapse:collapse;font-size:0.9em;"><tr style="border-bottom:1px solid var(--border-color)"><th style="text-align:left;padding:4px 8px">ปีที่</th><th style="padding:4px 8px">r = 7%/ปี</th><th style="padding:4px 8px">r = 10%/ปี</th><th style="padding:4px 8px">r = 15%/ปี</th></tr><tr><td style="padding:4px 8px">1</td><td style="padding:4px 8px">232,000</td><td style="padding:4px 8px">240,000</td><td style="padding:4px 8px">255,000</td></tr><tr><td style="padding:4px 8px">3</td><td style="padding:4px 8px">522,000</td><td style="padding:4px 8px">563,000</td><td style="padding:4px 8px">664,000</td></tr><tr><td style="padding:4px 8px">5</td><td style="padding:4px 8px">853,000</td><td style="padding:4px 8px">933,000</td><td style="padding:4px 8px">1,315,000 ✓</td></tr><tr><td style="padding:4px 8px">6</td><td style="padding:4px 8px">1,036,000 ✓</td><td style="padding:4px 8px">1,146,000 ✓</td><td style="padding:4px 8px">1,792,000</td></tr><tr><td style="padding:4px 8px">7</td><td style="padding:4px 8px">1,231,000</td><td style="padding:4px 8px">1,381,000</td><td style="padding:4px 8px">2,391,000</td></tr></table><p style="margin-top:10px"><strong>ข้อสังเกต:</strong></p><ul><li>r = 7% ถึง 1M ที่ปีที่ 6 | r = 10% ถึงที่ปีที่ 6 เช่นกัน (แต่เหลือเงินมากกว่า)</li><li>r = 15% ถึงที่ปีที่ 5 — เร็วขึ้น 1 ปี แต่รับความเสี่ยงสูงขึ้น ไม่ต้องเร่ง</li><li>ตัวเลขสมมติว่า r สม่ำเสมอ ในความจริงปีไหนดีปีไหนแย่ แต่ long-run average ออกมาที่นี่</li></ul><p><strong>ถ้าอยากถึงเป้าเร็วขึ้นโดยไม่รับความเสี่ยงเพิ่ม:</strong> ออมเพิ่มเป็น 15,000/เดือน ที่ r=10% จะถึง 1M ที่ปีที่ 5 แทนปีที่ 6</p>' },
+          { type: 'takeaway', heading: 'สรุปสำคัญ', body: '<p><strong>ถ้าจำได้แค่อย่างเดียว: เงินล้านมาจาก "ออมสม่ำเสมอ + ถือนาน" ไม่ใช่หุ้นปังครั้งเดียว</strong></p><p>แผนปฏิบัติ:<br>① ออม 10,000+ บาท/เดือน ลงทุนใน diversified ETF หรือ core positions ที่เข้าใจ<br>② อย่าขายตอนตลาดร่วง ถ้า thesis ยังไม่เปลี่ยน<br>③ เพิ่ม savings rate เมื่อรายได้เพิ่ม — อย่า lifestyle inflate ทุกบาทที่ได้เพิ่ม<br>④ Review portfolio ทุก quarter ไม่ใช่ทุกวัน</p><p>เส้นทาง 6–7 ปีฟังดูนาน แต่เทียบกับชีวิต 60+ ปีข้างหน้า มันสั้นมาก และทำได้ถ้าเริ่มตอนนี้</p>' }
         ],
         quiz: [
           { q: 'ที่ r=10%/ปี เริ่ม PV=100k + ออม 10k/เดือน จะถึง 1 ล้านในปีที่เท่าไหร่?', options: ['ปีที่ 3', 'ปีที่ 5', 'ปีที่ 7', 'ปีที่ 10'], correct: 2 },
@@ -801,49 +801,73 @@
   /* ── Team flip cards ── */
   var teamData = [
     {
-      name: 'Godji', role: 'เจ้าของ', sub: 'เจ้าของ goddiary', img: 'Avatars/God-cool.png',
+      name: 'Godji', role: 'Founder', sub: 'Owner of goddiary', dot: '#3D2314', img: 'Avatars/God-cool.png',
       tagline: 'เป้าหมาย: เงินล้านก่อน 30 · สุขภาพ · 3 ภาษา · YouTube',
       personality: 'คนที่สร้างระบบนี้ขึ้นเพื่อดูแลทุกมิติของชีวิต ชอบ systems thinking และ long-term mindset ไม่ชอบปล่อยให้อะไรหลุดจากการควบคุม',
       duties: ['ตั้งเป้าหมายชีวิตและ OKR รายปี', 'สั่งการทีมและตัดสินใจขั้นสุดท้าย', 'ลงทุนระยะยาว (US stocks)', 'สร้างระบบ goddiary เพื่อจัดการทุกมิติ']
     },
     {
-      name: 'June', role: 'Chief of Staff', sub: 'หัวหน้าทีม', img: 'Avatars/June.png',
+      name: 'June', role: 'Chief of Staff', sub: 'Team Lead', dot: '#3D2314', img: 'Avatars/June.png',
       tagline: 'รับงานทุกอย่าง — ส่งให้คนที่ใช่เสมอ',
       personality: 'นิ่ง เฉียบ พูดน้อยแต่ตรงประเด็น ไม่ตื่นตระหนก มองภาพใหญ่เสมอ ไม่มีงานเฉพาะของตัวเอง — หน้าที่คือรับงานและส่งให้คนที่ใช่',
       duties: ['รับคำสั่งจาก Godji และวิเคราะห์ว่างานนี้เป็นของใคร', 'ส่ง task ให้ทีมที่เหมาะสม', 'ประสานงานหลายคนพร้อมกันเมื่อจำเป็น', 'แสดงผลลัพธ์และบอกว่าใครทำ']
     },
     {
-      name: 'Mint', role: 'งาน', sub: 'เลขางาน', img: 'Avatars/Mint.png',
+      name: 'Mint', role: 'Project Manager', sub: 'Task & Deadline Tracker', dot: '#b8860b', img: 'Avatars/Mint.png',
       tagline: 'ไม่มีอะไรหลุดจากมือ — deadline คือชีวิต',
       personality: 'ขยัน ละเอียด จดทุกอย่าง ไม่มีอะไรหลุดจากมือ ชอบ checklist และ deadline ชัดๆ ถามว่า "deadline คือวันไหนคะ?" ก่อนเริ่มงานทุกครั้ง',
       duties: ['บันทึก task ใหม่ที่ Godji บอก', 'อัปเดตสถานะ task ที่เสร็จแล้ว', 'แจ้งเตือน deadline ที่ใกล้มา', 'ถามรายละเอียดเพิ่มเมื่อข้อมูลไม่ครบ']
     },
     {
-      name: 'Elly', role: 'การเงิน', sub: 'เลขาการเงิน', img: 'Avatars/Elly.png',
+      name: 'Elly', role: 'Accountant', sub: 'Expense Tracker', dot: '#7A5C3F', img: 'Avatars/Elly.png',
       tagline: 'ตัวเลขไม่โกหก — Elly ก็เหมือนกัน',
       personality: 'ซื่อสัตย์กับตัวเลข บอกความจริงเสมอแม้จะเจ็บปวด ไม่ยอมปัดเศษหรือเฉลี่ยให้รู้สึกดีขึ้น ชอบพูดว่า "ตัวเลขไม่โกหกนะคะ"',
       duties: ['บันทึกค่าใช้จ่ายรายวันทุกรายการ', 'สรุปค่าใช้จ่ายรายหมวดเมื่อถูกถาม', 'แจ้งเตือนเมื่อใช้จ่ายเกิน budget', 'เปรียบเทียบรายจ่ายเดือนนี้กับเดือนที่แล้ว']
     },
     {
-      name: 'Max', role: 'หุ้น', sub: 'นักวางแผนความมั่งคั่ง', img: 'Avatars/Max.png',
+      name: 'Max', role: 'Portfolio Manager', sub: 'Wealth Planner', dot: '#1a3d5c', img: 'Avatars/Max.png',
       tagline: 'เงินคือเครื่องมือ — ไม่ใช่เป้าหมาย',
       personality: 'มั่นใจ คิดระยะยาว มองเงินเป็นเครื่องมือไม่ใช่เป้าหมาย ชอบพูดถึง compound effect และ asset allocation ก่อนนอนทุกคืน',
       duties: ['อัปเดตมูลค่าพอร์ตเมื่อ Godji แจ้ง', 'คำนวณความคืบหน้าสู่เป้าหมายเงินล้าน', 'แนะนำ strategy การลงทุนระยะยาว', 'วิเคราะห์ว่าควรโปะ กยศ. หรือลงทุนต่อ']
     },
     {
-      name: 'Big', role: 'สุขภาพ', sub: 'เลขาสุขภาพ', img: 'Avatars/Big.png',
+      name: 'Fai', role: 'Market Analyst', sub: 'News & Catalyst Tracker', dot: '#0d7377', img: 'Avatars/Fai.png',
+      tagline: 'ถ้ามีข่าวออกมา Fai รู้ก่อนใคร',
+      personality: 'เร็ว ทันสถานการณ์เสมอ พลังงานสูง ถ้ามีอะไรเคลื่อนไหวในตลาดจะรู้ก่อนใคร ชอบพูดว่า "มีอัปเดตแล้วค่ะ"',
+      duties: ['ค้นหาข่าวสด 7 วันล่าสุดของหุ้นที่สนใจ', 'ติดตาม analyst moves และ rating changes', 'หา upcoming catalysts ที่อาจกระทบราคา', 'ทำงานใน /stock และ /brief flow']
+    },
+    {
+      name: 'Kla', role: 'Financial Analyst', sub: 'Annual Report Analyst', dot: '#0d7377', img: 'Avatars/Kla.png',
+      tagline: 'ให้เวลาผมอ่านก่อน — ไม่มีบรรทัดไหนที่ข้ามได้',
+      personality: 'ใจเย็น ละเอียดถี่ถ้วน ไม่เร่ง อ่านทุกบรรทัดใน annual report โดยไม่ข้าม มักพูดว่า "ให้เวลาผมอ่านก่อนนะครับ"',
+      duties: ['อ่านไฟล์ 10-K และ 20-F จาก SEC EDGAR', 'สรุป company snapshot และ fundamentals', 'วิเคราะห์ revenue trend, margin, และ risk factors', 'ทำงานใน /stock และ /brief flow']
+    },
+    {
+      name: 'Sam', role: 'Earnings Analyst', sub: 'Earnings Call Analyst', dot: '#0d7377', img: 'Avatars/Sam.png',
+      tagline: 'น้ำเสียงบอกได้มากกว่าตัวเลข',
+      personality: 'สังเกตเก่ง จับ tone ได้แม่น รู้ว่า management กำลังเน้นอะไรและปิดอะไร มักพูดว่า "น้ำเสียงตอนนั้นน่าสนใจมากครับ"',
+      duties: ['อ่าน earnings call transcript รายไตรมาส', 'สรุป quarterly numbers และ guidance', 'วิเคราะห์ management tone: confident / cautious / defensive', 'ทำงานใน /stock และ /brief flow']
+    },
+    {
+      name: 'Alex', role: 'Fact Checker', sub: 'Data Verifier', dot: '#1a3d5c', img: 'Avatars/Alex.png',
+      tagline: 'ไม่ผ่านถ้าไม่ verify — ทุกตัวเลขต้องมีที่มา',
+      personality: 'เงียบ รอบคอบสูงมาก ไม่ยอมผ่านข้อมูลที่ยังไม่ verify ชอบอ้างแหล่งที่มาก่อนพูดทุกครั้ง มักพูดว่า "ขอเช็คก่อนนะครับ"',
+      duties: ['ตรวจสอบตัวเลข revenue, margin, FCF, EPS กับแหล่งออนไลน์', 'flag ข้อมูลที่ไม่ตรงกับ filing จริง', 'อ้างอิงแหล่งที่มาทุกจุดที่ verify', 'ทำงานใน /deep flow ก่อนส่งให้ Max']
+    },
+    {
+      name: 'Big', role: 'Health Coach', sub: 'Fitness & Health Tracker', dot: '#b84040', img: 'Avatars/Big.png',
       tagline: 'แค่ 10 นาทีก็ยังดี — ขอให้ลงมือทำ',
       personality: 'พลังงานเยอะ กระตือรือร้น เชียร์ทุกก้าว ไม่ว่าจะเหนื่อยแค่ไหนก็ยังมีคำพูดให้กำลังใจเสมอ ประเภทที่บอกว่า "วันนี้แค่ 10 นาทีก็ยังดีครับ!"',
       duties: ['บันทึกการออกกำลังกายแต่ละครั้ง', 'ติดตามน้ำหนักรายเดือน', 'แนะนำ routine ที่เหมาะกับระดับปัจจุบัน', 'บันทึกนัดหมอ']
     },
     {
-      name: 'Noon', role: 'คน', sub: 'เลขาความสัมพันธ์', img: 'Avatars/Noon.png',
+      name: 'Noon', role: 'People Manager', sub: 'Relationship Tracker', dot: '#b84040', img: 'Avatars/Noon.png',
       tagline: 'ทุกความสัมพันธ์มีความหมาย — ไม่มีใครถูกลืม',
       personality: 'อบอุ่น จำทุกอย่างเกี่ยวกับคนรอบข้าง จำวันเกิด ความชอบ และครั้งสุดท้ายที่คุย รู้สึกได้ว่าทุกความสัมพันธ์มีความหมาย ไม่มีใครถูกลืม',
       duties: ['บันทึกข้อมูลคนสำคัญ (วันเกิด ความชอบ)', 'แจ้งเตือนวันสำคัญที่ใกล้มา', 'บันทึกนัดหมายสังคม', 'จำครั้งสุดท้ายที่ Godji ติดต่อแต่ละคน']
     },
     {
-      name: 'Peter', role: 'เป้าหมาย', sub: 'โค้ชเป้าหมาย', img: 'Avatars/Peter.png',
+      name: 'Peter', role: 'Life Coach', sub: 'Goal & OKR Coach', dot: '#A67C52', img: 'Avatars/Peter.png',
       tagline: 'ทำหรือไม่ทำ — ไม่รับข้อแก้ตัว',
       personality: 'จริงจัง ไม่รับข้อแก้ตัว ดันให้ออกจาก comfort zone เสมอ พูดตรงๆ ว่าทำได้หรือไม่ได้ ถามว่า "เมื่อวานทำ OKR ข้อไหนไปแล้วครับ?"',
       duties: ['ติดตาม progress ภาษาแต่ละภาษา', 'ติดตาม milestone YouTube channel', 'ตั้งและ review OKR รายเดือน', 'ไม่รับข้อแก้ตัว ถามตรงๆ ว่าทำหรือไม่ทำ']
@@ -859,7 +883,7 @@
           '<div class="flip-inner">' +
             '<div class="flip-front">' +
               '<img class="f-photo" src="' + p.img + '" alt="' + p.name + '">' +
-              '<div class="f-tag">' + p.role + '</div>' +
+              '<div class="f-tag" style="background:' + p.dot + ';color:#fff;border-color:' + p.dot + '">' + p.role + '</div>' +
               '<div class="f-overlay">' +
                 '<span class="fname">' + p.name + '</span>' +
                 '<span class="f-sub">' + p.sub + '</span>' +
@@ -903,8 +927,16 @@
       members: ['Mint']
     },
     {
-      dot: '#7A5C3F', label: 'การเงิน', sub: 'รายวัน → พอร์ต → เป้าล้าน',
-      members: ['Elly', 'Max']
+      dot: '#7A5C3F', label: 'Accounting', sub: 'บันทึกรายวัน → สรุป → แจ้งเตือน budget',
+      members: ['Elly']
+    },
+    {
+      dot: '#0d7377', label: 'Research', sub: 'ข่าวสด · งบการเงิน · earnings call',
+      members: ['Fai', 'Kla', 'Sam']
+    },
+    {
+      dot: '#1a3d5c', label: 'Verify & Analyze', sub: 'ตรวจสอบตัวเลข → วิเคราะห์พอร์ต',
+      members: ['Alex', 'Max']
     },
     {
       dot: '#b84040', label: 'ชีวิต & คน', sub: 'สุขภาพ · ความสัมพันธ์',
@@ -1517,16 +1549,20 @@
   var _commentUnsubscribe = null;
   function renderComments(tripId) {
     if (_commentUnsubscribe) { _commentUnsubscribe(); _commentUnsubscribe = null; }
-    _commentUnsubscribe = _db.getComments(tripId, function(items) {
+    _commentUnsubscribe = _db.getComments(tripId, async function(items) {
       var el = document.getElementById('comments-list-' + tripId);
       if (!el) return;
       if (!items.length) {
         el.innerHTML = '<div class="comments-empty">ยังไม่มีความคิดเห็น — เป็นคนแรกที่แสดงความคิดเห็นค่ะ</div>';
         return;
       }
+      var profiles = await _db.getProfiles();
+      var profileImgMap = {};
+      profiles.forEach(function(p) { if (p.uid) profileImgMap[p.uid] = p.img || ''; });
       el.innerHTML = items.map(function(c) {
-        var avatarHTML = c.avatar
-          ? '<img class="comment-avatar" src="' + c.avatar + '" referrerpolicy="no-referrer">'
+        var imgSrc = (c.uid && profileImgMap[c.uid]) || c.avatar || '';
+        var avatarHTML = imgSrc
+          ? '<img class="comment-avatar" src="' + imgSrc + '" referrerpolicy="no-referrer">'
           : '<div class="comment-avatar comment-avatar-init">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
         var tsLabel = c.ts ? new Date(c.ts.seconds * 1000).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '';
         var isOwn = _currentUser && _currentUser.uid === c.uid;
@@ -3013,6 +3049,7 @@
   /* ── Expenses ── */
   var _expData   = null;
   var _expPeriod = 'today';
+  var _expView   = 'list';
 
   function expLoad() {
     if (_expData) return;
@@ -3055,16 +3092,17 @@
   }
 
   function addExpense() {
-    var textEl = document.getElementById('exp-input');
-    var amtEl  = document.getElementById('exp-amount');
-    var text   = (textEl ? textEl.value || '' : '').trim();
-    var amount = parseFloat(amtEl ? amtEl.value : 0) || 0;
+    var textEl  = document.getElementById('exp-input');
+    var amtEl   = document.getElementById('exp-amount');
+    var dateEl  = document.getElementById('exp-date');
+    var text    = (textEl ? textEl.value || '' : '').trim();
+    var amount  = parseFloat(amtEl ? amtEl.value : 0) || 0;
+    var dateStr = (dateEl && dateEl.value) || new Date().toISOString().slice(0,10);
     if (!text && !amount) return;
     walletLoad();
     if (!_addWalletId && _walletData.length) _addWalletId = _walletData[0].id;
-    var now = new Date();
     expLoad();
-    var rec = { id:Date.now(), text:text||(_addType==='income'?'รายรับ':'รายจ่าย'), amount:amount, walletId:_addWalletId, date:now.toISOString().slice(0,10), ts:now.getTime() };
+    var rec = { id:Date.now(), text:text||(_addType==='income'?'รายรับ':'รายจ่าย'), amount:amount, walletId:_addWalletId, date:dateStr, ts:Date.now() };
     if (_addType === 'income') rec.type = 'income';
     _expData.unshift(rec);
     expSave();
@@ -3082,9 +3120,30 @@
 
   function renderExpenses() {
     walletLoad();
+    var dateEl = document.getElementById('exp-date');
+    if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
     renderWalletRow();
     renderWalletSelector();
-    renderExpList();
+    if (_expView === 'dash') renderExpDashboard();
+    else renderExpList();
+  }
+
+  function switchExpView(view) {
+    _expView = view;
+    document.querySelectorAll('.exp-vtab').forEach(function(el){ el.classList.toggle('active', el.dataset.view===view); });
+    var filterTabs = document.querySelector('.exp-filter-tabs');
+    var addForm    = document.querySelector('.exp-add-form');
+    var summary    = document.getElementById('exp-summary');
+    var list       = document.getElementById('exp-list');
+    var dash       = document.getElementById('exp-dashboard');
+    var show = view === 'list';
+    if (filterTabs) filterTabs.style.display = show ? '' : 'none';
+    if (addForm)    addForm.style.display    = show ? '' : 'none';
+    if (summary)    summary.style.display    = show ? '' : 'none';
+    if (list)       list.style.display       = show ? '' : 'none';
+    if (dash)       dash.style.display       = show ? 'none' : '';
+    if (view === 'dash') renderExpDashboard();
+    else renderExpList();
   }
 
   function renderWalletRow() {
@@ -3101,8 +3160,12 @@
       }
     });
     var nonTransfer = items.filter(function(e){ return e.type!=='transfer'; });
-    var totalIncome  = nonTransfer.filter(function(e){ return e.type==='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
-    var totalExpense = nonTransfer.filter(function(e){ return e.type!=='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var nonExcl = nonTransfer.filter(function(e){
+      var w = _walletData.find(function(w){ return w.id === e.walletId; });
+      return !w || !w.excluded;
+    });
+    var totalIncome  = nonExcl.filter(function(e){ return e.type==='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+    var totalExpense = nonExcl.filter(function(e){ return e.type!=='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
     var grandTotal = totalIncome - totalExpense;
 
     var el = document.getElementById('exp-wallets-scroll');
@@ -3111,9 +3174,9 @@
       var isActive = _selectedWallet === w.id;
       var tot = totals[w.id] || 0;
       var amtColor = tot >= 0 ? '#3D7A52' : '#C04040';
-      return '<div class="exp-wallet-card'+(isActive?' active':'')+'"'+
+      return '<div class="exp-wallet-card'+(isActive?' active':'')+(w.excluded?' excl':'')+'"'+
         ' onclick="filterByWallet('+w.id+')">'+
-        '<div class="exp-wallet-card-name" style="color:'+w.color+'">'+finEsc(w.name)+'</div>'+
+        '<div class="exp-wallet-card-name" style="color:'+w.color+'">'+finEsc(w.name)+(w.excluded?'<span class="excl-badge">∑</span>':'')+'</div>'+
         '<div class="exp-wallet-card-amt" style="color:'+amtColor+'">'+(tot<0?'-':'')+'฿'+Math.abs(tot).toLocaleString()+'</div></div>';
     }).join('') +
     '<div class="exp-wallet-card'+((!_selectedWallet)?' active':'')+'" onclick="filterByWallet(null)">'+
@@ -3151,8 +3214,12 @@
       });
     }
     var nonTransfer = items.filter(function(e){ return e.type !== 'transfer'; });
-    var incomes  = nonTransfer.filter(function(e){ return e.type === 'income'; });
-    var expenses = nonTransfer.filter(function(e){ return e.type !== 'income'; });
+    var summaryItems = _selectedWallet ? nonTransfer : nonTransfer.filter(function(e){
+      var w = _walletData.find(function(w){ return w.id === e.walletId; });
+      return !w || !w.excluded;
+    });
+    var incomes  = summaryItems.filter(function(e){ return e.type === 'income'; });
+    var expenses = summaryItems.filter(function(e){ return e.type !== 'income'; });
     var totalInc = incomes.reduce(function(s,e){ return s+(e.amount||0); }, 0);
     var totalExp = expenses.reduce(function(s,e){ return s+(e.amount||0); }, 0);
     var net = totalInc - totalExp;
@@ -3197,6 +3264,111 @@
     }).join('');
   }
 
+  function renderExpDashboard() {
+    expLoad();
+    walletLoad();
+    var el = document.getElementById('exp-dashboard');
+    if (!el) return;
+    var today = new Date();
+    var moNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    var html = '';
+
+    /* ── 1. Monthly trend (6 months) ── */
+    var months = [];
+    for (var i = 5; i >= 0; i--) {
+      var d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      months.push(d.toISOString().slice(0, 7));
+    }
+    var monthlyData = months.map(function(m) {
+      var items = _expData.filter(function(e){ return e.date.slice(0,7) === m && e.type !== 'transfer'; });
+      var excl  = items.filter(function(e){
+        var w = _walletData.find(function(w){ return w.id === e.walletId; });
+        return !w || !w.excluded;
+      });
+      var inc = excl.filter(function(e){ return e.type==='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+      var exp = excl.filter(function(e){ return e.type!=='income'; }).reduce(function(s,e){ return s+(e.amount||0); }, 0);
+      return { m:m, inc:inc, exp:exp };
+    });
+    var maxVal = Math.max.apply(null, monthlyData.map(function(x){ return Math.max(x.inc, x.exp); })) || 1;
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">สรุปรายเดือน (6 เดือนล่าสุด)</div>';
+    html += '<div class="dash-monthly">';
+    html += monthlyData.map(function(x) {
+      var iP = Math.max(2, Math.round((x.inc/maxVal)*100));
+      var eP = Math.max(2, Math.round((x.exp/maxVal)*100));
+      var label = moNames[parseInt(x.m.slice(5,7))-1];
+      return '<div class="dash-month-col">'+
+        '<div class="dash-month-bars">'+
+          '<div class="dash-mbar inc" style="height:'+iP+'%" title="รายรับ ฿'+x.inc.toLocaleString()+'"></div>'+
+          '<div class="dash-mbar exp" style="height:'+eP+'%" title="รายจ่าย ฿'+x.exp.toLocaleString()+'"></div>'+
+        '</div>'+
+        '<div class="dash-month-label">'+label+'</div>'+
+      '</div>';
+    }).join('');
+    html += '</div></div>';
+
+    /* ── 2. Wallet breakdown (this month expenses) ── */
+    var thisMonth = today.toISOString().slice(0,7);
+    var thisExp = _expData.filter(function(e){
+      return e.date.slice(0,7) === thisMonth && e.type !== 'transfer' && e.type !== 'income';
+    });
+    var walletTotals = {};
+    thisExp.forEach(function(e) {
+      var w = _walletData.find(function(w){ return w.id === e.walletId; });
+      if (w && w.excluded) return;
+      walletTotals[e.walletId] = (walletTotals[e.walletId]||0) + (e.amount||0);
+    });
+    var totalThisExp = Object.keys(walletTotals).reduce(function(s,k){ return s+walletTotals[k]; }, 0);
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">รายจ่ายเดือนนี้ แยกกระเป๋า</div>';
+    if (!totalThisExp) {
+      html += '<p class="fin-empty" style="margin:0.5rem 0">ยังไม่มีรายการเดือนนี้</p>';
+    } else {
+      var wKeys = Object.keys(walletTotals).sort(function(a,b){ return walletTotals[b]-walletTotals[a]; });
+      html += wKeys.map(function(wid) {
+        var w   = walletById(parseInt(wid));
+        var amt = walletTotals[wid];
+        var pct = Math.round((amt/totalThisExp)*100);
+        return '<div class="dash-bar-row">'+
+          '<div class="dash-bar-label">'+finEsc(w.name)+'</div>'+
+          '<div class="dash-bar-track"><div class="dash-bar-fill" style="width:'+pct+'%;background:'+w.color+'"></div></div>'+
+          '<span class="dash-bar-val">฿'+amt.toLocaleString()+'<span class="dash-bar-pct"> '+pct+'%</span></span>'+
+        '</div>';
+      }).join('');
+    }
+    html += '</div>';
+
+    /* ── 3. Top 5 expenses (this month) ── */
+    var topItems = thisExp.filter(function(e){
+      var w = _walletData.find(function(w){ return w.id === e.walletId; });
+      return !w || !w.excluded;
+    }).sort(function(a,b){ return (b.amount||0)-(a.amount||0); }).slice(0,5);
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">Top 5 รายจ่ายเดือนนี้</div>';
+    if (!topItems.length) {
+      html += '<p class="fin-empty" style="margin:0.5rem 0">ยังไม่มีรายการเดือนนี้</p>';
+    } else {
+      html += topItems.map(function(e, i) {
+        var w = walletById(e.walletId);
+        return '<div class="dash-top-item">'+
+          '<span class="dash-top-rank">'+(i+1)+'</span>'+
+          '<span class="exp-item-dot" style="background:'+w.color+';flex-shrink:0"></span>'+
+          '<div class="dash-top-info">'+
+            '<span class="dash-top-text">'+finEsc(e.text||'รายจ่าย')+'</span>'+
+            '<span class="dash-top-date">'+thDate(e.date)+'</span>'+
+          '</div>'+
+          '<span class="dash-top-amt">฿'+(e.amount||0).toLocaleString()+'</span>'+
+        '</div>';
+      }).join('');
+    }
+    html += '</div>';
+
+    el.innerHTML = html;
+  }
+
   function switchExpPeriod(period) {
     _expPeriod = period;
     document.querySelectorAll('.exp-ftab').forEach(function(el){ el.classList.toggle('active', el.dataset.period===period); });
@@ -3226,8 +3398,17 @@
       return '<div class="wallet-mgmt-item">'+
         '<span class="wallet-mgmt-dot" style="background:'+w.color+'"></span>'+
         '<span class="wallet-mgmt-name">'+finEsc(w.name)+'</span>'+
+        '<button class="wallet-excl-btn'+(w.excluded?' active':'')+'" onclick="toggleWalletExclude('+w.id+')" title="แยกออกจากผลรวม">∑</button>'+
         '<button class="wallet-mgmt-del" onclick="deleteWallet('+w.id+')">×</button></div>';
     }).join('');
+  }
+
+  function toggleWalletExclude(id) {
+    walletLoad();
+    var w = _walletData.find(function(w){ return w.id === id; });
+    if (w) w.excluded = !w.excluded;
+    walletSave();
+    renderWalletMgmtList();
   }
 
   function renderWalletColorSwatches() {

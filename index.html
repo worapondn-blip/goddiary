@@ -134,7 +134,7 @@
     <div class="page-inner">
       <div class="page-head">
         <h2>The team.</h2>
-        <span class="count">8 people</span>
+        <span class="count">12 people</span>
       </div>
       <p class="page-sub">แต่ละคนดูแลด้านที่เชี่ยวชาญ — June รับงานแล้วส่งให้คนที่ใช่</p>
 
@@ -549,11 +549,21 @@
           <button class="exp-wallet-mgmt-btn" onclick="openWalletMgmt()" title="จัดการกระเป๋า">⚙</button>
         </div>
 
+        <!-- View tabs -->
+        <div class="exp-view-tabs">
+          <span class="exp-vtab active" data-view="list" onclick="switchExpView('list')">รายการ</span>
+          <span class="exp-vtab" data-view="dash" onclick="switchExpView('dash')">ภาพรวม</span>
+        </div>
+
         <!-- Add form -->
         <div class="exp-add-form">
           <div class="exp-add-row1">
             <input id="exp-input" class="exp-input" type="text" placeholder="รายละเอียด เช่น กาแฟ, ค่าไฟ...">
             <input id="exp-amount" class="exp-amount-input" type="number" min="0" placeholder="฿" onkeydown="if(event.key==='Enter')addExpense()">
+          </div>
+          <div class="exp-add-row2">
+            <span class="exp-date-label">วันที่</span>
+            <input id="exp-date" class="exp-input exp-date-input" type="date">
           </div>
           <div class="exp-wallet-selector" id="exp-wallet-selector"></div>
           <div class="exp-type-toggle">
@@ -572,6 +582,7 @@
 
         <div class="exp-summary" id="exp-summary"></div>
         <div class="exp-list" id="exp-list"></div>
+        <div id="exp-dashboard" style="display:none"></div>
       </div>
 
     </div>
